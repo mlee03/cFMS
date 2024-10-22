@@ -25,11 +25,13 @@ extern void cfms_init(int *localcomm, char *alt_input_nml_path_ptr, int *ndomain
 
 extern void cfms_end();
 
-extern char* cfms_get_domain_name(int *domain_id);
+extern void cfms_get_domain_name(int *domain_id, char *domain_name);
 
-extern void cfms_define_domains2D(int *global_indices, int *layout, int *n_pelist, int *pelist, int *domain_id,
+extern void cfms_set_npes(int *npes_in);
+
+extern void cfms_define_domains2D(int *global_indices, int *layout, int *domain_id, int *pelist, 
                                   int *xflags, int *yflags, int *xhalo, int *yhalo, int **xextent, int **yextent,
-                                  int **maskmap, char *name_ptr, bool *symmetry, int *memory_size,
+                                  bool **maskmap, char *name_c, bool *symmetry, int *memory_size,
                                   int *whalo, int *ehalo, int *shalo, int *nhalo, bool *is_mosaic,
                                   int *tile_count, int *tile_id, bool *complete, int *x_cyclic_offset, int *y_cyclic_offset);
 

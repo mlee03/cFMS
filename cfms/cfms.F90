@@ -34,7 +34,7 @@ module cfms_mod
   private
   
   public :: cfms_init, cfms_end
-  public :: set_current_domain
+  public :: cfms_set_current_domain, cfms_get_domain_name, cfms_set_npes
   public :: cfms_define_domains2D, cfms_define_io_domain2D
   public :: cfms_set_compute_domain2D, cfms_set_data_domain2D, cfms_set_global_domain2D
   public :: cfms_define_nest_domain
@@ -47,9 +47,11 @@ module cfms_mod
   
   type(FmsMppDomainsNestDomain_type), public :: nest_domain
 
+  integer :: npes
+  
 contains
 
-  subroutine set_current_domain(domain_id)
+  subroutine cfms_set_current_domain(domain_id)
 
     implicit none
     integer, intent(in), optional :: domain_id
@@ -60,25 +62,27 @@ contains
        current_domain => domain(1)
     end if
     
-  end subroutine set_current_domain
+  end subroutine cfms_set_current_domain
   
 
-  function cfms_get_domain_name(domain_id)
+  subroutine cfms_get_domain_name(domain_id, domain_name) bind(C)
 
     implicit none
 
     integer, intent(in), optional :: domain_id
-    character(len=NAME_LENGTH) :: domain_name
-    character(kind=c_char) :: cfms_get_domain_name(NAME_LENGTH)
+    character(kind=c_char) :: domain_name(NAME_LENGTH)
     
-    call set_current_domain(domain_id)
-    domain_name = fms_mpp_domains_get_domain_name(current_domain)
+    call cfms_set_current_domain(domain_id)
+    call fms_string_utils_f2c_string(domain_name, fms_mpp_domains_get_domain_name(current_domain))
+    
+  end subroutine cfms_get_domain_name
 
-    call fms_string_utils_f2c_string(cfms_get_domain_name, domain_name)
-    
-  end function cfms_get_domain_name
+  subroutine cfms_set_npes(npes_in) bind(C)
+    implicit none
+    integer, intent(in) :: npes_in
+    npes = npes_in
+  end subroutine cfms_set_npes
   
-
   subroutine cfms_init(localcomm, alt_input_nml_path_ptr, ndomain) bind(C)
 
     implicit none
@@ -131,40 +135,39 @@ contains
   !end subroutine cfms_define_mosaic
   
   !> call mpp_define_domain
-  subroutine cfms_define_domains2D(global_indices, layout, n_pelist, pelist, domain_id, &
-       xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_ptr,               &
-       symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,        &
-       tile_id, complete, x_cyclic_offset, y_cyclic_offset) bind(C)
+  subroutine cfms_define_domains2D(global_indices, layout, domain_id, pelist,   &
+       xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_c,         &
+       symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,&
+       tile_id, complete, x_cyclic_offset, y_cyclic_offset) bind(C, name="cfms_define_domains2D")
 
     implicit none
     
     integer, intent(in) :: global_indices(4) 
     integer, intent(in) :: layout(2)
-    integer, intent(in) :: n_pelist
     integer, intent(in), optional :: domain_id
-    integer, intent(in), optional :: pelist(n_pelist) 
+    integer, intent(in), optional :: pelist(npes) 
     integer, intent(in), optional :: xflags, yflags
     integer, intent(in), optional :: xhalo, yhalo
     integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
     logical, intent(in), optional :: maskmap(layout(1),layout(2))
-    type(c_ptr), intent(in), optional :: name_ptr
+    character(c_char), intent(in), optional :: name_c(NAME_LENGTH)
     logical, intent(in), optional :: symmetry
-    logical, intent(in), optional :: is_mosaic
     integer, intent(in), optional :: memory_size(2)
     integer, intent(in), optional :: whalo, ehalo, shalo, nhalo
+    logical, intent(in), optional :: is_mosaic
     integer, intent(in), optional :: tile_count
     integer, intent(in), optional :: tile_id
     logical, intent(in), optional :: complete
     integer, intent(in), optional :: x_cyclic_offset
     integer, intent(in), optional :: y_cyclic_offset
 
-    character(len=20) :: name = input_nml_path
+    character(len=20) :: name_f = input_nml_path
 
-    if(present(name_ptr)) name = fms_string_utils_c2f_string(name_ptr)
+    if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)
 
-    call set_current_domain(domain_id)    
-    call fms_mpp_domains_define_domains(global_indices, layout, current_domain,                         &
-         pelist, xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name, symmetry,  memory_size, &
+    call cfms_set_current_domain(domain_id)    
+    call fms_mpp_domains_define_domains(global_indices, layout, current_domain,                           &
+         pelist, xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_f, symmetry,  memory_size, &
          whalo, ehalo, shalo, nhalo, is_mosaic, tile_count, tile_id, complete, x_cyclic_offset, y_cyclic_offset)
 
   end subroutine cfms_define_domains2D
@@ -176,7 +179,7 @@ contains
     integer, intent(in) :: io_layout(2)
     integer, intent(in), optional :: domain_id
 
-    call set_current_domain(domain_id)
+    call cfms_set_current_domain(domain_id)
     call fms_mpp_domains_define_io_domain(current_domain, io_layout)
 
   end subroutine cfms_define_io_domain2D
@@ -192,7 +195,7 @@ contains
     logical, intent(in), optional :: x_is_global, y_is_global
     integer, intent(in), optional :: tile_count
 
-    call set_current_domain(domain_id)
+    call cfms_set_current_domain(domain_id)
     call fms_mpp_domains_set_compute_domain(current_domain, xbegin, xend, ybegin, yend, xsize, ysize, &
                                             x_is_global, y_is_global, tile_count)
 
@@ -209,7 +212,7 @@ contains
     logical, intent(in), optional :: x_is_global, y_is_global
     integer, intent(in), optional :: tile_count
     
-    call set_current_domain(domain_id)
+    call cfms_set_current_domain(domain_id)
     call fms_mpp_domains_set_data_domain(current_domain, xbegin, xend, ybegin, yend, xsize, ysize, &
                                          x_is_global, y_is_global, tile_count)
 
@@ -224,7 +227,7 @@ contains
     integer, intent(in), optional :: xbegin, xend, ybegin, yend, xsize, ysize
     integer, intent(in), optional :: tile_count
 
-    call set_current_domain(domain_id)
+    call cfms_set_current_domain(domain_id)
     call fms_mpp_domains_set_global_domain(current_domain, xbegin, xend, ybegin, yend, &
                                            xsize, ysize, tile_count)
 
@@ -256,7 +259,7 @@ contains
     
     if(present(name_ptr)) name = fms_string_utils_c2f_string(name_ptr)
 
-    call set_current_domain(domain_id)
+    call cfms_set_current_domain(domain_id)
     call fms_mpp_domains_define_nest_domains(nest_domain, current_domain, num_nest, nest_level, &
          tile_fine, tile_coarse, istart_coarse, icount_coarse, jstart_coarse, jcount_coarse, npes_nest_tile,&
          x_refine, y_refine, extra_halo, name)
