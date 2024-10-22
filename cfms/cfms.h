@@ -25,7 +25,7 @@ extern void cfms_init(int *localcomm, char *alt_input_nml_path_ptr, int *ndomain
 
 extern void cfms_end();
 
-extern void cfms_get_domain_name(int *domain_id, char *domain_name);
+extern void cfms_get_domain_name(int *domain_id, char *domain_name_c);
 
 extern void cfms_set_npes(int *npes_in);
 

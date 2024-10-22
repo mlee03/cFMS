@@ -65,15 +65,17 @@ contains
   end subroutine cfms_set_current_domain
   
 
-  subroutine cfms_get_domain_name(domain_id, domain_name) bind(C)
+  subroutine cfms_get_domain_name(domain_id, domain_name_c) bind(C)
 
     implicit none
 
     integer, intent(in), optional :: domain_id
-    character(kind=c_char) :: domain_name(NAME_LENGTH)
+    character(kind=c_char), intent(out) :: domain_name_c(NAME_LENGTH)
+    character(len=NAME_LENGTH) :: domain_name_f
     
     call cfms_set_current_domain(domain_id)
-    call fms_string_utils_f2c_string(domain_name, fms_mpp_domains_get_domain_name(current_domain))
+    domain_name_f = fms_mpp_domains_get_domain_name(current_domain)
+    call fms_string_utils_f2c_string(domain_name_c, domain_name_f)
     
   end subroutine cfms_get_domain_name
 
