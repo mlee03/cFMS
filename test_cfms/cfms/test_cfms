@@ -188,7 +188,7 @@ func_exec_program ()
 
   if test -f "$progdir/$program"; then
     # Add our own library path to LD_LIBRARY_PATH
-    LD_LIBRARY_PATH="/home/Mikyung.Lee/fms-to-python/fms2py/clibFMS/libcFMS/.libs:/home/Mikyung.Lee/fms-to-python/fms2py/clibFMS/FMS/FMSGNU/lib:/opt/netcdf/4.9.2/GNU/12.4.0/lib64:/opt/gcc/12.4.0/lib/../lib64:/opt/hdf5/1.14.4-3/GNU/12.4.0/lib:$LD_LIBRARY_PATH"
+    LD_LIBRARY_PATH="/home/Mikyung.Lee/fms-to-python/cFMS/cFMS/libcFMS/.libs:/home/Mikyung.Lee/fms-to-python/cFMS/FMS/FMSGNU/lib:/opt/netcdf/4.9.2/GNU/12.4.0/lib64:/opt/gcc/12.4.0/lib/../lib64:/opt/hdf5/1.14.4-3/GNU/12.4.0/lib:$LD_LIBRARY_PATH"
 
     # Some systems cannot cope with colon-terminated LD_LIBRARY_PATH
     # The second colon is a workaround for a bug in BeOS R4 sed

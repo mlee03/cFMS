@@ -21,39 +21,48 @@
 
 #include <stdbool.h>
 
-extern void cfms_init(int *localcomm, char *alt_input_nml_path_ptr, int *ndomain);
+extern const int NOTE;
+extern const int WARNING;
+extern const int FATAL;
 
-extern void cfms_end();
+extern void cFMS_set_npes(int *npes_in);
 
-extern void cfms_get_domain_name(int *domain_id, char *domain_name_c);
+extern void cFMS_init(int *localcomm, char *alt_input_nml_path_ptr, int *ndomain);
 
-extern void cfms_set_npes(int *npes_in);
+extern void cFMS_end();
 
-extern void cfms_define_domains2D(int *global_indices, int *layout, int *domain_id, int *pelist, 
-                                  int *xflags, int *yflags, int *xhalo, int *yhalo, int **xextent, int **yextent,
-                                  bool **maskmap, char *name_c, bool *symmetry, int *memory_size,
-                                  int *whalo, int *ehalo, int *shalo, int *nhalo, bool *is_mosaic,
-                                  int *tile_count, int *tile_id, bool *complete, int *x_cyclic_offset, int *y_cyclic_offset);
+extern void cFMS_error(int errortype, char* errormsg_c);
 
-extern void cfms_define_io_domain2D(int *io_layout, int *domain_id);
+extern void cFMS_define_domains(int *global_indices, int *layout, int *domain_id, int *pelist, 
+                                int *xflags, int *yflags, int *xhalo, int *yhalo, int **xextent, int **yextent,
+                                bool **maskmap, char *name_c, bool *symmetry, int *memory_size,
+                                int *whalo, int *ehalo, int *shalo, int *nhalo, bool *is_mosaic,
+                                int *tile_count, int *tile_id, bool *complete, int *x_cyclic_offset, int *y_cyclic_offset);
 
-extern void cfms_set_compute_domain2D(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                      int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
+extern void cFMS_define_io_domain(int *io_layout, int *domain_id);
 
-extern void cfms_set_data_domain2D(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                   int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
+extern void cFMS_set_compute_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                    int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
 
-extern void cfms_set_global_domain2D(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                     int *xsize, int *ysize, int *tile_count);
+extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                 int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
 
-extern void cfms_define_nest_domain(int *num_nest, int *nest_level, int *tile_fine, int *tile_course,
+extern void cFMS_set_global_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                   int *xsize, int *ysize, int *tile_count);
+
+extern void cFMS_define_nest_domain(int *num_nest, int *nest_level, int *tile_fine, int *tile_course,
                                     int *istart_coarse, int *icount_coarse, int *jstart_coarse, int *jcount_coarse,
                                     int *npes_nest_tile, int *x_refine, int *y_refine, int *domain_id,
                                     int *extra_halo, char *name_ptr);
 
 
-                                     
+extern void cFMS_get_domain_name(char *domain_name_c, int *domain_id);
 
+extern void cFMS_get_domain_pelist(int *pelist, int *domain_id, int *pos);
+
+extern void cFMS_get_domain_layout(int *layout, int *domain_id);
+                                     
+extern bool cFMS_domain_is_initialized(int *domain_id);
                                   
                                    
 
