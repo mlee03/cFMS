@@ -43,7 +43,7 @@ merge_dpis () {
 }
 
 # ensure working directory is at the top of the build directory
-top_builddir='/home/Mikyung.Lee/fms-to-python/fms2py/clibFMS'
+top_builddir='/home/Mikyung.Lee/fms-to-python/cFMS/cFMS'
 cd $top_builddir
 
 # remove previous runtime data/report

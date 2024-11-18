@@ -24,10 +24,15 @@ AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/cfms
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
-check_PROGRAMS = test_cfms
+check_PROGRAMS = test_cfms \
+	test_nest_domain
+
+TESTS = test_cfms.sh \
+	test_nest_domain.sh
 
 test_cfms_SOURCES = test_cfms.c
-TESTS = test_cfms.sh
+test_nest_domain_SOURCES = test_nest_domain.c
+
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \

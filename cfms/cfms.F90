@@ -19,12 +19,15 @@
 module cFMS_mod
 
   use FMS, only : fms_init, fms_end, fms_mpp_domains_init
-  use FMS, only : fms_string_utils_c2f_string, fms_string_utils_f2c_string
+  use FMS, only : fms_string_utils_c2f_string, fms_string_utils_f2c_string, fms_string_utils_cstring2cpointer
 
   use FMS, only : fms_mpp_error, NOTE, WARNING, FATAL
-
+  use FMS, only : fms_mpp_pe, fms_mpp_npes, fms_mpp_domains_define_layout
+  
   use FMS, only : FmsMppDomain2D, FmsMppDomainsNestDomain_type
   use FMS, only : fms_mpp_domains_get_domain_name, fms_mpp_domains_get_pelist, fms_mpp_domains_get_layout
+  use FMS, only : fms_mpp_domains_get_compute_domain, fms_mpp_domains_get_data_domain
+  
   use FMS, only : fms_mpp_domains_domain_is_initialized
   use FMS, only : fms_mpp_domains_define_domains, fms_mpp_domains_define_io_domain 
   use FMS, only : fms_mpp_domains_set_compute_domain, fms_mpp_domains_set_data_domain, fms_mpp_domains_set_global_domain
@@ -38,10 +41,19 @@ module cFMS_mod
   private
   
   public :: cFMS_init, cFMS_end, cFMS_error, cFMS_set_npes
-  public :: cFMS_define_domains, cFMS_define_io_domain
-  public :: cFMS_set_compute_domain, cFMS_set_data_domain, cFMS_set_global_domain
+  public :: cFMS_pe, cFMS_npes, cFMS_define_layout
+
+  public :: cFMS_define_domains
+  public :: cFMS_define_io_domain
+  public :: cFMS_set_compute_domain
+  public :: cFMS_set_data_domain
+  public :: cFMS_set_global_domain
   public :: cFMS_define_nest_domain
-  public :: cFMS_get_domain_name, cFMS_get_domain_pelist, cFMS_get_domain_layout
+  public :: cFMS_get_domain_name
+  public :: cFMS_get_domain_pelist
+  public :: cFMS_get_domain_layout
+  public :: cFMS_get_compute_domain
+  public :: cFMS_get_data_domain
   public :: cFMS_domain_is_initialized
 
   public :: cFMS_set_current_domain
@@ -129,7 +141,32 @@ contains
     call fms_mpp_error(errortype, trim(errormsg_f))
     
   end subroutine cFMS_error
-  
+
+  !> cFMS_pes
+  function cFMS_pe() bind(C, name="cFMS_pe")
+    implicit none
+    integer :: cFMS_pe
+    cFMS_pe = fms_mpp_pe()
+  end function cFMS_pe
+
+  !> cFMS_npes
+  function cFMS_npes() bind(C, name="cFMS_npes")
+    implicit none
+    integer :: cFMS_npes
+    cFMS_npes = fms_mpp_npes()
+  end function cFMS_npes
+
+  !> cFMS_define_layout
+  subroutine cFMS_define_layout(global_indices, ndivs, layout) bind(C, name="cFMS_define_layout")
+
+    implicit none
+    integer, intent(in) :: global_indices(4)
+    integer, intent(in) :: ndivs
+    integer, intent(out) :: layout(2)
+
+    call fms_mpp_domains_define_layout(global_indices, ndivs, layout)
+    
+  end subroutine cFMS_define_layout
   
   !> call mpp_define_domain
   subroutine cFMS_define_domains(global_indices, layout, domain_id, pelist,   &
@@ -268,13 +305,19 @@ contains
   subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")
 
     implicit none
-    character(kind=c_char), intent(out) :: domain_name_c(NAME_LENGTH)
+    type(c_ptr) , intent(out) :: domain_name_c
     integer, intent(in),  optional :: domain_id
     character(len=NAME_LENGTH) :: domain_name_f
+    character(kind=c_char), allocatable, target :: domain_name_cstring(:)
+
+    character(kind=c_char), target :: tmp
     
     call cFMS_set_current_domain(domain_id)
     domain_name_f = fms_mpp_domains_get_domain_name(current_domain)
-    call fms_string_utils_f2c_string(domain_name_c, domain_name_f)
+
+    allocate(domain_name_cstring(len(trim(domain_name_f))+1))    
+    call fms_string_utils_f2c_string(domain_name_cstring, trim(domain_name_f))
+    domain_name_c = fms_string_utils_cstring2cpointer(domain_name_cstring)
     
   end subroutine cFMS_get_domain_name
 
@@ -304,6 +347,44 @@ contains
   end subroutine cFMS_get_domain_layout
 
 
+  !> cFMS_get_compute_domain
+  subroutine cFMS_get_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
+                                     x_is_global, y_is_global, tile_count, position)
+
+    implicit none
+    integer, intent(in), optional :: domain_id
+    integer, intent(out), optional :: xbegin, xend, ybegin, yend
+    integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
+    logical, intent(out), optional :: x_is_global, y_is_global
+    integer, intent(in), optional :: tile_count, position
+
+    call cFMS_set_current_doamin(domain_id)
+    call fms_mpp_domains_get_compute_domain(current_domain, xbegin, xend, ybegin, yend, &
+                                            xsize, xmax_size, ysize, ymax_size,         &
+                                            x_is_global, y_is_global, tile_count, position)
+
+  end subroutine cFMS_get_compute_domain
+
+
+  !> cFMS_get_data_domain
+  subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &                                         
+                                  x_is_global, y_is_global, tile_count, position)
+
+    implicit none
+    integer, intent(in), optional :: domain_id
+    integer, intent(out), optional :: xbegin, xend, ybegin, yend
+    integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
+    logical, intent(out), optional :: x_is_global, y_is_global
+    integer, intent(in), optional :: tile_count, position
+
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_get_data_domain(current_domain, xbegin, xend, ybegin, yend, &
+                                         xsize, xmax_size, ysize, ymax_size,         &
+                                         x_is_global, y_is_global, tile_count, position)
+
+  end subroutine cFMS_get_data_domain
+  
+    
   function cFMS_domain_is_initialized(domain_id) bind(C, name="cFMS_domain_is_initialized")
 
     implicit none
@@ -314,6 +395,6 @@ contains
     cFMS_domain_is_initialized = fms_mpp_domains_domain_is_initialized(current_domain)
 
   end function cFMS_domain_is_initialized
-  
-  
+
+
 end module cFMS_mod

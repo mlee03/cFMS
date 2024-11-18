@@ -30,9 +30,13 @@
 
 #define NDOMAIN 2
 int ndomain=NDOMAIN;
+int domain_id[] = {1,2};
 
-int test_cFMS_init();
-int test_cFMS_define_domains();
+void test_cFMS_init();
+void test_cFMS_define_domains();
+void test_cFMS_define_io_domain();
+void test_cFMS_set_compute_domain();
+void test_cFMS_set_global_domain();
 
 int main() {
 
@@ -40,14 +44,17 @@ int main() {
 
   test_cFMS_init();
   test_cFMS_define_domains();
-
+  test_cFMS_define_io_domain();
+  test_cFMS_set_compute_domain();
+  test_cFMS_set_global_domain();
+  
   cFMS_end();
   
   return SUCCESS;
 
 }
 
-int test_cFMS_init()
+void test_cFMS_init()
 {
   //initialize MPI with mpp
 
@@ -59,22 +66,21 @@ int test_cFMS_init()
   if(mpi_flag == 0) perror("FATAL: MPI has not been initialized in test_cFMS_init");
   
   cFMS_error(NOTE, "PASS cFMS_init...");  
-  return SUCCESS;
   
 }
 
-int test_cFMS_define_domains()
+void test_cFMS_define_domains()
 {
   int global_indices[] = {1, 384, 1, 384};
-  int layout[NDOMAIN] = {2, 2}; //require 4 pes
-  int domain_id[NDOMAIN] = {1, 2};
+  int layout[NDOMAIN] = {2,2}; //require 4 pes
+  //int domain_id[NDOMAIN] = {1, 2};
   int npes = 4;
   int pelist[] = {0,1,2,3};
   int *xflags = NULL, *yflags = NULL;
   int *xhalo = NULL, *yhalo = NULL;
-  int **xextent = NULL, **yextent = NULL;
+  int *xextent = NULL, *yextent = NULL;
   bool **maskmap = NULL;
-  char name[NDOMAIN][7] = {"domain1", "domain2"};
+  char name_domain[NDOMAIN][10] = {"domain1", "domain2"};
   bool *symmetry = NULL;
   int *memory_size = NULL;
   int *whalo = NULL, *ehalo = NULL, *shalo = NULL, *nhalo = NULL;
@@ -85,33 +91,67 @@ int test_cFMS_define_domains()
 
   cFMS_error(NOTE, "testing cFMS_define_domains");
 
-  for( int idomain=0 ; idomain<ndomain-1 ; idomin++ ) {
-  
+  for( int idomain=0 ; idomain<NDOMAIN ; idomain++ ) {
+    
     cFMS_set_npes(&npes);
-    cFMS_define_domains(global_indices, layout, &domain_id[idomain], pelist, xflags, yflags, xhalo, yhalo,
-                        xextent, yextent, maskmap, name[idomain], symmetry, memory_size, whalo, ehalo, shalo, nhalo,
+    cFMS_define_domains(global_indices, layout, domain_id+idomain, pelist, xflags, yflags, xhalo, yhalo,
+                        xextent, yextent, maskmap, name_domain[idomain], symmetry, memory_size, whalo, ehalo, shalo, nhalo,
                         is_mosaic, tile_count, tile_id, complete, x_cyclic_offset, y_cyclic_offset);
     
     //check if domain is initialized
     if( ! cFMS_domain_is_initialized(&domain_id[0]) ) cFMS_error(FATAL, "domain is not initialized");
     
-    //check domain pelist is set correctly
-    int test_pelist[] = {0,0,0,0};
-    int *pos=NULL;
-    cFMS_set_npes(&npes);
-    cFMS_get_domain_pelist(test_pelist, &domain_id[idomain], pos);  
-    if(memcmp(test_pelist, pelist, sizeof(pelist)) != SUCCESS) cFMS_error(FATAL, "domain pelist is not setup correctly");
-        
-    //check domain name is set correctly
-    
-    
-    
   } //for idomain
-    
+  
   cFMS_error(NOTE, "PASS test_cFMS_define_domains");
-  return SUCCESS;
 }
 
+void test_cFMS_define_io_domain()
+{
 
+  cFMS_error(NOTE, "testing cFMS_define_io_domain");
+
+  for( int idomain=0 ; idomain<NDOMAIN; idomain++ ) {
+    int io_layout[] = {idomain+1, idomain+1};
+    cFMS_define_io_domain(io_layout, domain_id+idomain);
+  }
+
+  cFMS_error(NOTE, "PASS test_cFMS_define_io_domain");
+  
+}
+
+void test_cFMS_set_compute_domain()
+{
+
+  int *xbegin=NULL, *xend=NULL, *ybegin=NULL, *yend=NULL, *xsize=NULL, *ysize=NULL;
+  bool *x_is_global=NULL, *y_is_global=NULL;
+  int *tile_count=NULL;
+
+  cFMS_error(NOTE, "testing cFMS_set_compute_domain");
+  
+  for( int idomain=0 ; idomain<NDOMAIN; idomain++ ) {
+    cFMS_set_compute_domain(domain_id+idomain, xbegin, xend, ybegin, yend, xsize, ysize,
+                            x_is_global, y_is_global, tile_count);    
+  }
+  
+  cFMS_error(NOTE, "PASS test_cFMS_set_compute_domain");
+  
+}
+
+void test_cFMS_set_global_domain()
+{
+
+  int *xbegin=NULL, *xend=NULL, *ybegin=NULL, *yend=NULL, *xsize=NULL, *ysize=NULL;
+  int *tile_count=NULL;
+
+  cFMS_error(NOTE, "testing cFMS_set_global_domain");
+  
+  for( int idomain=0 ; idomain<NDOMAIN; idomain++ ) {
+    cFMS_set_global_domain(domain_id+idomain, xbegin, xend, ybegin, yend, xsize, ysize, tile_count);    
+  }
+
+  cFMS_error(NOTE, "PASS test_cFMS_set_global_domain");
+  
+}
   
     

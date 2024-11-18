@@ -26,8 +26,8 @@
 # Thank you Junio.
 
 # Useful locations
-top_srcdir='/home/Mikyung.Lee/fms-to-python/fms2py/clibFMS'
-top_buildir='/home/Mikyung.Lee/fms-to-python/fms2py/clibFMS'
+top_srcdir='/home/Mikyung.Lee/fms-to-python/cFMS/cFMS'
+top_buildir='/home/Mikyung.Lee/fms-to-python/cFMS/cFMS'
 
 TEST_NAME="$(basename "$0" .sh)"
 TEST_NUMBER="${TEST_NAME%%-*}"
