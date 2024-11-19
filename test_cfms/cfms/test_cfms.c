@@ -30,7 +30,7 @@
 
 #define NDOMAIN 2
 int ndomain=NDOMAIN;
-int domain_id[] = {1,2};
+int domain_id[] = {0,1};
 
 void test_cFMS_init();
 void test_cFMS_define_domains();

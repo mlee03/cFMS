@@ -23,6 +23,7 @@ module cFMS_mod
 
   use FMS, only : fms_mpp_error, NOTE, WARNING, FATAL
   use FMS, only : fms_mpp_pe, fms_mpp_npes, fms_mpp_domains_define_layout
+  use FMS, only : fms_mpp_declare_pelist, fms_mpp_set_current_pelist, fms_mpp_get_current_pelist
   
   use FMS, only : FmsMppDomain2D, FmsMppDomainsNestDomain_type
   use FMS, only : fms_mpp_domains_get_domain_name, fms_mpp_domains_get_pelist, fms_mpp_domains_get_layout
@@ -42,7 +43,9 @@ module cFMS_mod
   
   public :: cFMS_init, cFMS_end, cFMS_error, cFMS_set_npes
   public :: cFMS_pe, cFMS_npes, cFMS_define_layout
+  public :: cFMS_declare_pelist, cFMS_set_current_pelist, cFMS_get_current_pelist
 
+  
   public :: cFMS_define_domains
   public :: cFMS_define_io_domain
   public :: cFMS_set_compute_domain
@@ -56,7 +59,6 @@ module cFMS_mod
   public :: cFMS_get_data_domain
   public :: cFMS_domain_is_initialized
 
-  public :: cFMS_set_current_domain
   
   integer, parameter :: NAME_LENGTH = 64 !< value taken from mpp_domains
   integer, parameter :: MESSAGE_LENGTH=128
@@ -84,7 +86,7 @@ contains
     if(present(domain_id)) then
        current_domain => domain(domain_id)
     else
-       current_domain => domain(1)
+       current_domain => domain(0)
     end if
     
   end subroutine cFMS_set_current_domain
@@ -114,9 +116,9 @@ contains
     call fms_mpp_domains_init()
     
     if(present(ndomain)) then
-       allocate(domain(ndomain))
+       allocate(domain(0:ndomain-1))
     else
-       allocate(domain(1))
+       allocate(domain(0:0))
     end if
 
   end subroutine cFMS_init
@@ -156,6 +158,48 @@ contains
     cFMS_npes = fms_mpp_npes()
   end function cFMS_npes
 
+
+  !> cFMS_declare_pelist
+  subroutine cFMS_declare_pelist(pelist, name_c, commID) bind(C, name="cFMS_declare_pelist")
+
+    implicit none
+    integer, intent(in) :: pelist(npes)
+    type(c_ptr), intent(in), optional :: name_c
+    integer, intent(out), optional :: commID
+
+    character(len=NAME_LENGTH) :: name_f=" " !mpp default
+
+    if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)
+    call fms_mpp_declare_pelist(pelist, name_f, commID)
+    
+  end subroutine cFMS_declare_pelist
+  
+  !> cFMS_set_current_pelist
+  subroutine cFMS_set_current_pelist(pelist, no_sync) bind(C, name="cFMS_set_current_pelist")
+
+    implicit none
+    integer, intent(in), optional :: pelist(npes)
+    logical, intent(in), optional :: no_sync
+
+    call fms_mpp_set_current_pelist(pelist, no_sync)
+    
+  end subroutine cFMS_set_current_pelist
+
+  !> cFMS_get_current_pelist
+  subroutine cFMS_get_current_pelist(pelist, name_c, commID) bind(C, name="cFMS_get_current_pelist")
+
+    implicit none
+    integer, intent(out) :: pelist(npes)
+    type(c_ptr), intent(out), optional :: name_c
+    integer, intent(out), optional :: commID
+
+    character(len=NAME_LENGTH) :: name_f=" " !mpp default
+    
+    if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)    
+    call fms_mpp_get_current_pelist(pelist, name_f, commID)
+    
+  end subroutine cFMS_get_current_pelist
+  
   !> cFMS_define_layout
   subroutine cFMS_define_layout(global_indices, ndivs, layout) bind(C, name="cFMS_define_layout")
 
@@ -198,7 +242,8 @@ contains
 
     if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)
 
-    call cFMS_set_current_domain(domain_id)    
+    call cFMS_set_current_domain(domain_id)
+
     call fms_mpp_domains_define_domains(global_indices, layout, current_domain,                           &
          pelist, xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_f, symmetry,  memory_size, &
          whalo, ehalo, shalo, nhalo, is_mosaic, tile_count, tile_id, complete, x_cyclic_offset, y_cyclic_offset)
@@ -349,7 +394,7 @@ contains
 
   !> cFMS_get_compute_domain
   subroutine cFMS_get_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
-                                     x_is_global, y_is_global, tile_count, position)
+                           x_is_global, y_is_global, tile_count, position) bind(C, name="cFMS_get_compute_domain")
 
     implicit none
     integer, intent(in), optional :: domain_id
@@ -358,7 +403,7 @@ contains
     logical, intent(out), optional :: x_is_global, y_is_global
     integer, intent(in), optional :: tile_count, position
 
-    call cFMS_set_current_doamin(domain_id)
+    call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_get_compute_domain(current_domain, xbegin, xend, ybegin, yend, &
                                             xsize, xmax_size, ysize, ymax_size,         &
                                             x_is_global, y_is_global, tile_count, position)
@@ -367,8 +412,8 @@ contains
 
 
   !> cFMS_get_data_domain
-  subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &                                         
-                                  x_is_global, y_is_global, tile_count, position)
+  subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
+                                  x_is_global, y_is_global, tile_count, position) bind(C, name="cFMS_get_data_domain")
 
     implicit none
     integer, intent(in), optional :: domain_id

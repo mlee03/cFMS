@@ -36,6 +36,12 @@ extern void cFMS_error(int errortype, char* errormsg_c);
 extern int cFMS_pe();
 extern int cFMS_npes();
 
+extern void cFMS_declare_pelist(int* pelist, char* name_c, int* commID);
+
+extern void cFMS_set_current_pelist(int* pelist, bool* no_sync);
+
+extern void cFMS_get_current_pelist(int* pelist, char* name_c, int* commID);
+
 extern void cFMS_define_layout(int global_indices[4], int* ndivs, int layout[2]);
 
 extern void cFMS_define_domains(int global_indices[4], int layout[2], int* domain_id, int pelist[], 
