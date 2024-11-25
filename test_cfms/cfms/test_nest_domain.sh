@@ -26,6 +26,6 @@
 rm -f input.nml
 touch input.nml
 
-test_expect_success "cfms" 'mpirun -n 4  ./test_nest_domain'
+test_expect_success "cfms" 'mpirun -n 7  ./test_nest_domain'
 test_done
 
