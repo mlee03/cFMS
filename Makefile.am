@@ -38,7 +38,7 @@ SUBDIRS = cfms \
 	test_cfms
 
 ## Build libFMS module
-#AM_CPPFLAGS = -I${top_srcdir}/include
+AM_CPPFLAGS = -I${top_srcdir}/include
 AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
 include $(top_srcdir)/mkmods.mk

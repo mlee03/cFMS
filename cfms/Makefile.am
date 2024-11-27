@@ -30,12 +30,14 @@ AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 noinst_LTLIBRARIES = libcfms.la
 
 # Each convenience library depends on its source.
-libcfms_la_SOURCES = cfms.F90
+libcfms_la_SOURCES = cfms.F90 cmpp.F90 cmpp_domains.F90
 
-cfms_mod.$(FC_MODEXT): cfms.F90
+cmpp_domains_smod.smod: cmpp_domains.F90 cfms_mod.mod cfms_mod.smod
+cmpp_smod.smod: cmpp.F90 cfms_mod.mod cfms_mod.smod
+cfms_mod.mod, cfms_mod.smod: cfms.F90 
 
 # Mod files are built and then installed as headers.
-MODFILES = cfms_mod.$(FC_MODEXT)
+MODFILES = cfms_mod.mod cmpp_smod.smod cmpp_domains_smod.smod
 BUILT_SOURCES = $(MODFILES)
 nodist_include_HEADERS = $(MODFILES) $(FMS_INC_FILES)
 
