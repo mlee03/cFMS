@@ -32,14 +32,14 @@ noinst_LTLIBRARIES = libcfms.la
 # Each convenience library depends on its source.
 libcfms_la_SOURCES = cfms.F90 cmpp.F90 cmpp_domains.F90
 
-cmpp_domains_smod.smod: cmpp_domains.F90 cfms_mod.mod cfms_mod.smod
-cmpp_smod.smod: cmpp.F90 cfms_mod.mod cfms_mod.smod
+cfms_mod@cmpp_domains_smod.smod: cmpp_domains.F90 cfms_mod.mod cfms_mod.smod
+cfms_mod@cmpp_smod.smod: cmpp.F90 cfms_mod.mod cfms_mod.smod
 cfms_mod.mod, cfms_mod.smod: cfms.F90 
 
 # Mod files are built and then installed as headers.
-MODFILES = cfms_mod.mod cmpp_smod.smod cmpp_domains_smod.smod
+MODFILES = cfms_mod.mod cfms_mod.smod cfms_mod@cmpp_smod.smod cfms_mod@cmpp_domains_smod.smod
 BUILT_SOURCES = $(MODFILES)
-nodist_include_HEADERS = $(MODFILES) $(FMS_INC_FILES)
+nodist_include_HEADERS =  $(FMS_INC_FILES) #$(MODFILES)
 
 include_HEADERS = cfms.h
 
