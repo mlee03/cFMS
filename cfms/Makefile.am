@@ -41,6 +41,6 @@ MODFILES = cfms_mod.mod cfms_mod.smod cfms_mod@cmpp_smod.smod cfms_mod@cmpp_doma
 BUILT_SOURCES = $(MODFILES)
 nodist_include_HEADERS =  $(FMS_INC_FILES) #$(MODFILES)
 
-include_HEADERS = cfms.h
+include_HEADERS = cfms.h cmpp.h cmpp_domains.h
 
 include $(top_srcdir)/mkmods.mk
