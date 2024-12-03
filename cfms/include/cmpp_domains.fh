@@ -1,0 +1,218 @@
+! int
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cint_2d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cint_2d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    integer
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   2
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cint_3d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cint_3d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    integer
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   3
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(3),field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cint_4d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cint_4d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    integer
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   4
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3),field_shape(4)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/4,3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cint_5d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cint_5d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    integer
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   5
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3),field_shape(4),field_shape(5)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/5,4,3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+  
+! real 32
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cfloat_2d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cfloat_2d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_float)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   2
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(1),field_shape(2)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cfloat_3d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cfloat_3d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_float)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   3
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(3),field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cfloat_4d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cfloat_4d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_float)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   4
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3),field_shape(4)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/4,3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cfloat_5d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cfloat_5d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_float)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   5
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3),field_shape(4),field_shape(5)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/5,4,3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#include "cmpp_domains.inc"
+  
+! real64
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cdouble_2d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cdouble_2d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_double)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   2
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(2),field_shape(1)/)
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cdouble_3d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cdouble_3d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_double)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   3
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(3),field_shape(2),field_shape(1)/)
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cdouble_4d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cdouble_4d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_double)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   4
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3),field_shape(4)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/4,3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+
+#undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
+#undef  CFMS_UPDATE_DOMAINS_BINDC_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_TYPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_SHAPE_
+#undef  CFMS_UPDATE_DOMAINS_FIELD_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
+#undef  CFMS_UPDATE_DOMAINS_RESHAPE_BACK_
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cdouble_5d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cdouble_5d"
+#define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    real(kind=c_double)
+#define CFMS_UPDATE_DOMAINS_FIELD_SHAPE_   5
+#define CFMS_UPDATE_DOMAINS_FIELD_         field_shape(1),field_shape(2),field_shape(3),field_shape(4),field_shape(5)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_       (/field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/5,4,3,2,1/)
+#define CFMS_UPDATE_DOMAINS_RESHAPE_BACK_  (/field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)/)
