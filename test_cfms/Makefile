@@ -221,7 +221,7 @@ AWK = gawk
 CC = mpicc
 CCDEPMODE = depmode=gcc3
 CC_VERSION = /opt/mpich/4.2.3/GNU/14.2.0/bin/mpicc
-CFLAGS = -g -fPIC -DINTERNAL_FILE_NML -I/opt/netcdf/4.9.2/GNU/14.2.0/include -I/home/Mikyung.Lee/fms-to-python/cFMS/FMS/FMSGNU/include -fopenmp
+CFLAGS = -g -fPIC -DINTERNAL_FILE_NML -I/opt/netcdf/4.9.2/GNU/14.2.0/include -I/home/Mikyung.Lee/fms-to-python/cFMS/FMS/FMSGNU/include -fmax-errors=10 -fopenmp
 CPP = mpicc -E
 CPPFLAGS =  -fopenmp
 CYGPATH_W = echo
@@ -237,7 +237,7 @@ ECHO_T =
 EGREP = /usr/bin/grep -E
 EXEEXT = 
 FC = mpif90
-FCFLAGS = -g -fPIC -DINTERNAL_FILE_NML -I/opt/netcdf/4.9.2/GNU/14.2.0/include -I/home/Mikyung.Lee/fms-to-python/cFMS/FMS/FMSGNU/include  -ffree-form -fcray-pointer -fopenmp
+FCFLAGS = -g -fPIC -DINTERNAL_FILE_NML -I/opt/netcdf/4.9.2/GNU/14.2.0/include -I/home/Mikyung.Lee/fms-to-python/cFMS/FMS/FMSGNU/include -fmax-errors=10  -ffree-form -fcray-pointer -fopenmp
 FC_ALLOW_ARG_MISMATCH_FLAG = 
 FC_CRAY_POINTER_FLAG = -fcray-pointer
 FC_MODEXT = mod

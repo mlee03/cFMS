@@ -108,7 +108,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-check_PROGRAMS = test_cfms$(EXEEXT) test_nest_domain$(EXEEXT)
+check_PROGRAMS = test_cfms$(EXEEXT) test_nest_domain$(EXEEXT) \
+	test_cFMS_update_domains$(EXEEXT)
 subdir = test_cfms/cfms
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gx_fortran_legacy_options.m4 \
@@ -123,14 +124,19 @@ DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_test_cfms_OBJECTS = test_cfms.$(OBJEXT)
-test_cfms_OBJECTS = $(am_test_cfms_OBJECTS)
-test_cfms_LDADD = $(LDADD)
-test_cfms_DEPENDENCIES = ${top_builddir}/libcFMS/libcFMS.la
+test_cFMS_update_domains_SOURCES = test_cFMS_update_domains.c
+test_cFMS_update_domains_OBJECTS = test_cFMS_update_domains.$(OBJEXT)
+test_cFMS_update_domains_LDADD = $(LDADD)
+test_cFMS_update_domains_DEPENDENCIES =  \
+	${top_builddir}/libcFMS/libcFMS.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_test_cfms_OBJECTS = test_cfms.$(OBJEXT)
+test_cfms_OBJECTS = $(am_test_cfms_OBJECTS)
+test_cfms_LDADD = $(LDADD)
+test_cfms_DEPENDENCIES = ${top_builddir}/libcFMS/libcFMS.la
 am_test_nest_domain_OBJECTS = test_nest_domain.$(OBJEXT)
 test_nest_domain_OBJECTS = $(am_test_nest_domain_OBJECTS)
 test_nest_domain_LDADD = $(LDADD)
@@ -150,8 +156,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/test_cfms.Po \
-	./$(DEPDIR)/test_nest_domain.Po
+am__depfiles_remade = ./$(DEPDIR)/test_cFMS_update_domains.Po \
+	./$(DEPDIR)/test_cfms.Po ./$(DEPDIR)/test_nest_domain.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -171,8 +177,10 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(test_cfms_SOURCES) $(test_nest_domain_SOURCES)
-DIST_SOURCES = $(test_cfms_SOURCES) $(test_nest_domain_SOURCES)
+SOURCES = test_cFMS_update_domains.c $(test_cfms_SOURCES) \
+	$(test_nest_domain_SOURCES)
+DIST_SOURCES = test_cFMS_update_domains.c $(test_cfms_SOURCES) \
+	$(test_nest_domain_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -549,17 +557,19 @@ top_srcdir = @top_srcdir@
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 TESTS = test_cfms.sh \
-	test_nest_domain.sh
+	test_nest_domain.sh \
+  test_cFMS_update_domains.sh
 
 test_cfms_SOURCES = test_cfms.c
 test_nest_domain_SOURCES = test_nest_domain.c
+test_cFMS_update_domains = test_cFMS_update_domains.c
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(abs_top_srcdir)/test_cfms/tap-driver.sh
 
 
 # Include these files with the distribution.
-EXTRA_DIST = test_cfms.sh
+EXTRA_DIST = test_cfms.sh test_nest_domain.sh test_cFMS_update_domains.sh
 
 # Clean up
 CLEANFILES = input.nml *.nc* *.out *.dpi *.spi *.dyn *.spl *_table* input*
@@ -606,6 +616,10 @@ clean-checkPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+test_cFMS_update_domains$(EXEEXT): $(test_cFMS_update_domains_OBJECTS) $(test_cFMS_update_domains_DEPENDENCIES) $(EXTRA_test_cFMS_update_domains_DEPENDENCIES) 
+	@rm -f test_cFMS_update_domains$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_cFMS_update_domains_OBJECTS) $(test_cFMS_update_domains_LDADD) $(LIBS)
+
 test_cfms$(EXEEXT): $(test_cfms_OBJECTS) $(test_cfms_DEPENDENCIES) $(EXTRA_test_cfms_DEPENDENCIES) 
 	@rm -f test_cfms$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_cfms_OBJECTS) $(test_cfms_LDADD) $(LIBS)
@@ -620,6 +634,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_cFMS_update_domains.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_cfms.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_nest_domain.Po@am__quote@ # am--include-marker
 
@@ -946,7 +961,8 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/test_cfms.Po
+		-rm -f ./$(DEPDIR)/test_cFMS_update_domains.Po
+	-rm -f ./$(DEPDIR)/test_cfms.Po
 	-rm -f ./$(DEPDIR)/test_nest_domain.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -993,7 +1009,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/test_cfms.Po
+		-rm -f ./$(DEPDIR)/test_cFMS_update_domains.Po
+	-rm -f ./$(DEPDIR)/test_cfms.Po
 	-rm -f ./$(DEPDIR)/test_nest_domain.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

@@ -64,7 +64,7 @@ void test_cFMS_define_domains()
     //top level define_domain
     if( any(top_npes[itop], top_pelist, cFMS_pe()) ) {
       
-      DefineDomainStruct cdomain = DefineDomainStruct_default;
+      DefineDomainStruct cdomain = DefineDomainStructDefault;
       bool symmetry = true;
       char name[] = "Cubic-Grid top level grid";
       int  global_indices[] = {1, nx, 1, ny};
@@ -109,7 +109,7 @@ void test_cFMS_define_domains()
 
     if( any(nest_npes[inest], nest_pelist, cFMS_pe()) ){
 
-      DefineDomainStruct cdomain = DefineDomainStruct_default;
+      DefineDomainStruct cdomain = DefineDomainStructDefault;
 
       bool symmetry = true;
       char name[] = "Cubic-Grid fine grid";      
