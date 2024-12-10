@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,34 +17,15 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
-#
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/cfms
+# Set common test settings.
+. ../test-lib.sh
 
-# Link to the FMS library.
-LDADD = ${top_builddir}/libcFMS/libcFMS.la
+rm -f input.nml
+touch input.nml
 
-check_PROGRAMS = test_cfms \
-	test_nest_domain \
-  test_cFMS_update_domains
-
-TESTS = test_cfms.sh \
-	test_nest_domain.sh \
-  test_cFMS_update_domains.sh
-
-test_cfms_SOURCES = test_cfms.c
-test_nest_domain_SOURCES = test_nest_domain.c
-test_cFMS_update_domains = test_cFMS_update_domains.c
-
-
-TEST_EXTENSIONS = .sh
-SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
-                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
-
-# Include these files with the distribution.
-EXTRA_DIST = test_cfms.sh test_nest_domain.sh test_cFMS_update_domains.sh
-
-# Clean up
-CLEANFILES = input.nml *.nc* *.out *.dpi *.spi *.dyn *.spl *_table* input*
+test_expect_success "cfms" 'mpirun -n 4  ./test_cFMS_update_domains'
+test_done
 

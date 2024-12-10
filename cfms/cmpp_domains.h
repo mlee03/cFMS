@@ -96,11 +96,75 @@ extern void cFMS_define_nest_domain(int *num_nest, int nest_level[], int tile_fi
 
 extern bool cFMS_domain_is_initialized(int *domain_id);
 
+extern void cFMS_get_compute_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                    int *xsize, int *xmax_size, int *ysize, int *ymax_size,
+                                    bool *x_is_global, bool *y_is_global, int *tile_count, int *position,
+                                    int *whalo, int *shalo);
+  
+extern void cFMS_get_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                 int *xsize, int *xmax_size, int *ysize, int *ymax_size,
+                                 bool *x_is_global, bool *y_is_global, int *tile_count, int *position,
+                                 int *whalo, int *shalo);
+
 extern void cFMS_get_domain_layout(int layout[2], int *domain_id);
 
 extern void cFMS_get_domain_name(char *domain_name_c, int *domain_id);
 
 extern void cFMS_get_domain_pelist(int pelist[], int *domain_id, int *pos);
+
+extern void cFMS_set_compute_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                    int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
+
+extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                 int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
+
+extern void cFMS_set_global_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                   int *xsize, int *ysize, int *tile_count);
+
+extern void cFMS_update_domains_cint_2d(int *field_shape, int **idata, int *domain_id, int *flags, bool *complete,
+                                        int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                        char *name, int *tile_count);
+
+extern void cFMS_update_domains_cint_3d(int *field_shape, int ***idata, int *domain_id, int *flags, bool *complete,
+                                        int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                        char *name, int *tile_count);
+
+extern void cFMS_update_domains_cint_4d(int *field_shape, int ****idata, int *domain_id, int *flags, bool *complete,
+                                        int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                        char *name, int *tile_count);
+
+extern void cFMS_update_domains_cfloat_2d(int *field_shape, float **fdata, int *domain_id, int *flags, bool *complete,
+                                          int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                          char *name, int *tile_count);
+
+extern void cFMS_update_domains_cfloat_3d(int *field_shape, float ***fdata, int *domain_id, int *flags, bool *complete,
+                                          int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                          char *name, int *tile_count);
+
+extern void cFMS_update_domains_cfloat_4d(int *field_shape, float ****fdata, int *domain_id, int *flags, bool *complete,
+                                          int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                          char *name, int *tile_count);
+
+extern void cFMS_update_domains_cfloat_5d(int *field_shape, float *****fdata, int *domain_id, int *flags, bool *complete,
+                                          int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                          char *name, int *tile_count);
+
+extern void cFMS_update_domains_cdouble_2d(int *field_shape, double **ddata, int *domain_id, int *flags, bool *complete,
+                                           int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                           char *name, int *tile_count);
+
+extern void cFMS_update_domains_cdouble_3d(int *field_shape, double ***ddata, int *domain_id, int *flags, bool *complete,
+                                           int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                           char *name, int *tile_count);
+
+extern void cFMS_update_domains_cdouble_4d(int *field_shape, double ****ddata, int *domain_id, int *flags, bool *complete,
+                                           int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                           char *name, int *tile_count);
+
+extern void cFMS_update_domains_cdouble_5d(int *field_shape, double *****ddata, int *domain_id, int *flags, bool *complete,
+                                           int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                           char *name, int *tile_count);
+
 
 extern void cFMS_define_domains_wrap(DefineDomainStruct cdomain);
 
