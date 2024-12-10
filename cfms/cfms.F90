@@ -177,8 +177,6 @@ module cFMS_mod
        integer, intent(in), optional :: domain_id
      end subroutine
 
-#include "cfms_interfaces.fh"
-
   end interface
   
   public :: cFMS_end, cFMS_error, cFMS_init
