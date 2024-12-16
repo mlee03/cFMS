@@ -28,11 +28,12 @@ jobs:
            make
            cd ../
     - name: build cFMS
+      env:
+        LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$PWD/FMS/gnuFMS/lib
+        FFLAGS: $FFLAGS -I$PWD/FMS/gnuFMS/include
+        CFLAGS: $CFLAGS -I$PWD/FMS/gnuFMS/include
+        LDFLAGS: $LDFLAGS -lFMS -L/$PWD/FMS/gnuFMS/lib
       run: |
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/FMS/gnuFMS/lib"
-        export FFLAGS="FFLAGS -I$PWD/FMS/gnuFMS/include"
-        export CFLAGS="$CFLAGS -I$PWD/FMS/gnuFMS/include"
-        export LDFLAGS="$LDFLAGS -lFMS -L/$PWD/FMS/gnuFMS/lib"
         autoreconf -iv
         ./configure --prefix=$PWD/cgnuFMS
         make check
