@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@v4
     - name: build FMS
       run: echo $PWD
-           cd FMS  &&
+           cd FMS  && echo $PWD &&
            autoreconf -iv &&
            ./configure --enable-portable-kinds --prefix=$PWD/gnuFMS &&
            make install
