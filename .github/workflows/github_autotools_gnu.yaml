@@ -21,14 +21,7 @@ jobs:
       with:
         submodules: 'recursive'
     - name: build FMS
-      run: echo "$PWD"
-           ls 
-           cd FMS
-           echo "$PWD"
-           autoreconf -iv 
-           ./configure --enable-portable-kinds --prefix=$PWD/gnuFMS 
-           make install
-           cd ../
+      run: echo `ls`
     - name: build cFMS
       run:  autoreconf -iv 
             ./configure FCFLAGS="$FCFLAGS -I/usr/include" CFLAGS="$CFLAGS -I/usr/include" LDFLAGS="$LDFLAGS -L$PWD/FMS/gnuFMS"
