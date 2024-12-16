@@ -1,6 +1,6 @@
 name: Build libFMS test with autotools
 
-on: [push, pull_request]
+on: [push]
 
 # cancel running jobs if theres a newer push
 concurrency:
@@ -22,6 +22,9 @@ jobs:
         submodules: 'recursive'
     - name: build FMS
       run: echo `ls`
+           cd FMS
+           echo `ls`
+           
     - name: build cFMS
       run:  autoreconf -iv 
             ./configure FCFLAGS="$FCFLAGS -I/usr/include" CFLAGS="$CFLAGS -I/usr/include" LDFLAGS="$LDFLAGS -L$PWD/FMS/gnuFMS"
