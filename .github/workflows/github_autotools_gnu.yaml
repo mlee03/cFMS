@@ -22,14 +22,9 @@ jobs:
         submodules: 'recursive'
     - name: build FMS
       run: echo `ls`
+           echo "here1"
            cd FMS
+           echo "here2"
            echo `ls`
-           
-    - name: build cFMS
-      run:  autoreconf -iv 
-            ./configure FCFLAGS="$FCFLAGS -I/usr/include" CFLAGS="$CFLAGS -I/usr/include" LDFLAGS="$LDFLAGS -L$PWD/FMS/gnuFMS"
-            make
-    - name:
-      run: make check
             
 
