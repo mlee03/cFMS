@@ -34,6 +34,8 @@ jobs:
         CFLAGS: $CFLAGS -I$PWD/FMS/gnuFMS/include
         LDFLAGS: $LDFLAGS -lFMS -L/$PWD/FMS/gnuFMS/lib
       run: |
+        echo "$FC"
+        echo "$CC"
         autoreconf -iv
         ./configure --prefix=$PWD/cgnuFMS
         make check
