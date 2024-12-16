@@ -24,45 +24,45 @@ contains
 
 
   !> cFMS_declare_pelist
-  module subroutine cFMS_declare_pelist(pelist, name_c, commID) bind(C, name="cFMS_declare_pelist")
+  module subroutine cFMS_declare_pelist(pelist, name, commID) bind(C, name="cFMS_declare_pelist")
 
     implicit none
     integer, intent(in) :: pelist(npes)
-    type(c_ptr), intent(in), optional :: name_c
+    character(c_char), intent(in), optional :: name(NAME_LENGTH)
     integer, intent(out), optional :: commID
 
     character(len=NAME_LENGTH) :: name_f=" " !mpp default
 
-    if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)
+    if(present(name)) name_f = fms_string_utils_c2f_string(name)
     call fms_mpp_declare_pelist(pelist, name_f, commID)
     
   end subroutine cFMS_declare_pelist
   
   !> cFMS_error
-  module subroutine cFMS_error(errortype, errormsg_c) bind(C, name="cFMS_error")
+  module subroutine cFMS_error(errortype, errormsg) bind(C, name="cFMS_error")
     
     implicit none
     integer, intent(in), value :: errortype
-    character(c_char), intent(in), optional :: errormsg_c(MESSAGE_LENGTH)
+    character(c_char), intent(in), optional :: errormsg(MESSAGE_LENGTH)
     character(len=MESSAGE_LENGTH) :: errormsg_f
 
-    if(present(errormsg_c)) errormsg_f = fms_string_utils_c2f_string(errormsg_c)
+    if(present(errormsg)) errormsg_f = fms_string_utils_c2f_string(errormsg)
     call fms_mpp_error(errortype, trim(errormsg_f))
     
   end subroutine cFMS_error
 
   
   !> cFMS_get_current_pelist
-  module subroutine cFMS_get_current_pelist(pelist, name_c, commID) bind(C, name="cFMS_get_current_pelist")
+  module subroutine cFMS_get_current_pelist(pelist, name, commID) bind(C, name="cFMS_get_current_pelist")
 
     implicit none
     integer, intent(out) :: pelist(npes)
-    type(c_ptr), intent(out), optional :: name_c
+    character(c_char), intent(out), optional :: name(NAME_LENGTH)
     integer, intent(out), optional :: commID
 
     character(len=NAME_LENGTH) :: name_f=" " !mpp default
     
-    if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)    
+    if(present(name)) name_f = fms_string_utils_c2f_string(name)
     call fms_mpp_get_current_pelist(pelist, name_f, commID)
     
   end subroutine cFMS_get_current_pelist

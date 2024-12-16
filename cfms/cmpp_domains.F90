@@ -22,10 +22,11 @@ submodule(cfms_mod) cmpp_domains_smod
 
 contains
   
-  !> call mpp_define_domain
-  module subroutine cFMS_define_domains(global_indices, layout, domain_id, pelist,     &
-       xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_c,         &
-       symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,&
+  !> cFMS_calls mpp_define_domains2D to define the domain with id=domain_id.  Domain_id must be
+  !! an integer.  This wrapper assumes C indexing convention where array indexing starts from 0
+  module subroutine cFMS_define_domains(global_indices, layout, domain_id, pelist, &
+       xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name,              &
+       symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,   &
        tile_id, complete, x_cyclic_offset, y_cyclic_offset) bind(C, name="cFMS_define_domains")
 
     implicit none   
@@ -37,7 +38,7 @@ contains
     integer, intent(in),  optional :: xhalo, yhalo
     integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
     logical, intent(in), optional :: maskmap(layout(1),layout(2))
-    character(c_char), intent(in), optional :: name_c(NAME_LENGTH)
+    character(c_char), intent(in), optional :: name(NAME_LENGTH)
     logical, intent(in),  optional :: symmetry
     integer, intent(in), optional :: memory_size(2)
     integer, intent(in),  optional :: whalo, ehalo, shalo, nhalo
@@ -48,15 +49,18 @@ contains
     integer, intent(in),  optional :: x_cyclic_offset
     integer, intent(in),  optional :: y_cyclic_offset
 
+    integer :: i, global_indices_f(4) , tile_id_f;
     character(len=NAME_LENGTH) :: name_f = "domain"
     
-    if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)
+    if(present(name)) name_f = fms_string_utils_c2f_string(name)
+
+    tile_id_f = tile_id + 1;
+    global_indices_f = global_indices + 1
     
     call cFMS_set_current_domain(domain_id)
-
-    call fms_mpp_domains_define_domains(global_indices, layout, current_domain,                           &
+    call fms_mpp_domains_define_domains(global_indices_f, layout, current_domain,                         &
          pelist, xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_f, symmetry,  memory_size, &
-         whalo, ehalo, shalo, nhalo, is_mosaic, tile_count, tile_id, complete, x_cyclic_offset, y_cyclic_offset)
+         whalo, ehalo, shalo, nhalo, is_mosaic, tile_count, tile_id_f, complete, x_cyclic_offset, y_cyclic_offset)
 
   end subroutine cFMS_define_domains
 
@@ -73,6 +77,7 @@ contains
     
   end subroutine cFMS_define_io_domain
 
+
   !> cFMS_define_layout
   module subroutine cFMS_define_layout(global_indices, ndivs, layout) bind(C, name="cFMS_define_layout")
     
@@ -86,14 +91,16 @@ contains
   end subroutine cFMS_define_layout
   
 
-  !> cFMS_define_nest_domain
-  module subroutine cFMS_define_nest_domain(num_nest, nest_level, tile_fine, tile_coarse,                               &
+  !> cFMS_define_nest_domain calls mpp_define_nest_domains to define the nest domain with id=nest_domain_id.
+  !! Nest_domain_id must be an integer.  This wrapper assumes C indexing convention where array indexing starts from 0  
+  module subroutine cFMS_define_nest_domains(num_nest, ntiles, nest_level, tile_fine, tile_coarse,               &
                                      istart_coarse, icount_coarse, jstart_coarse, jcount_coarse, npes_nest_tile, &
-                                     x_refine, y_refine, domain_id, extra_halo, name_ptr)                        &
-                                                                            bind(C, name="cFMS_define_nest_domain")
+                                     x_refine, y_refine, nest_domain_id, domain_id, extra_halo, name)            &
+                                                                            bind(C, name="cFMS_define_nest_domains")
 
     implicit none
-    integer, intent(in), value :: num_nest
+    integer, intent(in) :: num_nest
+    integer, intent(in) :: ntiles
     integer, intent(in) :: nest_level(num_nest)
     integer, intent(in) :: tile_fine(num_nest)
     integer, intent(in) :: tile_coarse(num_nest)
@@ -101,23 +108,31 @@ contains
     integer, intent(in) :: icount_coarse(num_nest)
     integer, intent(in) :: jstart_coarse(num_nest)
     integer, intent(in) :: jcount_coarse(num_nest)
-    integer, intent(in) :: npes_nest_tile(num_nest) !fix this
+    integer, intent(in) :: npes_nest_tile(ntiles)
     integer, intent(in) :: x_refine(num_nest)
     integer, intent(in) :: y_refine(num_nest)
-    integer, intent(in),  optional :: domain_id
+    integer, intent(in),  optional :: nest_domain_id, domain_id
     integer, intent(in),  optional :: extra_halo
-    type(c_ptr), intent(in), optional :: name_ptr
+    character(c_char), intent(in), optional :: name(NAME_LENGTH)
 
-    character(100) :: name = "nest"    
+    integer :: i, istart_coarse_f(num_nest), jstart_coarse_f(num_nest)
+    integer :: tile_fine_f(num_nest), tile_coarse_f(num_nest)
+    character(100) :: name_f = "nest"    
+
+    if(present(name)) name_f = fms_string_utils_c2f_string(name)
+
+    istart_coarse_f = istart_coarse + 1
+    jstart_coarse_f = jstart_coarse + 1
+    tile_fine_f = tile_fine + 1
+    tile_coarse_f = tile_coarse + 1
     
-    if(present(name_ptr)) name = fms_string_utils_c2f_string(name_ptr)
-
+    call cFMS_set_current_nest_domain(nest_domain_id)
     call cFMS_set_current_domain(domain_id)
-    call fms_mpp_domains_define_nest_domains(nest_domain, current_domain, num_nest, nest_level, &
-         tile_fine, tile_coarse, istart_coarse, icount_coarse, jstart_coarse, jcount_coarse, npes_nest_tile,&
-         x_refine, y_refine, extra_halo, name)
+    call fms_mpp_domains_define_nest_domains(current_nest_domain, current_domain, num_nest, nest_level, &
+         tile_fine_f, tile_coarse_f, istart_coarse_f, icount_coarse, jstart_coarse_f, jcount_coarse, npes_nest_tile,&
+         x_refine, y_refine, extra_halo, name_f)
     
-  end subroutine cFMS_define_nest_domain
+  end subroutine cFMS_define_nest_domains
 
 
   function cFMS_domain_is_initialized(domain_id) bind(C, name="cFMS_domain_is_initialized")
@@ -131,55 +146,9 @@ contains
 
   end function cFMS_domain_is_initialized
 
-
-  !> cFMS_get_domain_name
-  module subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")
-    
-    implicit none
-    type(c_ptr) , intent(out) :: domain_name_c
-    integer, intent(in),  optional :: domain_id
-    character(len=NAME_LENGTH) :: domain_name_f
-    character(kind=c_char), allocatable, target :: domain_name_cstring(:)
-
-    character(kind=c_char), target :: tmp
-    
-    call cFMS_set_current_domain(domain_id)
-    domain_name_f = fms_mpp_domains_get_domain_name(current_domain)
-
-    allocate(domain_name_cstring(len(trim(domain_name_f))+1))    
-    call fms_string_utils_f2c_string(domain_name_cstring, trim(domain_name_f))
-    domain_name_c = fms_string_utils_cstring2cpointer(domain_name_cstring)
-    
-  end subroutine cFMS_get_domain_name
-
-
-  module subroutine cFMS_get_layout(layout, domain_id) bind(C, name="cFMS_get_layout")
-
-    implicit none
-    integer, intent(out) :: layout(2)
-    integer, intent(in),  optional :: domain_id
-
-    call cFMS_set_current_domain(domain_id)
-    call fms_mpp_domains_get_layout(current_domain, layout)
-
-  end subroutine cFMS_get_layout
-
   
-  !> cFMS_get_pelist
-  module subroutine cFMS_get_domain_pelist(pelist, domain_id, pos) bind(C, name="cFMS_get_domain_pelist")
-
-    implicit none
-    integer, intent(out) :: pelist(npes)
-    integer, intent(in),  optional :: domain_id
-    integer, intent(out), optional :: pos
-
-    call cFMS_set_current_domain(domain_id)
-    call fms_mpp_domains_get_pelist(current_domain, pelist, pos)
-
-  end subroutine cFMS_get_domain_pelist
-
-
-  !> cFMS_set_current_domain
+  !> cFMS_set_current_domain sets the domain to the current_domain where the
+  !! current_domain has id=domain_id
   module subroutine cFMS_set_current_domain(domain_id)
 
     implicit none
@@ -192,6 +161,22 @@ contains
     end if
     
   end subroutine cFMS_set_current_domain
+
+
+  !> cFMS_set_current_nest_domain sets the nest_domain to the current_nest_domain
+  !! where the current_nest_domain has id=nest_domain_id  
+  module subroutine cFMS_set_current_nest_domain(nest_domain_id)
+
+    implicit none
+    integer, intent(in), optional :: nest_domain_id
+    
+    if(present(nest_domain_id)) then
+       current_nest_domain => nest_domain(nest_domain_id)
+    else
+       current_nest_domain => nest_domain(0)
+    end if
+    
+  end subroutine cFMS_set_current_nest_domain
   
 
 end submodule cmpp_domains_smod

@@ -21,18 +21,16 @@
 
 #include <stdbool.h>
 
-extern void cFMS_error(int errortype, char *errormsg_c);
+extern void cFMS_error(int errortype, char *errormsg);
 
-extern void cFMS_declare_pelist(int *pelist, char *name_c, int *commID);
+extern void cFMS_declare_pelist(int *pelist, char *name, int *commID);
 
-extern void cFMS_get_current_pelist(int *pelist, char *name_c, int *commID);
+extern void cFMS_get_current_pelist(int *pelist, char *name, int *commID);
 
 extern int cFMS_npes();
 
 extern int cFMS_pe();
 
 extern void cFMS_set_current_pelist(int *pelist, bool *no_sync);
-
-extern void cFMS_set_npes(int *npes_in);
 
 #endif

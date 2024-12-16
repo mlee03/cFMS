@@ -29,8 +29,10 @@ module cFMS_mod
 
   use FMS, only : fms_mpp_domains_define_domains, fms_mpp_domains_define_io_domain, fms_mpp_domains_define_layout
   use FMS, only : fms_mpp_domains_define_nest_domains, fms_mpp_domains_domain_is_initialized
-  use FMS, only : fms_mpp_domains_get_domain_name
+  use FMS, only : fms_mpp_domains_get_compute_domain, fms_mpp_domains_get_data_domain, fms_mpp_domains_get_domain_name
   use FMS, only : fms_mpp_domains_get_layout, fms_mpp_domains_get_pelist
+  use FMS, only : fms_mpp_domains_set_compute_domain, fms_mpp_domains_set_data_domain, fms_mpp_domains_set_global_domain
+  use FMS, only : fms_mpp_domains_update_domains
   
   use iso_c_binding
 
@@ -48,30 +50,32 @@ module cFMS_mod
   
   type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
-  type(FmsMppDomainsNestDomain_type), public :: nest_domain
+
+  type(FmsMppDomainsNestDomain_type), allocatable, target, public :: nest_domain(:)
+  type(FmsMppDomainsNestDomain_type), pointer :: current_nest_domain
   
   interface
 
-     module subroutine cFMS_declare_pelist(pelist, name_c, commID) bind(C, name="cFMS_declare_pelist")
+     module subroutine cFMS_declare_pelist(pelist, name, commID) bind(C, name="cFMS_declare_pelist")
        implicit none
        integer, intent(in) :: pelist(npes)
-       type(c_ptr), intent(in), optional :: name_c
+       character(c_char), intent(in), optional :: name(NAME_LENGTH)
        integer, intent(out), optional :: commID
      end subroutine
 
      !> cFMS_error
-     module subroutine cFMS_error(errortype, errormsg_c) bind(C, name="cFMS_error")
+     module subroutine cFMS_error(errortype, errormsg) bind(C, name="cFMS_error")
        
        implicit none
        integer, intent(in), value :: errortype
-       character(c_char), intent(in), optional :: errormsg_c(MESSAGE_LENGTH)
+       character(c_char), intent(in), optional :: errormsg(MESSAGE_LENGTH)
        character(len=MESSAGE_LENGTH) :: errormsg_f
      end subroutine
      
-     module subroutine cFMS_get_current_pelist(pelist, name_c, commID) bind(C, name="cFMS_get_current_pelist")
+     module subroutine cFMS_get_current_pelist(pelist, name, commID) bind(C, name="cFMS_get_current_pelist")
        implicit none
        integer, intent(out) :: pelist(npes)
-       type(c_ptr), intent(out), optional :: name_c
+       character(c_char), intent(out), optional :: name(NAME_LENGTH)
        integer, intent(out), optional :: commID
      end subroutine
 
@@ -90,7 +94,7 @@ module cFMS_mod
      end subroutine
 
      module subroutine cFMS_define_domains(global_indices, layout, domain_id, pelist,     &
-          xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name_c,                &
+          xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name,                  &
           symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,       &
           tile_id, complete, x_cyclic_offset, y_cyclic_offset) bind(C, name="cFMS_define_domains")
        implicit none   
@@ -102,7 +106,7 @@ module cFMS_mod
        integer, intent(in),  optional :: xhalo, yhalo
        integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
        logical, intent(in), optional :: maskmap(layout(1),layout(2))
-       character(c_char), intent(in), optional :: name_c(NAME_LENGTH)
+       character(c_char), intent(in), optional :: name(NAME_LENGTH)
        logical, intent(in),  optional :: symmetry
        integer, intent(in), optional :: memory_size(2)
        integer, intent(in),  optional :: whalo, ehalo, shalo, nhalo
@@ -127,11 +131,12 @@ module cFMS_mod
        integer, intent(out) :: layout(2)
      end subroutine
      
-     module subroutine cFMS_define_nest_domain(num_nest, nest_level, tile_fine, tile_coarse,&
-          istart_coarse, icount_coarse, jstart_coarse, jcount_coarse, npes_nest_tile,       &
-          x_refine, y_refine, domain_id, extra_halo, name_ptr) bind(C, name="cFMS_define_nest_domain")
+     module subroutine cFMS_define_nest_domains(num_nest, ntiles, nest_level, tile_fine, tile_coarse,&
+          istart_coarse, icount_coarse, jstart_coarse, jcount_coarse, npes_nest_tile,                &
+          x_refine, y_refine, nest_domain_id, domain_id, extra_halo, name) bind(C, name="cFMS_define_nest_domains")
        implicit none
-       integer, intent(in), value :: num_nest
+       integer, intent(in) :: num_nest
+       integer, intent(in) :: ntiles
        integer, intent(in) :: nest_level(num_nest)
        integer, intent(in) :: tile_fine(num_nest)
        integer, intent(in) :: tile_coarse(num_nest)
@@ -139,12 +144,12 @@ module cFMS_mod
        integer, intent(in) :: icount_coarse(num_nest)
        integer, intent(in) :: jstart_coarse(num_nest)
        integer, intent(in) :: jcount_coarse(num_nest)
-       integer, intent(in) :: npes_nest_tile(num_nest) !fix this
+       integer, intent(in) :: npes_nest_tile(ntiles)
        integer, intent(in) :: x_refine(num_nest)
        integer, intent(in) :: y_refine(num_nest)
-       integer, intent(in),  optional :: domain_id
+       integer, intent(in),  optional :: nest_domain_id, domain_id
        integer, intent(in),  optional :: extra_halo
-       type(c_ptr), intent(in), optional :: name_ptr
+       character(c_char), intent(in), optional :: name(NAME_LENGTH)
      end subroutine
      
      module function cFMS_domain_is_initialized(domain_id) bind(C, name="cFMS_domain_is_initialized")
@@ -153,43 +158,25 @@ module cFMS_mod
        logical :: cFMS_domain_is_initialized
      end function
 
-     module subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")
-       implicit none
-       type(c_ptr) , intent(out) :: domain_name_c
-       integer, intent(in),  optional :: domain_id
-     end subroutine
-
-     module subroutine cFMS_get_domain_layout(layout, domain_id) bind(C, name="cFMS_get_domain_layout")
-       implicit none
-       integer, intent(out) :: layout(2)
-       integer, intent(in),  optional :: domain_id
-     end subroutine
-
-     module subroutine cFMS_get_domain_pelist(pelist, domain_id, pos) bind(C, name="cFMS_get_domain_pelist")
-       implicit none
-       integer, intent(out) :: pelist(npes)
-       integer, intent(in),  optional :: domain_id
-       integer, intent(out), optional :: pos
-     end subroutine
-     
      module subroutine cFMS_set_current_domain(domain_id) bind(C, name="cFMS_set_current_domain")
        implicit none
        integer, intent(in), optional :: domain_id
      end subroutine
 
-#include "cfms_interfaces.fh"
-
+     module subroutine cFMS_set_current_nest_domain(nest_domain_id) bind(C, name="cFMS_set_current_nest_domain")
+       implicit none
+       integer, intent(in), optional :: nest_domain_id
+     end subroutine
+     
   end interface
   
-  public :: cFMS_end, cFMS_error, cFMS_init
+  public :: cFMS_end, cFMS_error, cFMS_init, cFMS_set_pelist_npes
   public :: cFMS_declare_pelist, cFMS_get_current_pelist, cFMS_npes, cFMS_pe, cFMS_set_current_pelist
   public :: cFMS_define_domains
   public :: cFMS_define_io_domain
   public :: cFMS_define_layout
-  public :: cFMS_define_nest_domain
+  public :: cFMS_define_nest_domains
   public :: cFMS_domain_is_initialized  
-  public :: cFMS_get_domain_layout
-  public :: cFMS_get_domain_pelist
 
 contains
 
@@ -200,19 +187,20 @@ contains
   end subroutine cFMS_end
 
   !> cFMS_init
-  module subroutine cFMS_init(localcomm, alt_input_nml_path_ptr, ndomain) bind(C, name="cFMS_init")
+  module subroutine cFMS_init(localcomm, alt_input_nml_path, ndomain, nnest_domain) bind(C, name="cFMS_init")
     
     implicit none
     integer, intent(in), optional :: localcomm
     integer, intent(in), optional :: ndomain
-    type(c_ptr), intent(in), optional :: alt_input_nml_path_ptr
+    integer, intent(in), optional :: nnest_domain
+    character(c_char), intent(in), optional :: alt_input_nml_path(NAME_LENGTH)
     
-    character(100) :: alt_input_nml_path = input_nml_path
+    character(100) :: alt_input_nml_path_f = input_nml_path
     
-    if(present(alt_input_nml_path_ptr)) &
-         alt_input_nml_path = fms_string_utils_c2f_string(alt_input_nml_path_ptr)
+    if(present(alt_input_nml_path)) &
+         alt_input_nml_path_f = fms_string_utils_c2f_string(alt_input_nml_path)
     
-    call fms_init(localcomm=localcomm, alt_input_nml_path=alt_input_nml_path)
+    call fms_init(localcomm=localcomm, alt_input_nml_path=alt_input_nml_path_f)
     call fms_mpp_domains_init()
     
     if(present(ndomain)) then
@@ -220,14 +208,20 @@ contains
     else
        allocate(domain(0:0))
     end if
+
+    if(present(nnest_domain)) then
+       allocate(nest_domain(0:nnest_domain-1))
+    else
+       allocate(nest_domain(0:0))
+    end if
     
   end subroutine cFMS_init
 
   !> cFMS_set_npes
-  module subroutine cFMS_set_npes(npes_in) bind(C, name="cFMS_set_npes")
+  module subroutine cFMS_set_pelist_npes(npes_in) bind(C, name="cFMS_set_pelist_npes")
     implicit none
     integer, intent(in) :: npes_in
     npes = npes_in
-  end subroutine cFMS_set_npes  
+  end subroutine cFMS_set_pelist_npes
 
 end module cFMS_mod

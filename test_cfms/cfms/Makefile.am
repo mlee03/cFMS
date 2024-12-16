@@ -24,25 +24,18 @@ AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/cfms
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
-check_PROGRAMS = test_cfms \
-	test_nest_domain \
-  test_cFMS_update_domains
+check_PROGRAMS = test_define_domains
 
-TESTS = test_cfms.sh \
-	test_nest_domain.sh \
-  test_cFMS_update_domains.sh
+TESTS = test_define_domains.sh 
 
-test_cfms_SOURCES = test_cfms.c
-test_nest_domain_SOURCES = test_nest_domain.c
-test_cFMS_update_domains = test_cFMS_update_domains.c
-
+test_define_domains_SOURCES = test_define_domains.c
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(abs_top_srcdir)/test_cfms/tap-driver.sh
 
 # Include these files with the distribution.
-EXTRA_DIST = test_cfms.sh test_nest_domain.sh test_cFMS_update_domains.sh
+EXTRA_DIST = test_define_domains.sh 
 
 # Clean up
 CLEANFILES = input.nml *.nc* *.out *.dpi *.spi *.dyn *.spl *_table* input*

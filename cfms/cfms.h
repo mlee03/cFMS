@@ -27,9 +27,11 @@ extern const int NOTE;
 extern const int WARNING;
 extern const int FATAL;
 
-extern void cFMS_init(int *localcomm, char *alt_input_nml_path_ptr, int *ndomain);
+extern void cFMS_init(int *localcomm, char *alt_input_nml_path, int *ndomain, int *nnest_domain);
 
 extern void cFMS_end();
+
+extern void cFMS_set_pelist_npes(int *npes_in);
 
 #endif
 
