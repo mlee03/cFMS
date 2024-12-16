@@ -22,10 +22,20 @@ jobs:
         submodules: 'recursive'
     - name: build FMS
       run: |
-           echo `ls`
-           echo "here1"
            cd FMS
-           echo "here2"
-           echo `ls`
+           autoreconf -iv
+           ./configure --enable-portable-kinds --prefix=$PWD/gnuFMS
+           cd ../
+    - name: build cFMS
+      run: |
+        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/FMS/gnuFMS"
+        export FFLAGS="FFLAGS -I$PWD/FMS/gnuFMS/include"
+        export CFLAGS="$CFLAGS -I$PWD/FMS/gnuFMS/include"
+        export LDFLAGS="$LDFLAGS -lFMS -L/$PWD/FMS/gnuFMS/lib"
+        autoreconf -iv
+        ./configure --prefix=$PWD/cgnuFMS
+        make check
+                            
+        
             
 
