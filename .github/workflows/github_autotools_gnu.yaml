@@ -21,8 +21,8 @@ jobs:
       with:
         submodules: 'recursive'
     - name: build FMS
-      run: $PWD
-           cd FMS  && $PWD &&
+      run: echo "$PWD"
+           cd FMS  && echo "$PWD" &&
            autoreconf -iv &&
            ./configure --enable-portable-kinds --prefix=$PWD/gnuFMS &&
            make install
