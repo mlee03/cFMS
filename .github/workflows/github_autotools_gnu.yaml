@@ -25,10 +25,11 @@ jobs:
            cd FMS
            autoreconf -iv
            ./configure --enable-portable-kinds --prefix=$PWD/gnuFMS
+           make
            cd ../
     - name: build cFMS
       run: |
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/FMS/gnuFMS"
+        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/FMS/gnuFMS/lib"
         export FFLAGS="FFLAGS -I$PWD/FMS/gnuFMS/include"
         export CFLAGS="$CFLAGS -I$PWD/FMS/gnuFMS/include"
         export LDFLAGS="$LDFLAGS -lFMS -L/$PWD/FMS/gnuFMS/lib"
