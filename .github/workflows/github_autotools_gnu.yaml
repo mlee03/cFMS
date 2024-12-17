@@ -20,15 +20,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - name: build FMS
-      run: |
-        cd FMS
-        export FCFLAGS="$FCFLAGS -fPIC"
-        export CFLAGS="$CFLAGS -fPIC"
-        autoreconf -iv
-        ./configure --enable-portable-kinds --prefix=$PWD/cFMS/gnuFMS
-        make install
-        cd ../
     - name: test
       run: $PWD/.github/workflows/test.sh
                             
