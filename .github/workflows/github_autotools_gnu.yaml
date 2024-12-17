@@ -20,25 +20,8 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - name: build FMS
-      run: |
-           cd FMS
-           autoreconf -iv
-           ./configure --enable-portable-kinds --prefix=$PWD/gnuFMS
-           make
-           cd ../
-    - name: build cFMS
-      env:
-        LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$PWD/FMS/gnuFMS/lib
-        FFLAGS: $FFLAGS -I$PWD/FMS/gnuFMS/include
-        CFLAGS: $CFLAGS -I$PWD/FMS/gnuFMS/include
-        LDFLAGS: $LDFLAGS -lFMS -L/$PWD/FMS/gnuFMS/lib
-      run: |
-        echo "$FC"
-        echo "$CC"
-        autoreconf -iv
-        ./configure --prefix=$PWD/cgnuFMS
-        make check
+    - name: build and run tests
+      run: ./test.sh
                             
         
             
