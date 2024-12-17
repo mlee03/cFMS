@@ -42,8 +42,6 @@ jobs:
       run: |
         export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/gnuFMS/lib"
         make check
-
-.github/workflows/test.sh
                             
         
             
