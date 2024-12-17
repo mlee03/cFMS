@@ -20,5 +20,4 @@ export LDFLAGS="$LDFLAGS -lFMS -L$install_fms/lib"
 
 autoreconf -iv
 ./configure --prefix=$curr_dir/cgnuFMS
-if [ $? -ne 0 ] ; then cat config.log ; fi
 make check

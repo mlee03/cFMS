@@ -29,19 +29,8 @@ jobs:
         ./configure --enable-portable-kinds --prefix=$PWD/cFMS/gnuFMS
         make install
         cd ../
-    - name: build cFMS
-      run: |
-        export FCFLAGS="$FCFLAGS -fPIC -I$PWD/FMS/gnuFMS/include"
-        export CFLAGS="$CFLAGS -fPIC -I$PWD/FMS/gnuFMS/include"
-        export LDFLAGS="$LDFLAGS -lFMS -L$PWD/FMS/gnuFMS/lib"
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/gnuFMS/lib"
-        autoreconf -iv
-        ./configure --prefix=$PWD/cgnuFMS
-        make install
-    - name: run tests
-      run: |
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/gnuFMS/lib"
-        make check
+    - name: test
+      run: $PWD/.github/workflows/test.sh
                             
         
             
