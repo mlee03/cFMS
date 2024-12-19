@@ -146,6 +146,32 @@ contains
 
   end function cFMS_domain_is_initialized
 
+
+  !>cFMS_set_compute_domain
+  module subroutine cFMS_set_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, &
+       x_is_global, y_is_global, tile_count) bind(C, name="cFMS_set_compute_domain")
+    
+    implicit none
+    integer, intent(in),  optional :: domain_id
+    integer, intent(in),  optional :: xbegin, xend, ybegin, yend, xsize, ysize
+    logical, intent(in),  optional :: x_is_global, y_is_global
+    integer, intent(in),  optional :: tile_count
+
+    integer :: xbegin_f, xend_f, ybegin_f, yend_f, xsize_f, ysize_f, tile_count_f
+
+    xbegin_f = xbegin + 1
+    ybegin_f = ybegin + 1
+    xend_f = xend + 1
+    yend_f = yend + 1
+    tile_count_f = tile_count + 1
+    
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_set_compute_domain(current_domain, xbegin_f, xend_f, ybegin_f, yend_f, xsize, ysize, &
+                                            x_is_global, y_is_global, tile_count_f)
+    
+  end subroutine cFMS_set_compute_domain
+
+  
   
   !> cFMS_set_current_domain sets the domain to the current_domain where the
   !! current_domain has id=domain_id
@@ -177,6 +203,55 @@ contains
     end if
     
   end subroutine cFMS_set_current_nest_domain
-  
+
+
+  !> cFMS_set_data_domain
+  module subroutine cFMS_set_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, &
+       x_is_global, y_is_global, tile_count) bind(C, name="cFMS_set_data_domain")
+    
+    implicit none
+    integer, intent(in),  optional :: domain_id
+    integer, intent(in),  optional :: xbegin, xend, ybegin, yend, xsize, ysize
+    logical, intent(in),  optional :: x_is_global, y_is_global
+    integer, intent(in),  optional :: tile_count
+
+    integer :: xbegin_f, xend_f, ybegin_f, yend_f, tile_count_f
+
+    xbegin_f = xbegin + 1
+    ybegin_f = ybegin + 1
+    xend_f = xend + 1
+    yend_f = yend + 1
+    tile_count_f = tile_count + 1
+    
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_set_data_domain(current_domain, xbegin_f, xend_f, ybegin_f, yend_f, xsize, ysize, &
+                                         x_is_global, y_is_global, tile_count_f)
+
+  end subroutine cFMS_set_data_domain
+
+
+  !> cFMS_set_global_domain
+  module subroutine cFMS_set_global_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, tile_count) &
+       bind(C, name="cFMS_set_global_domain")
+    implicit none
+    integer, intent(in),  optional :: domain_id
+    integer, intent(in),  optional :: xbegin, xend, ybegin, yend, xsize, ysize
+    integer, intent(in),  optional :: tile_count
+
+    integer :: xbegin_f, xend_f, ybegin_f, yend_f, xsize_f, ysize_f, tile_count_f
+
+    xbegin_f = xbegin + 1
+    ybegin_f = ybegin + 1
+    xend_f = xend + 1
+    yend_f = yend + 1
+    tile_count_f = tile_count + 1
+    
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_set_global_domain(current_domain, xbegin_f, xend_f, ybegin_f, yend_f, &
+                                           xsize, ysize, tile_count_f)
+    
+  end subroutine cFMS_set_global_domain
+
+
 
 end submodule cmpp_domains_smod

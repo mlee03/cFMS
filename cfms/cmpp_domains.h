@@ -1,4 +1,4 @@
-/************************************************************************
+11;rgb:fcfc/e8e8/e8e8/************************************************************************
 !*                   GNU Lesser General Public License
 !*
 !* This file is part of the GFDL Flexible Modeling System (FMS).
@@ -34,14 +34,23 @@ extern void cFMS_define_layout(int global_indices[4], int *ndivs, int layout[2])
 
 extern void cFMS_define_nest_domains(int *num_nest, int *ntiles, int nest_level[], int tile_fine[], int tile_course[],
                                      int istart_coarse[], int icount_coarse[], int jstart_coarse[], int jcount_coarse[],
-                                     int npes_nest_tile[], int x_refine[], int y_refine[], int *nest_domain_id, int* domain_id,
-                                     int *extra_halo, char *name);
+                                     int npes_nest_tile[], int x_refine[], int y_refine[], int *nest_domain_id,
+                                     int* domain_id, int *extra_halo, char *name);
 
 extern bool cFMS_domain_is_initialized(int *domain_id);
 
 extern void cFMS_define_domains_easy(cDomainStruct cdomain);
 
 extern void cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain);
+
+extern void cFMS_set_compute_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                    int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
+
+extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                 int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count);
+
+extern void cFMS_set_global_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
+                                   int *xsize, int *ysize, int *tile_count);
 
 void cFMS_define_domains_easy(cDomainStruct cdomain)
 {
