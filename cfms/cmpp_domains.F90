@@ -36,8 +36,8 @@ contains
     integer, intent(in), optional :: pelist(npes) 
     integer, intent(in),  optional :: xflags, yflags
     integer, intent(in),  optional :: xhalo, yhalo
-    integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
-    logical, intent(in), optional :: maskmap(layout(1),layout(2))
+    integer, intent(in), optional :: xextent(layout(2)), yextent(layout(1))
+    logical, intent(in), optional :: maskmap(layout(2),layout(1))
     character(c_char), intent(in), optional :: name(NAME_LENGTH)
     logical, intent(in),  optional :: symmetry
     integer, intent(in), optional :: memory_size(2)
@@ -49,12 +49,12 @@ contains
     integer, intent(in),  optional :: x_cyclic_offset
     integer, intent(in),  optional :: y_cyclic_offset
 
-    integer :: i, global_indices_f(4) , tile_id_f;
+    integer :: i, global_indices_f(4) , tile_id_f, layout_f(2);
     character(len=NAME_LENGTH) :: name_f = "domain"
     
     if(present(name)) name_f = fms_string_utils_c2f_string(name)
 
-    tile_id_f = tile_id + 1;
+    if(present(tile_id)) tile_id_f = tile_id + 1;
     global_indices_f = global_indices + 1
     
     call cFMS_set_current_domain(domain_id)
@@ -87,7 +87,7 @@ contains
     integer, intent(out) :: layout(2)
 
     call fms_mpp_domains_define_layout(global_indices, ndivs, layout)
-    
+
   end subroutine cFMS_define_layout
   
 
@@ -147,6 +147,105 @@ contains
   end function cFMS_domain_is_initialized
 
 
+  !> cFMS_get_compute_domain
+  module subroutine cFMS_get_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
+       x_is_global, y_is_global, tile_count, position, whalo, shalo) bind(C, name="cFMS_get_compute_domain")
+    
+    implicit none
+    integer, intent(in),  optional :: domain_id
+    integer, intent(out), optional :: xbegin, xend, ybegin, yend
+    integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
+    logical, intent(out), optional :: x_is_global, y_is_global
+    integer, intent(in),  optional :: tile_count, position
+    integer, intent(in),  optional :: whalo, shalo
+
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_get_compute_domain(current_domain, xbegin, xend, ybegin, yend, &
+                                            xsize, xmax_size, ysize, ymax_size,         &
+                                            x_is_global, y_is_global, tile_count, position)
+    
+    if(present(whalo)) then
+       xbegin = xbegin + whalo - 1
+       xend = xend + whalo - 1 
+    end if
+    if(present(shalo)) then
+       ybegin = ybegin + shalo - 1 
+       yend = yend + shalo - 1
+    end if    
+
+  end subroutine cFMS_get_compute_domain
+
+
+  !> cFMS_get_data_domain
+  module subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
+       x_is_global, y_is_global, tile_count, position, whalo, shalo) bind(C, name="cFMS_get_data_domain")
+    
+    implicit none
+    integer, intent(in), optional  :: domain_id
+    integer, intent(out), optional :: xbegin, xend, ybegin, yend
+    integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
+    logical, intent(out), optional :: x_is_global, y_is_global
+    integer, intent(in), optional  :: tile_count, position
+    integer, intent(in), optional  :: whalo, shalo
+
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_get_data_domain(current_domain, xbegin, xend, ybegin, yend, &
+                                         xsize, xmax_size, ysize, ymax_size,         &
+                                         x_is_global, y_is_global, tile_count, position)
+    
+    if(present(whalo)) then
+       xbegin = xbegin + whalo - 1 
+       xend = xend + whalo - 1
+    end if
+    if(present(shalo)) then
+       ybegin = ybegin + shalo - 1 
+       yend = yend + shalo  - 1 
+    end if
+    
+  end subroutine cFMS_get_data_domain
+
+
+  !> cFMS_get_domain_name
+  module subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")
+    
+    implicit none
+    character(c_char), intent(out) :: domain_name_c(NAME_LENGTH)
+    integer, intent(in),  optional :: domain_id
+    character(len=NAME_LENGTH) :: domain_name_f
+    
+    call cFMS_set_current_domain(domain_id)
+    domain_name_f = fms_mpp_domains_get_domain_name(current_domain)
+
+    call fms_string_utils_f2c_string(domain_name_c, domain_name_f)
+    
+  end subroutine cFMS_get_domain_name
+
+
+  module subroutine cFMS_get_layout(layout, domain_id) bind(C, name="cFMS_get_layout")
+    
+    implicit none
+    integer, intent(out) :: layout(2)
+    integer, intent(in),  optional :: domain_id
+
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_get_layout(current_domain, layout)
+
+  end subroutine cFMS_get_layout
+
+
+  !> cFMS_get_pelist
+  module subroutine cFMS_get_domain_pelist(pelist, domain_id) bind(C, name="cFMS_get_domain_pelist")
+    
+    implicit none
+    integer, intent(out) :: pelist(npes)
+    integer, intent(in),  optional :: domain_id
+    
+    call cFMS_set_current_domain(domain_id)
+    call fms_mpp_domains_get_pelist(current_domain, pelist)
+    
+  end subroutine cFMS_get_domain_pelist
+
+    
   !>cFMS_set_compute_domain
   module subroutine cFMS_set_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, &
        x_is_global, y_is_global, tile_count) bind(C, name="cFMS_set_compute_domain")
@@ -159,11 +258,11 @@ contains
 
     integer :: xbegin_f, xend_f, ybegin_f, yend_f, xsize_f, ysize_f, tile_count_f
 
-    xbegin_f = xbegin + 1
-    ybegin_f = ybegin + 1
-    xend_f = xend + 1
-    yend_f = yend + 1
-    tile_count_f = tile_count + 1
+    if(present(xbegin)) xbegin_f = xbegin + 1
+    if(present(ybegin)) ybegin_f = ybegin + 1
+    if(present(xend))   xend_f = xend + 1
+    if(present(yend))   yend_f = yend + 1
+    if(present(tile_count)) tile_count_f = tile_count + 1
     
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_set_compute_domain(current_domain, xbegin_f, xend_f, ybegin_f, yend_f, xsize, ysize, &
@@ -217,11 +316,11 @@ contains
 
     integer :: xbegin_f, xend_f, ybegin_f, yend_f, tile_count_f
 
-    xbegin_f = xbegin + 1
-    ybegin_f = ybegin + 1
-    xend_f = xend + 1
-    yend_f = yend + 1
-    tile_count_f = tile_count + 1
+    if(present(xbegin)) xbegin_f = xbegin + 1
+    if(present(ybegin)) ybegin_f = ybegin + 1
+    if(present(xend))   xend_f = xend + 1
+    if(present(yend))   yend_f = yend + 1
+    if(present(tile_count)) tile_count_f = tile_count + 1
     
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_set_data_domain(current_domain, xbegin_f, xend_f, ybegin_f, yend_f, xsize, ysize, &
@@ -240,11 +339,11 @@ contains
 
     integer :: xbegin_f, xend_f, ybegin_f, yend_f, xsize_f, ysize_f, tile_count_f
 
-    xbegin_f = xbegin + 1
-    ybegin_f = ybegin + 1
-    xend_f = xend + 1
-    yend_f = yend + 1
-    tile_count_f = tile_count + 1
+    if(present(xbegin)) xbegin_f = xbegin + 1
+    if(present(ybegin)) ybegin_f = ybegin + 1
+    if(present(xend))   xend_f = xend + 1
+    if(present(yend))   yend_f = yend + 1
+    if(present(tile_count)) tile_count_f = tile_count + 1
     
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_set_global_domain(current_domain, xbegin_f, xend_f, ybegin_f, yend_f, &
