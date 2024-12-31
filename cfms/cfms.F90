@@ -37,8 +37,23 @@ module cFMS_mod
   use iso_c_binding
 
   implicit none
-  private
 
+  public :: cFMS_init
+  public :: cFMS_end, cFMS_error, cFMS_set_pelist_npes
+  public :: cFMS_declare_pelist, cFMS_get_current_pelist, cFMS_npes, cFMS_pe, cFMS_set_current_pelist
+  public :: cFMS_define_domains
+  public :: cFMS_define_io_domain
+  public :: cFMS_define_layout
+  public :: cFMS_define_nest_domains
+  public :: cFMS_domain_is_initialized  
+  public :: cFMS_get_compute_domain
+  public :: cFMS_get_data_domain
+  public :: cFMS_get_domain_name
+  public :: cFMS_get_layout
+  public :: cFMS_set_compute_domain
+  public :: cFMS_set_data_domain
+  public :: cFMS_set_global_domain
+  
   integer, parameter :: NAME_LENGTH = 64 !< value taken from mpp_domains
   integer, parameter :: MESSAGE_LENGTH=128
   character(FMS_PATH_LEN), parameter :: input_nml_path="./input.nml"
@@ -53,7 +68,7 @@ module cFMS_mod
 
   type(FmsMppDomainsNestDomain_type), allocatable, target, public :: nest_domain(:)
   type(FmsMppDomainsNestDomain_type), pointer :: current_nest_domain
-  
+
   interface
 
      module subroutine cFMS_declare_pelist(pelist, name, commID) bind(C, name="cFMS_declare_pelist")
@@ -98,24 +113,24 @@ module cFMS_mod
           symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,       &
           tile_id, complete, x_cyclic_offset, y_cyclic_offset) bind(C, name="cFMS_define_domains")
        implicit none   
-       integer, intent(in) :: global_indices(4) 
+       integer, intent(inout) :: global_indices(4) 
        integer, intent(in) :: layout(2)
-       integer, intent(in),  optional :: domain_id
+       integer, intent(in), optional :: domain_id
        integer, intent(in), optional :: pelist(npes) 
-       integer, intent(in),  optional :: xflags, yflags
-       integer, intent(in),  optional :: xhalo, yhalo
+       integer, intent(in), optional :: xflags, yflags
+       integer, intent(in), optional :: xhalo, yhalo
        integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
        logical, intent(in), optional :: maskmap(layout(1),layout(2))
        character(c_char), intent(in), optional :: name(NAME_LENGTH)
-       logical, intent(in),  optional :: symmetry
+       logical, intent(in), optional :: symmetry
        integer, intent(in), optional :: memory_size(2)
-       integer, intent(in),  optional :: whalo, ehalo, shalo, nhalo
-       logical, intent(in),  optional :: is_mosaic
-       integer, intent(in),  optional :: tile_count
-       integer, intent(in),  optional :: tile_id
-       logical, intent(in),  optional :: complete
-       integer, intent(in),  optional :: x_cyclic_offset
-       integer, intent(in),  optional :: y_cyclic_offset
+       integer, intent(in), optional :: whalo, ehalo, shalo, nhalo
+       logical, intent(in), optional :: is_mosaic
+       integer, intent(inout),  optional :: tile_count
+       integer, intent(inout),  optional :: tile_id
+       logical, intent(in), optional :: complete
+       integer, intent(in), optional :: x_cyclic_offset
+       integer, intent(in), optional :: y_cyclic_offset
      end subroutine
 
      module subroutine cFMS_define_io_domain(io_layout, domain_id) bind(C, name="cFMS_define_io_domain")
@@ -165,18 +180,20 @@ module cFMS_mod
        integer, intent(out), optional :: xbegin, xend, ybegin, yend
        integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
        logical, intent(out), optional :: x_is_global, y_is_global
-       integer, intent(in),  optional :: tile_count, position
+       integer, intent(inout), optional :: tile_count
+       integer, intent(in),  optional :: position
        integer, intent(in),  optional :: whalo, shalo
      end subroutine
 
      module subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
           x_is_global, y_is_global, tile_count, position, whalo, shalo) bind(C, name="cFMS_get_data_domain")
        implicit none
-       integer, intent(in), optional  :: domain_id
+       integer, intent(in),  optional :: domain_id
        integer, intent(out), optional :: xbegin, xend, ybegin, yend
        integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
        logical, intent(out), optional :: x_is_global, y_is_global
-       integer, intent(in), optional  :: tile_count, position
+       integer, intent(inout), optional :: tile_count
+       integer, intent(in), optional  :: position
        integer, intent(in), optional  :: whalo, shalo
      end subroutine     
 
@@ -199,12 +216,13 @@ module cFMS_mod
      end subroutine
      
      module subroutine cFMS_set_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, &
-            x_is_global, y_is_global, tile_count) bind(C, name="cFMS_set_compute_domain")
+            x_is_global, y_is_global, tile_count, whalo, shalo) bind(C, name="cFMS_set_compute_domain")
        implicit none
-       integer, intent(in),  optional :: domain_id
-       integer, intent(in),  optional :: xbegin, xend, ybegin, yend, xsize, ysize
-       logical, intent(in),  optional :: x_is_global, y_is_global
-       integer, intent(in),  optional :: tile_count
+       integer, intent(in),    optional :: domain_id
+       integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
+       logical, intent(inout), optional :: x_is_global, y_is_global
+       integer, intent(inout), optional :: tile_count
+       integer, intent(in),    optional :: whalo, shalo
      end subroutine
      
      module subroutine cFMS_set_current_domain(domain_id) bind(C, name="cFMS_set_current_domain")
@@ -218,51 +236,37 @@ module cFMS_mod
      end subroutine
 
      module subroutine cFMS_set_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, &
-          x_is_global, y_is_global, tile_count) bind(C, name="cFMS_set_data_domain")
+          x_is_global, y_is_global, tile_count, whalo, shalo) bind(C, name="cFMS_set_data_domain")
        
        implicit none
-       integer, intent(in),  optional :: domain_id
-       integer, intent(in),  optional :: xbegin, xend, ybegin, yend, xsize, ysize
-       logical, intent(in),  optional :: x_is_global, y_is_global
-       integer, intent(in),  optional :: tile_count
+       integer, intent(in),    optional :: domain_id
+       integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
+       logical, intent(in),    optional :: x_is_global, y_is_global
+       integer, intent(inout), optional :: tile_count
+       integer, intent(in),    optional :: whalo, shalo
      end subroutine
 
-     module subroutine cFMS_set_global_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, tile_count) &
-          bind(C, name="cFMS_set_global_domain")
+     module subroutine cFMS_set_global_domain(domain_id, xbegin, xend, ybegin, yend, xsize, ysize, &
+                                              tile_count, whalo, shalo) bind(C, name="cFMS_set_global_domain")
        implicit none
-       integer, intent(in),  optional :: domain_id
-       integer, intent(in),  optional :: xbegin, xend, ybegin, yend, xsize, ysize
-       integer, intent(in),  optional :: tile_count
+       integer, intent(in),    optional :: domain_id
+       integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
+       integer, intent(inout), optional :: tile_count
+       integer, intent(in),    optional :: whalo, shalo
      end subroutine     
-
      
   end interface
-  
-  public :: cFMS_end, cFMS_error, cFMS_init, cFMS_set_pelist_npes
-  public :: cFMS_declare_pelist, cFMS_get_current_pelist, cFMS_npes, cFMS_pe, cFMS_set_current_pelist
-  public :: cFMS_define_domains
-  public :: cFMS_define_io_domain
-  public :: cFMS_define_layout
-  public :: cFMS_define_nest_domains
-  public :: cFMS_domain_is_initialized  
-  public :: cFMS_get_compute_domain
-  public :: cFMS_get_data_domain
-  public :: cFMS_get_domain_name
-  public :: cFMS_get_layout
-  public :: cFMS_set_compute_domain
-  public :: cFMS_set_data_domain
-  public :: cFMS_set_global_domain
 
 contains
 
   !> cFMS_end
-  module subroutine cFMS_end() bind(C, name="cFMS_end")
+  subroutine cFMS_end() bind(C, name="cFMS_end")
     implicit none
     call fms_end()
   end subroutine cFMS_end
 
-  !> cFMS_init
-  module subroutine cFMS_init(localcomm, alt_input_nml_path, ndomain, nnest_domain) bind(C, name="cFMS_init")
+  !> cfms_init
+  subroutine cFMS_init(localcomm, alt_input_nml_path, ndomain, nnest_domain) bind(C,  name="cFMS_init")
     
     implicit none
     integer, intent(in), optional :: localcomm
@@ -290,10 +294,10 @@ contains
        allocate(nest_domain(0:0))
     end if
     
-  end subroutine cFMS_init
+  end subroutine cfms_init
 
   !> cFMS_set_npes
-  module subroutine cFMS_set_pelist_npes(npes_in) bind(C, name="cFMS_set_pelist_npes")
+  subroutine cFMS_set_pelist_npes(npes_in) bind(C, name="cFMS_set_pelist_npes")
     implicit none
     integer, intent(in) :: npes_in
     npes = npes_in

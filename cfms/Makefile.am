@@ -37,9 +37,9 @@ cfms_mod@cmpp_smod.smod: cmpp.F90 cfms_mod.mod cfms_mod.smod
 cfms_mod.mod, cfms_mod.smod: cfms.F90 
 
 # Mod files are built and then installed as headers.
-MODFILES = cfms_mod.mod cfms_mod.smod cfms_mod@cmpp_smod.smod cfms_mod@cmpp_domains_smod.smod
+MODFILES = cfms_mod.mod #cfms_mod.smod cfms_mod@cmpp_smod.smod cfms_mod@cmpp_domains_smod.smod
 BUILT_SOURCES = $(MODFILES)
-nodist_include_HEADERS =  $(FMS_INC_FILES) #$(MODFILES)
+nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
 
 include_HEADERS = cfms.h cmpp.h cmpp_domains.h
 
