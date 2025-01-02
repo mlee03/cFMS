@@ -105,7 +105,7 @@ module cFMS_mod
      module subroutine cFMS_set_current_pelist(pelist, no_sync) bind(C, name="cFMS_set_current_pelist")
        implicit none
        integer, intent(in), optional :: pelist(npes)
-       logical, intent(in), optional :: no_sync
+       logical(c_bool), intent(in), optional :: no_sync
      end subroutine
 
      module subroutine cFMS_define_domains(global_indices, layout, domain_id, pelist,     &
@@ -120,15 +120,15 @@ module cFMS_mod
        integer, intent(in), optional :: xflags, yflags
        integer, intent(in), optional :: xhalo, yhalo
        integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
-       logical, intent(in), optional :: maskmap(layout(1),layout(2))
+       logical(c_bool), intent(in), optional :: maskmap(layout(1),layout(2))
        character(c_char), intent(in), optional :: name(NAME_LENGTH)
-       logical, intent(in), optional :: symmetry
+       logical(c_bool), intent(in), optional :: symmetry
        integer, intent(in), optional :: memory_size(2)
        integer, intent(in), optional :: whalo, ehalo, shalo, nhalo
-       logical, intent(in), optional :: is_mosaic
+       logical(c_bool), intent(in), optional :: is_mosaic
        integer, intent(inout),  optional :: tile_count
        integer, intent(inout),  optional :: tile_id
-       logical, intent(in), optional :: complete
+       logical(c_bool), intent(in), optional :: complete
        integer, intent(in), optional :: x_cyclic_offset
        integer, intent(in), optional :: y_cyclic_offset
      end subroutine
@@ -170,7 +170,7 @@ module cFMS_mod
      module function cFMS_domain_is_initialized(domain_id) bind(C, name="cFMS_domain_is_initialized")
        implicit none
        integer, intent(in), optional :: domain_id
-       logical :: cFMS_domain_is_initialized
+       logical(c_bool) :: cFMS_domain_is_initialized
      end function
 
      module subroutine cFMS_get_compute_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
@@ -179,7 +179,7 @@ module cFMS_mod
        integer, intent(in),  optional :: domain_id
        integer, intent(out), optional :: xbegin, xend, ybegin, yend
        integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
-       logical, intent(out), optional :: x_is_global, y_is_global
+       logical(c_bool), intent(out), optional :: x_is_global, y_is_global
        integer, intent(inout), optional :: tile_count
        integer, intent(in),  optional :: position
        integer, intent(in),  optional :: whalo, shalo
@@ -191,7 +191,7 @@ module cFMS_mod
        integer, intent(in),  optional :: domain_id
        integer, intent(out), optional :: xbegin, xend, ybegin, yend
        integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
-       logical, intent(out), optional :: x_is_global, y_is_global
+       logical(c_bool), intent(out), optional :: x_is_global, y_is_global
        integer, intent(inout), optional :: tile_count
        integer, intent(in), optional  :: position
        integer, intent(in), optional  :: whalo, shalo
@@ -220,7 +220,7 @@ module cFMS_mod
        implicit none
        integer, intent(in),    optional :: domain_id
        integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
-       logical, intent(inout), optional :: x_is_global, y_is_global
+       logical(c_bool), intent(inout), optional :: x_is_global, y_is_global
        integer, intent(inout), optional :: tile_count
        integer, intent(in),    optional :: whalo, shalo
      end subroutine
@@ -241,7 +241,7 @@ module cFMS_mod
        implicit none
        integer, intent(in),    optional :: domain_id
        integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
-       logical, intent(in),    optional :: x_is_global, y_is_global
+       logical(c_bool), intent(in), optional :: x_is_global, y_is_global
        integer, intent(inout), optional :: tile_count
        integer, intent(in),    optional :: whalo, shalo
      end subroutine

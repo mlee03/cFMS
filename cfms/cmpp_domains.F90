@@ -36,33 +36,42 @@ contains
     integer, intent(in), optional :: pelist(npes) 
     integer, intent(in), optional :: xflags, yflags
     integer, intent(in), optional :: xhalo, yhalo
-    integer, intent(in), optional :: xextent(layout(2)), yextent(layout(1))
-    logical, intent(in), optional :: maskmap(layout(2),layout(1))
+    integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
+    logical(c_bool), intent(in), optional :: maskmap(layout(1),layout(2))
     character(c_char), intent(in), optional :: name(NAME_LENGTH)
-    logical, intent(in), optional :: symmetry
+    logical(c_bool), intent(in), optional :: symmetry
     integer, intent(in), optional :: memory_size(2)
     integer, intent(in), optional :: whalo, ehalo, shalo, nhalo
-    logical, intent(in), optional :: is_mosaic
+    logical(c_bool), intent(in), optional :: is_mosaic
     integer, intent(inout), optional :: tile_count
     integer, intent(inout), optional :: tile_id
-    logical, intent(in), optional :: complete
+    logical(c_bool), intent(in), optional :: complete
     integer, intent(in), optional :: x_cyclic_offset
     integer, intent(in), optional :: y_cyclic_offset
 
     character(len=NAME_LENGTH) :: name_f = "cdomain"
     integer :: global_indices_f(4)
+    logical :: maskmap_f(layout(2), layout(1)) !default maskmap
+    logical :: symmetry_f = .False.
+    logical :: is_mosaic_f = .False.
+    logical :: complete_f = .True.
 
+    maskmap_f = .True.
     global_indices_f = global_indices + 1
     if(present(tile_id))    tile_id = tile_id + 1;
     if(present(tile_count)) tile_count = tile_count + 1;
     if(present(name)) name_f = fms_string_utils_c2f_string(name)
+    if(present(maskmap)) maskmap_f = logical(maskmap)
+    if(present(symmetry)) symmetry_f = logical(symmetry)
+    if(present(is_mosaic)) is_mosaic_f = logical(is_mosaic)
+    if(present(complete)) complete_f = logical(complete)
     
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_define_domains(global_indices_f, layout, current_domain, pelist=pelist,  &
          xflags=xflags, yflags=yflags, xhalo=xhalo, yhalo=yhalo, xextent=xextent, yextent=yextent,&
-         maskmap=maskmap, name=name_f, symmetry=symmetry, memory_size=memory_size,                &
-         whalo=whalo, ehalo=ehalo, shalo=shalo, nhalo=nhalo, is_mosaic=is_mosaic, tile_count=tile_count, &
-         tile_id=tile_id, complete=complete, x_cyclic_offset=x_cyclic_offset, y_cyclic_offset=y_cyclic_offset)
+         maskmap=maskmap_f, name=name_f, symmetry=symmetry_f, memory_size=memory_size,            &
+         whalo=whalo, ehalo=ehalo, shalo=shalo, nhalo=nhalo, is_mosaic=is_mosaic_f, tile_count=tile_count, &
+         tile_id=tile_id, complete=complete_f, x_cyclic_offset=x_cyclic_offset, y_cyclic_offset=y_cyclic_offset)
 
     if(present(tile_id))    tile_id = tile_id - 1;
     if(present(tile_count)) tile_count = tile_count - 1;
@@ -143,10 +152,10 @@ contains
 
     implicit none
     integer, intent(in), optional :: domain_id
-    logical :: cFMS_domain_is_initialized
+    logical(c_bool) :: cFMS_domain_is_initialized
 
     call cFMS_set_current_domain(domain_id)
-    cFMS_domain_is_initialized = fms_mpp_domains_domain_is_initialized(current_domain)
+    cFMS_domain_is_initialized = logical(fms_mpp_domains_domain_is_initialized(current_domain), kind=c_bool)
 
   end function cFMS_domain_is_initialized
 
@@ -159,12 +168,13 @@ contains
     integer, intent(in),  optional :: domain_id
     integer, intent(out), optional :: xbegin, xend, ybegin, yend
     integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
-    logical, intent(out), optional :: x_is_global, y_is_global
+    logical(c_bool), intent(out), optional :: x_is_global, y_is_global
     integer, intent(inout), optional :: tile_count
     integer, intent(in),  optional :: position
     integer, intent(in),  optional :: whalo, shalo
 
     integer :: xshift = 0, yshift = 0
+    logical :: x_is_global_f, y_is_global_f
     
     if(present(tile_count)) tile_count = tile_count + 1
     if(present(whalo)) xshift = whalo 
@@ -173,14 +183,19 @@ contains
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_get_compute_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
                                             xsize=xsize, xmax_size=xmax_size, ysize=ysize, ymax_size=ymax_size, &
-                                            x_is_global=x_is_global, y_is_global=y_is_global, &
+                                            x_is_global=x_is_global_f, y_is_global=y_is_global_f, &
                                             tile_count=tile_count, position=position)
-    
+
     if(present(xbegin)) xbegin = xbegin + xshift - 1
     if(present(xend))   xend   = xend   + xshift - 1 
     if(present(ybegin)) ybegin = ybegin + yshift - 1 
     if(present(yend))   yend   = yend   + yshift - 1    
     if(present(tile_count)) tile_count = tile_count - 1
+    if(present(x_is_global)) x_is_global = logical(x_is_global_f, kind=c_bool)
+    if(present(y_is_global)) y_is_global = logical(y_is_global_f, kind=c_bool)
+
+    write(*,*) 'in CFMS get compute x', xmax_size, present(xmax_size)
+    write(*,*) 'in CFMS get compute y', ymax_size, present(ymax_size) 
     
   end subroutine cFMS_get_compute_domain
 
@@ -193,12 +208,13 @@ contains
     integer, intent(in),  optional :: domain_id
     integer, intent(out), optional :: xbegin, xend, ybegin, yend
     integer, intent(out), optional :: xsize, xmax_size, ysize, ymax_size
-    logical, intent(out), optional :: x_is_global, y_is_global
+    logical(c_bool), intent(out), optional :: x_is_global, y_is_global
     integer, intent(inout), optional :: tile_count
     integer, intent(in), optional  :: position
     integer, intent(in), optional  :: whalo, shalo
 
     integer :: xshift = 0, yshift = 0
+    logical :: x_is_global_f, y_is_global_f
     
     if(present(tile_count)) tile_count = tile_count + 1
     if(present(whalo)) xshift = whalo
@@ -206,14 +222,16 @@ contains
     
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_get_data_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
-         xsize=xsize, xmax_size=xmax_size, ysize=ysize, ymax_size=ymax_size, x_is_global=x_is_global,        &
-         y_is_global=y_is_global, tile_count=tile_count, position=position)
+         xsize=xsize, xmax_size=xmax_size, ysize=ysize, ymax_size=ymax_size, x_is_global=x_is_global_f,      &
+         y_is_global=y_is_global_f, tile_count=tile_count, position=position)
         
     if(present(xbegin)) xbegin = xbegin + xshift - 1 
     if(present(xend))   xend   = xend   + xshift - 1    
     if(present(ybegin)) ybegin = ybegin + yshift - 1 
     if(present(yend))   yend   = yend   + yshift - 1 
     if(present(tile_count)) tile_count = tile_count - 1
+    if(present(x_is_global)) x_is_global = logical(x_is_global,kind=4)
+    if(present(y_is_global)) y_is_global = logical(y_is_global,kind=4)
     
   end subroutine cFMS_get_data_domain
 
@@ -266,12 +284,12 @@ contains
     implicit none
     integer, intent(in),    optional :: domain_id
     integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
-    logical, intent(inout), optional :: x_is_global, y_is_global
+    logical(c_bool), intent(inout), optional :: x_is_global, y_is_global
     integer, intent(inout), optional :: tile_count
     integer, intent(in),    optional :: whalo, shalo
 
     integer :: xshift = 0, yshift = 0
-
+    
     if(present(whalo)) xshift = whalo
     if(present(shalo)) yshift = shalo
     
@@ -280,18 +298,35 @@ contains
     if(present(ybegin)) ybegin = ybegin - yshift + 1
     if(present(yend))   yend   = yend   - yshift + 1    
     if(present(tile_count)) tile_count = tile_count + 1
-    
+
     call cFMS_set_current_domain(domain_id)
-    call fms_mpp_domains_set_compute_domain(domain=current_domain, xbegin=xbegin, xend=xend,&
-         ybegin=ybegin, yend=yend, xsize=xsize, ysize=ysize, x_is_global=x_is_global, y_is_global=y_is_global,&
-         tile_count=tile_count)
+
+    if(present(x_is_global)) then
+       if(present(y_is_global)) then
+          call fms_mpp_domains_set_compute_domain(domain=current_domain, xbegin=xbegin, xend=xend,&
+               tile_count=tile_count, ybegin=ybegin, yend=yend, xsize=xsize, ysize=ysize,         &
+               x_is_global=logical(x_is_global), y_is_global=logical(y_is_global))
+       else
+          call fms_mpp_domains_set_compute_domain(domain=current_domain, xbegin=xbegin, xend=xend,&
+               tile_count=tile_count, ybegin=ybegin, yend=yend, xsize=xsize, ysize=ysize,         &
+               x_is_global=logical(x_is_global))
+       end if
+    else if(present(y_is_global)) then
+       call fms_mpp_domains_set_compute_domain(domain=current_domain, xbegin=xbegin, xend=xend,&
+            tile_count=tile_count, ybegin=ybegin, yend=yend, xsize=xsize, ysize=ysize,         &
+            y_is_global=logical(y_is_global))
+    else
+       call fms_mpp_domains_set_compute_domain(domain=current_domain, xbegin=xbegin, xend=xend,&
+            tile_count=tile_count, ybegin=ybegin, yend=yend, xsize=xsize, ysize=ysize)
+    end if
 
     if(present(xbegin)) xbegin = xbegin + xshift - 1
     if(present(xend))   xend   = xend   + xshift - 1
     if(present(ybegin)) ybegin = ybegin + yshift - 1
     if(present(yend))   yend   = yend   + yshift - 1
     if(present(tile_count)) tile_count = tile_count - 1
-    
+
+
   end subroutine cFMS_set_compute_domain
  
   
@@ -334,12 +369,12 @@ contains
     implicit none
     integer, intent(in),    optional :: domain_id
     integer, intent(inout), optional :: xbegin, xend, ybegin, yend, xsize, ysize
-    logical, intent(in),    optional :: x_is_global, y_is_global
+    logical(c_bool), intent(in),    optional :: x_is_global, y_is_global
     integer, intent(inout), optional :: tile_count
     integer, intent(in),    optional :: whalo, shalo
    
     integer :: yshift = 0, xshift = 0
-
+    
     if(present(whalo)) xshift = whalo
     if(present(shalo)) yshift = shalo
 
@@ -348,16 +383,34 @@ contains
     if(present(ybegin)) ybegin = ybegin - yshift + 1
     if(present(yend))   yend   = yend   - yshift + 1
     if(present(tile_count)) tile_count = tile_count + 1
-    
+
+    !simply way to avoid converting logicals from c_bool to kind=4.  The program will always send in
+    ! x_is_global and y_is_global
     call cFMS_set_current_domain(domain_id)
-    call fms_mpp_domains_set_data_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
-         xsize=xsize, ysize=ysize, x_is_global=x_is_global, y_is_global=y_is_global, tile_count=tile_count)
+
+    if(present(x_is_global)) then
+       if(present(y_is_global)) then
+          call fms_mpp_domains_set_data_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
+               xsize=xsize, ysize=ysize, x_is_global=logical(x_is_global), y_is_global=logical(y_is_global),       &
+               tile_count=tile_count)
+       else
+          call fms_mpp_domains_set_data_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
+               xsize=xsize, ysize=ysize, x_is_global=logical(x_is_global), tile_count=tile_count)
+       end if
+    else if(present(y_is_global)) then
+       call fms_mpp_domains_set_data_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
+            xsize=xsize, ysize=ysize, y_is_global=logical(y_is_global), tile_count=tile_count)
+    else
+       call fms_mpp_domains_set_data_domain(current_domain, xbegin=xbegin, xend=xend, ybegin=ybegin, yend=yend, &
+            xsize=xsize, ysize=ysize, tile_count=tile_count)
+    end if
 
     if(present(xbegin)) xbegin = xbegin + xshift - 1
     if(present(xend))   xend   = xend   + xshift - 1
     if(present(ybegin)) ybegin = ybegin + yshift - 1
     if(present(yend))   yend   = yend   + yshift - 1
-
+    if(present(tile_count)) tile_count = tile_count - 1
+    
   end subroutine cFMS_set_data_domain
 
 
