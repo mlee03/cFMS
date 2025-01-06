@@ -447,8 +447,10 @@ contains
     if(present(ybegin)) ybegin = ybegin + yshift - 1
     if(present(yend))   yend   = yend   + yshift - 1
     if(present(tile_count)) tile_count = tile_count - 1
-
-    
+   
   end subroutine cFMS_set_global_domain
-
+  
+  !> cFMS_update_domains
+#include "cmpp_domains.fh"
+  
 end submodule cmpp_domains_smod

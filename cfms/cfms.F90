@@ -263,7 +263,9 @@ module cFMS_mod
        integer, intent(inout), optional :: tile_count
        integer, intent(in),    optional :: whalo, shalo
      end subroutine     
-     
+
+#include "cfms_interfaces.fh"
+
   end interface
 
 contains
