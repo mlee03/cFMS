@@ -5,6 +5,8 @@
 
 #define TRUE 1
 #define FALSE 0
+#define SUCCESS 0
+#define FAIL 1
 
 int any(int n, int* array, int value)
 {
@@ -19,7 +21,7 @@ int errmsg_int(int answer, int test, char *message)
   printf("\nEXPECTED %d BUT GOT %d FOR %s\n", answer, test, message);
   printf("HEREHERE %d\n", FATAL);
   cFMS_error(FATAL, "GOODBYE!");
-  exit(1);
+  exit(FAIL);
 }
 
 #endif

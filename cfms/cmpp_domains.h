@@ -111,6 +111,55 @@ void cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain)
                            cnestdomain.name);
 }
 
+void cFMS_null_cdomain(cDomainStruct *cdomain)
+{
+  cdomain->global_indices = NULL;
+  cdomain->layout = NULL;
+  cdomain->domain_id = NULL;
+  cdomain->pelist = NULL;
+  cdomain->xflags = NULL;
+  cdomain->yflags = NULL;
+  cdomain->xhalo = NULL;
+  cdomain->yhalo = NULL;
+  cdomain->xextent = NULL;
+  cdomain->yextent = NULL;
+  cdomain->maskmap = NULL;
+  cdomain->name = NULL;
+  cdomain->symmetry = NULL;
+  cdomain->memory_size = NULL;
+  cdomain->whalo = NULL;
+  cdomain->ehalo = NULL;
+  cdomain->shalo = NULL;
+  cdomain->nhalo = NULL;
+  cdomain->is_mosaic = NULL;
+  cdomain->tile_count = NULL;
+  cdomain->tile_id = NULL;
+  cdomain->complete = NULL;
+  cdomain->x_cyclic_offset = NULL;
+  cdomain->y_cyclic_offset = NULL;
+}
+
+void cFMS_null_cnest_domain(cNestDomainStruct *cnest_domain)
+{
+  cnest_domain->num_nest = NULL;
+  cnest_domain->ntiles = NULL;
+  cnest_domain->nest_level = NULL;
+  cnest_domain->tile_fine = NULL;
+  cnest_domain->tile_coarse = NULL;
+  cnest_domain->istart_coarse = NULL;
+  cnest_domain->icount_coarse = NULL;
+  cnest_domain->jstart_coarse = NULL;
+  cnest_domain->jcount_coarse = NULL;
+  cnest_domain->npes_nest_tile = NULL;
+  cnest_domain->x_refine = NULL;
+  cnest_domain->y_refine = NULL;
+  cnest_domain->nest_domain_id = NULL;
+  cnest_domain->domain_id = NULL;
+  cnest_domain->extra_halo = NULL;
+  cnest_domain->name = NULL;
+}
+
+
 #endif
 
                    

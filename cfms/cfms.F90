@@ -22,7 +22,6 @@ module cFMS_mod
   use FMS, only : FmsMppDomain2D, FmsMppDomainsNestDomain_type
   use FMS, only : fms_init, fms_end, fms_mpp_domains_init
   use FMS, only : fms_string_utils_c2f_string, fms_string_utils_f2c_string, fms_string_utils_cstring2cpointer
-  use platform_mod, only : FMS_PATH_LEN
   
   use FMS, only : fms_mpp_declare_pelist, fms_mpp_error, fms_mpp_get_current_pelist
   use FMS, only : fms_mpp_npes, fms_mpp_pe, fms_mpp_set_current_pelist
@@ -33,6 +32,12 @@ module cFMS_mod
   use FMS, only : fms_mpp_domains_get_layout, fms_mpp_domains_get_pelist
   use FMS, only : fms_mpp_domains_set_compute_domain, fms_mpp_domains_set_data_domain, fms_mpp_domains_set_global_domain
   use FMS, only : fms_mpp_domains_update_domains
+
+  use FMS, only : GLOBAL_DATA_DOMAIN, BGRID_NE, CGRID_NE, DGRID_NE, AGRID
+  use FMS, only : FOLD_SOUTH_EDGE, FOLD_NORTH_EDGE, FOLD_WEST_EDGE, FOLD_EAST_EDGE
+  use FMS, only : MPP_DOMAIN_TIME, CYCLIC_GLOBAL_DOMAIN, NUPDATE,EUPDATE, XUPDATE, YUPDATE
+  use FMS, only : NORTH, NORTH_EAST, EAST, SOUTH_EAST, CORNER, CENTER
+  use FMS, only : SOUTH, SOUTH_WEST, WEST, NORTH_WEST
   
   use iso_c_binding
 
@@ -56,12 +61,16 @@ module cFMS_mod
   
   integer, parameter :: NAME_LENGTH = 64 !< value taken from mpp_domains
   integer, parameter :: MESSAGE_LENGTH=128
-  character(FMS_PATH_LEN), parameter :: input_nml_path="./input.nml"
+  character(NAME_LENGTH), parameter :: input_nml_path="./input.nml"
 
-  integer, public, bind(c, name="cFMS_pelist_npes") :: npes
-  integer, public, bind(c, name="NOTE")      :: NOTE_C    = NOTE
-  integer, public, bind(c, name="WARNING")   :: WARNING_C = WARNING
-  integer, public, bind(c, name="FATAL")     :: FATAL_C    = FATAL
+  integer, public, bind(C, name="cFMS_pelist_npes") :: npes
+  integer, public, bind(C, name="NOTE")    :: NOTE_C    = NOTE
+  integer, public, bind(C, name="WARNING") :: WARNING_C = WARNING
+  integer, public, bind(C, name="FATAL")   :: FATAL_C    = FATAL
+  integer, public, bind(C, name="WEST")  :: WEST_C = WEST
+  integer, public, bind(C, name="EAST")  :: EAST_C = EAST
+  integer, public, bind(C, name="SOUTH") :: SOUTH_C = SOUTH
+  integer, public, bind(C, name="NORTH") :: NORTH_C = NORTH
   
   type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
@@ -120,7 +129,7 @@ module cFMS_mod
        integer, intent(in), optional :: xflags, yflags
        integer, intent(in), optional :: xhalo, yhalo
        integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
-       logical(c_bool), intent(in), optional :: maskmap(layout(1),layout(2))
+       type(c_ptr), intent(in), optional :: maskmap
        character(c_char), intent(in), optional :: name(NAME_LENGTH)
        logical(c_bool), intent(in), optional :: symmetry
        integer, intent(in), optional :: memory_size(2)

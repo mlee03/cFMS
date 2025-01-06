@@ -37,7 +37,7 @@ contains
     integer, intent(in), optional :: xflags, yflags
     integer, intent(in), optional :: xhalo, yhalo
     integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
-    logical(c_bool), intent(in), optional :: maskmap(layout(1),layout(2))
+    type(c_ptr), intent(in), optional :: maskmap
     character(c_char), intent(in), optional :: name(NAME_LENGTH)
     logical(c_bool), intent(in), optional :: symmetry
     integer, intent(in), optional :: memory_size(2)
@@ -48,28 +48,37 @@ contains
     logical(c_bool), intent(in), optional :: complete
     integer, intent(in), optional :: x_cyclic_offset
     integer, intent(in), optional :: y_cyclic_offset
-
+    
     character(len=NAME_LENGTH) :: name_f = "cdomain"
     integer :: global_indices_f(4)
-    logical :: maskmap_f(layout(2), layout(1)) !default maskmap
-    logical :: symmetry_f = .False.
+    logical(c_bool), pointer :: maskmap_f(:,:)
+    logical :: symmetry_f  = .False.
     logical :: is_mosaic_f = .False.
-    logical :: complete_f = .True.
+    logical :: complete_f  = .True.
 
-    maskmap_f = .True.
+    integer :: i,j
+    
     global_indices_f = global_indices + 1
+
     if(present(tile_id))    tile_id = tile_id + 1;
     if(present(tile_count)) tile_count = tile_count + 1;
-    if(present(name)) name_f = fms_string_utils_c2f_string(name)
-    if(present(maskmap)) maskmap_f = logical(maskmap)
-    if(present(symmetry)) symmetry_f = logical(symmetry)
-    if(present(is_mosaic)) is_mosaic_f = logical(is_mosaic)
-    if(present(complete)) complete_f = logical(complete)
-    
+    if(present(name))       name_f = fms_string_utils_c2f_string(name)
+    if(present(symmetry))   symmetry_f = logical(symmetry)
+    if(present(is_mosaic))  is_mosaic_f = logical(is_mosaic)
+    if(present(complete))   complete_f = logical(complete)
+
+    if(present(maskmap)) then
+       call c_f_pointer(maskmap, maskmap_f, (/layout(2), layout(1)/))
+       maskmap_f = reshape(maskmap_f, shape=(/layout(1), layout(2)/))
+    else
+       allocate(maskmap_f(layout(1), layout(2)))
+       maskmap_f = .True.
+    end if
+
     call cFMS_set_current_domain(domain_id)
     call fms_mpp_domains_define_domains(global_indices_f, layout, current_domain, pelist=pelist,  &
          xflags=xflags, yflags=yflags, xhalo=xhalo, yhalo=yhalo, xextent=xextent, yextent=yextent,&
-         maskmap=maskmap_f, name=name_f, symmetry=symmetry_f, memory_size=memory_size,            &
+         maskmap=logical(maskmap_f), name=name_f, symmetry=symmetry_f, memory_size=memory_size,            &
          whalo=whalo, ehalo=ehalo, shalo=shalo, nhalo=nhalo, is_mosaic=is_mosaic_f, tile_count=tile_count, &
          tile_id=tile_id, complete=complete_f, x_cyclic_offset=x_cyclic_offset, y_cyclic_offset=y_cyclic_offset)
 
@@ -90,7 +99,7 @@ contains
     call fms_mpp_domains_define_io_domain(current_domain, io_layout)
     
   end subroutine cFMS_define_io_domain
-
+  
 
   !> cFMS_define_layout
   module subroutine cFMS_define_layout(global_indices, ndivs, layout) bind(C, name="cFMS_define_layout")
@@ -193,9 +202,6 @@ contains
     if(present(tile_count)) tile_count = tile_count - 1
     if(present(x_is_global)) x_is_global = logical(x_is_global_f, kind=c_bool)
     if(present(y_is_global)) y_is_global = logical(y_is_global_f, kind=c_bool)
-
-    write(*,*) 'in CFMS get compute x', xmax_size, present(xmax_size)
-    write(*,*) 'in CFMS get compute y', ymax_size, present(ymax_size) 
     
   end subroutine cFMS_get_compute_domain
 
