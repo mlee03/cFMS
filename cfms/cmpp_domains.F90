@@ -55,8 +55,6 @@ contains
     logical :: symmetry_f  = .False.
     logical :: is_mosaic_f = .False.
     logical :: complete_f  = .True.
-
-    integer :: i,j
     
     global_indices_f = global_indices + 1
 
