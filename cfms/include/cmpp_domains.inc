@@ -16,7 +16,7 @@ module subroutine CFMS_UPDATE_DOMAINS_SUB_NAME_(field_shape, field, domain_id, f
   CFMS_UPDATE_DOMAINS_FIELD_TYPE_ :: field_tmp(CFMS_UPDATE_DOMAINS_SHAPE_F_)
   character(len=NAME_LENGTH) :: name_f
   
-  if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c
+  if(present(name_c)) name_f = fms_string_utils_c2f_string(name_c)
   if(present(tile_count)) tile_count = tile_count + 1
   
   call c_f_pointer(field, field_f, (/CFMS_UPDATE_DOMAINS_SHAPE_C_/))  
