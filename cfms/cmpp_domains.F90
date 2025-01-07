@@ -66,11 +66,8 @@ contains
     if(present(is_mosaic))  is_mosaic_f = logical(is_mosaic)
     if(present(complete))   complete_f = logical(complete)
 
-    if(associated(maskmap_f)) then
-       if(allocated(maskmap_f)) deallocate(maskmap_f)
-       maskmap_f => NULL()
-    end if
-    
+    if(associated(maskmap_f)) nullify(maskmap_f)
+
     if(present(maskmap)) then
        call c_f_pointer(maskmap, maskmap_f, (/layout(2), layout(1)/))
        maskmap_f = reshape(maskmap_f, shape=(/layout(1), layout(2)/))
@@ -92,7 +89,7 @@ contains
 
     if(dealloc_maskmap) then
        deallocate(maskmap_f)
-       maskmap_f => NULL()
+       nullify(maskmap_f)
     end if
     
   end subroutine cFMS_define_domains
