@@ -55,6 +55,7 @@ contains
     logical :: symmetry_f  = .False.
     logical :: is_mosaic_f = .False.
     logical :: complete_f  = .True.
+    logical :: dealloc_maskmap = .False.
     
     global_indices_f = global_indices + 1
 
@@ -65,12 +66,15 @@ contains
     if(present(is_mosaic))  is_mosaic_f = logical(is_mosaic)
     if(present(complete))   complete_f = logical(complete)
 
+    if(associated(maskmap_f)) nullify(maskmap_f)
+    
     if(present(maskmap)) then
        call c_f_pointer(maskmap, maskmap_f, (/layout(2), layout(1)/))
        maskmap_f = reshape(maskmap_f, shape=(/layout(1), layout(2)/))
     else
        allocate(maskmap_f(layout(1), layout(2)))
        maskmap_f = .True.
+       dealloc_maskmap = .True.
     end if
 
     call cFMS_set_current_domain(domain_id)
@@ -82,6 +86,9 @@ contains
 
     if(present(tile_id))    tile_id = tile_id - 1;
     if(present(tile_count)) tile_count = tile_count - 1;
+
+    if(dealloc_maskmap) deallocate(maskmap_f)
+    nullify(maskmap_f)
     
   end subroutine cFMS_define_domains
 
