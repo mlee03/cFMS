@@ -70,6 +70,10 @@ extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *yb
 extern void cFMS_set_global_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
                                    int *xsize, int *ysize, int *tile_count);
 
+extern void cFMS_update_domains_float_2d(int *field_shape, float **field, int *domain_id, int *flags, int *complete,
+                                         int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
+                                         char *name, int *tile_count);
+
 void cFMS_define_domains_easy(cDomainStruct cdomain)
 {
   cFMS_define_domains(cdomain.global_indices,

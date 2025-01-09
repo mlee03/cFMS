@@ -33,6 +33,7 @@ extern const int WEST;
 extern const int EAST;
 extern const int SOUTH;
 extern const int NORTH;
+extern const int CYCLIC_GLOBAL_DOMAIN;
 
 extern void cFMS_init(int *localcomm, char *alt_input_nml_path, int *ndomain, int *nnest_domain);
 

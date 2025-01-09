@@ -38,6 +38,7 @@ module cFMS_mod
   use FMS, only : MPP_DOMAIN_TIME, CYCLIC_GLOBAL_DOMAIN, NUPDATE,EUPDATE, XUPDATE, YUPDATE
   use FMS, only : NORTH, NORTH_EAST, EAST, SOUTH_EAST, CORNER, CENTER
   use FMS, only : SOUTH, SOUTH_WEST, WEST, NORTH_WEST
+  use FMS, only : CYCLIC_GLOBAL_DOMAIN
   
   use iso_c_binding
 
@@ -66,11 +67,12 @@ module cFMS_mod
   integer, public, bind(C, name="cFMS_pelist_npes") :: npes
   integer, public, bind(C, name="NOTE")    :: NOTE_C    = NOTE
   integer, public, bind(C, name="WARNING") :: WARNING_C = WARNING
-  integer, public, bind(C, name="FATAL")   :: FATAL_C    = FATAL
+  integer, public, bind(C, name="FATAL")   :: FATAL_C   = FATAL
   integer, public, bind(C, name="WEST")  :: WEST_C = WEST
   integer, public, bind(C, name="EAST")  :: EAST_C = EAST
   integer, public, bind(C, name="SOUTH") :: SOUTH_C = SOUTH
   integer, public, bind(C, name="NORTH") :: NORTH_C = NORTH
+  integer, public, bind(C, name="CYCLIC_GLOBAL_DOMAIN") :: CYCLIC_GLOBAL_DOMAIN_C = CYCLIC_GLOBAL_DOMAIN
   
   type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
