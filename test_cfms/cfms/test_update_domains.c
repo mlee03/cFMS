@@ -23,11 +23,27 @@
 // d1 d2 | d1 d2 | d1 d2 |
 //-------|-------|-------|
 
+void define_domain(int *domain_id);
 void test_float2d(int *domain_id);
 
 int main()
 {
-  int domain_id=0;
+  int domain_id = 0;
+
+  cFMS_init(NULL,NULL,NULL,NULL);
+
+  define_domain(&domain_id);
+  cFMS_set_current_pelist(NULL,NULL);
+
+  test_float2d(&domain_id);
+
+  cFMS_end();
+  return EXIT_SUCCESS;
+
+}
+
+void define_domain(int *domain_id)
+{
   int global_indices[4] = {0, NX-1, 0, NY-1};
   int npes = NPES;
   int cyclic_global_domain = CYCLIC_GLOBAL_DOMAIN;
@@ -35,17 +51,16 @@ int main()
   int ehalo=EHALO;
   int nhalo=NHALO;
   int shalo=SHALO;
-
+  
   cDomainStruct cdomain;
-
-  cFMS_init(NULL,NULL,NULL,NULL);
+  
   cFMS_null_cdomain(&cdomain);
 
   cdomain.layout = (int *)calloc(2, sizeof(int));
   cFMS_define_layout(global_indices, &npes, cdomain.layout);
 
   cdomain.global_indices = global_indices;
-  cdomain.domain_id = &domain_id;
+  cdomain.domain_id = domain_id;
   cdomain.whalo = &whalo;
   cdomain.ehalo = &ehalo;
   cdomain.shalo = &shalo;
@@ -54,13 +69,6 @@ int main()
   cdomain.yflags = &cyclic_global_domain;
 
   cFMS_define_domains_easy(cdomain);
-  cFMS_set_current_pelist(NULL,NULL);
-  
-  test_float2d(&domain_id);
-
-  cFMS_end();
-  return EXIT_SUCCESS;
-
 }
 
 void test_float2d(int *domain_id)
@@ -171,6 +179,7 @@ void test_float2d(int *domain_id)
   
   cFMS_get_compute_domain(domain_id, &isc, &iec, &jsc, &jec, &xsize_c, xmax_size, &ysize_c, ymax_size,
                           x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
+
   cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
                        x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
   

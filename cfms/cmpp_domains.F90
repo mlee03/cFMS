@@ -245,7 +245,6 @@ contains
     
   end subroutine cFMS_get_data_domain
 
-
   !> cFMS_get_domain_name
   module subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")
     
