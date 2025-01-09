@@ -172,9 +172,10 @@ void test_float2d(int *domain_id)
   global = (float **)calloc(ydatasize, sizeof(float *));
   for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX;
 
-  for(int ix=WHALO ; ix<NX+WHALO; ix++) 
-    for(int iy=SHALO ; iy<NY+SHALO; iy++) {
-      global[ix][iy] = iy*10+ix;
+  for(int ix=0 ; ix<NX; ix++) {
+    for(int iy=0 ; iy<NY; iy++) {
+      global[WHALO+ix][SHALO+iy] = (iy+SHALO)*10+(ix+WHALO);
+    }
   }
   
   cFMS_get_compute_domain(domain_id, &isc, &iec, &jsc, &jec, &xsize_c, xmax_size, &ysize_c, ymax_size,
