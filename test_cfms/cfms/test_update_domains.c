@@ -168,18 +168,6 @@ void test_float2d(int *domain_id)
   bool *x_is_global = NULL;
   bool *y_is_global = NULL;  
 
-  //allocate global array
-  blob_global = (float *)calloc(xdatasize*ydatasize, sizeof(float));
-  global = (float **)calloc(ydatasize, sizeof(float *));
-  for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX;  
-
-  // allocate array for the ith data domain
-  blob_idata = (float *)malloc(xsize_d*ysize_d*sizeof(float));
-  idata = (float **)malloc(xsize_d*sizeof(float *));
-  for(int ix=0 ; ix<xsize_d; ix++) idata[ix] = blob_idata+ix*ysize_d;
-
-  for(int ix=0 ; ix<NX; ix++) for(int iy=0 ; iy<NY; iy++) global[WHALO+ix][SHALO+iy] = (iy+SHALO)*10+(ix+WHALO);
-
   // get compute domain indices
   cFMS_get_compute_domain(domain_id, &isc, &iec, &jsc, &jec, &xsize_c, xmax_size, &ysize_c, ymax_size,
                           x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
@@ -187,7 +175,19 @@ void test_float2d(int *domain_id)
   // get data domain sizes
   cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
                        x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
+
+  //allocate global array
+  blob_global = (float *)calloc(xdatasize*ydatasize, sizeof(float));
+  global = (float **)calloc(ydatasize, sizeof(float *));
+  for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX;  
   
+  // allocate array for the ith data domain
+  blob_idata = (float *)malloc(xsize_d*ysize_d*sizeof(float));
+  idata = (float **)malloc(xsize_d*sizeof(float *));
+  for(int ix=0 ; ix<xsize_d; ix++) idata[ix] = blob_idata+ix*ysize_d;
+
+  for(int ix=0 ; ix<NX; ix++) for(int iy=0 ; iy<NY; iy++) global[WHALO+ix][SHALO+iy] = (iy+SHALO)*10+(ix+WHALO);
+
   for(int ix=0; ix<xsize_c; ix++) for(int iy=0; iy<ysize_c; iy++) idata[WHALO+ix][SHALO+iy] = global[isc+ix][jsc+iy];
 
   int field_shape[2] = {xsize_d, ysize_d};
