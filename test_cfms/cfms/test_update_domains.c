@@ -156,43 +156,39 @@ void test_float2d(int *domain_id)
   int xsize_d = 0;
   int ysize_c = 0;
   int ysize_d = 0;
+  int whalo = WHALO;
+  int ehalo = EHALO;
+  int shalo = SHALO;
+  int nhalo = NHALO;
+
   int *xmax_size  = NULL;
   int *ymax_size  = NULL;
   int *tile_count = NULL;
   int *position   = NULL;
   bool *x_is_global = NULL;
-  bool *y_is_global = NULL;
+  bool *y_is_global = NULL;  
 
-  int whalo = WHALO;
-  int ehalo = EHALO;
-  int shalo = SHALO;
-  int nhalo = NHALO;
-  
+  //allocate global array
   blob_global = (float *)calloc(xdatasize*ydatasize, sizeof(float));
   global = (float **)calloc(ydatasize, sizeof(float *));
-  for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX;
+  for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX;  
 
-  for(int ix=0 ; ix<NX; ix++) {
-    for(int iy=0 ; iy<NY; iy++) {
-      global[WHALO+ix][SHALO+iy] = (iy+SHALO)*10+(ix+WHALO);
-    }
-  }
-  
-  cFMS_get_compute_domain(domain_id, &isc, &iec, &jsc, &jec, &xsize_c, xmax_size, &ysize_c, ymax_size,
-                          x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
-
-  cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
-                       x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
-  
+  // allocate array for the ith data domain
   blob_idata = (float *)malloc(xsize_d*ysize_d*sizeof(float));
   idata = (float **)malloc(xsize_d*sizeof(float *));
   for(int ix=0 ; ix<xsize_d; ix++) idata[ix] = blob_idata+ix*ysize_d;
 
-  for(int ix=0; ix<xsize_c; ix++) {
-    for(int iy=0; iy<ysize_c; iy++) {
-      idata[WHALO+ix][SHALO+iy] = global[isc+ix][jsc+iy];
-    }
-  }
+  for(int ix=0 ; ix<NX; ix++) for(int iy=0 ; iy<NY; iy++) global[WHALO+ix][SHALO+iy] = (iy+SHALO)*10+(ix+WHALO);
+
+  // get compute domain indices
+  cFMS_get_compute_domain(domain_id, &isc, &iec, &jsc, &jec, &xsize_c, xmax_size, &ysize_c, ymax_size,
+                          x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
+
+  // get data domain sizes
+  cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
+                       x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
+  
+  for(int ix=0; ix<xsize_c; ix++) for(int iy=0; iy<ysize_c; iy++) idata[WHALO+ix][SHALO+iy] = global[isc+ix][jsc+iy];
 
   int field_shape[2] = {xsize_d, ysize_d};
   int *flags = NULL;
