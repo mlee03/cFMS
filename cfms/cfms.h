@@ -23,9 +23,16 @@
 #include <cmpp.h>
 #include <cmpp_domains.h>
 
+#define NAME_LENGTH 64 
+#define MESSAGE_LENGTH 128
+
 extern const int NOTE;
 extern const int WARNING;
 extern const int FATAL;
+extern const int WEST;
+extern const int EAST;
+extern const int SOUTH;
+extern const int NORTH;
 
 extern void cFMS_init(int *localcomm, char *alt_input_nml_path, int *ndomain, int *nnest_domain);
 

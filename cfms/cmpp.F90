@@ -44,7 +44,7 @@ contains
     implicit none
     integer, intent(in), value :: errortype
     character(c_char), intent(in), optional :: errormsg(MESSAGE_LENGTH)
-    character(len=MESSAGE_LENGTH) :: errormsg_f
+    character(len=MESSAGE_LENGTH) :: errormsg_f=""
 
     if(present(errormsg)) errormsg_f = fms_string_utils_c2f_string(errormsg)
     call fms_mpp_error(errortype, trim(errormsg_f))
@@ -86,9 +86,13 @@ contains
 
     implicit none
     integer, intent(in), optional :: pelist(npes)
-    logical, intent(in), optional :: no_sync
+    logical(c_bool), intent(in), optional :: no_sync
 
-    call fms_mpp_set_current_pelist(pelist, no_sync)
+    if(present(no_sync)) then
+       call fms_mpp_set_current_pelist(pelist, logical(no_sync))
+    else
+       call fms_mpp_set_current_pelist(pelist)
+    end if
     
   end subroutine cFMS_set_current_pelist
   
