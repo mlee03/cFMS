@@ -35,7 +35,7 @@ module cFMS_mod
 
   use FMS, only : GLOBAL_DATA_DOMAIN, BGRID_NE, CGRID_NE, DGRID_NE, AGRID
   use FMS, only : FOLD_SOUTH_EDGE, FOLD_NORTH_EDGE, FOLD_WEST_EDGE, FOLD_EAST_EDGE
-  use FMS, only : MPP_DOMAIN_TIME, CYCLIC_GLOBAL_DOMAIN, NUPDATE,EUPDATE, XUPDATE, YUPDATE
+  use FMS, only : CYCLIC_GLOBAL_DOMAIN, NUPDATE,EUPDATE, XUPDATE, YUPDATE
   use FMS, only : NORTH, NORTH_EAST, EAST, SOUTH_EAST, CORNER, CENTER
   use FMS, only : SOUTH, SOUTH_WEST, WEST, NORTH_WEST
   use FMS, only : CYCLIC_GLOBAL_DOMAIN
@@ -68,12 +68,31 @@ module cFMS_mod
   integer, public, bind(C, name="NOTE")    :: NOTE_C    = NOTE
   integer, public, bind(C, name="WARNING") :: WARNING_C = WARNING
   integer, public, bind(C, name="FATAL")   :: FATAL_C   = FATAL
-  integer, public, bind(C, name="WEST")  :: WEST_C = WEST
-  integer, public, bind(C, name="EAST")  :: EAST_C = EAST
-  integer, public, bind(C, name="SOUTH") :: SOUTH_C = SOUTH
-  integer, public, bind(C, name="NORTH") :: NORTH_C = NORTH
+
+  integer, public, bind(C, name="GLOBAL_DATA_DOMAIN") :: GLOBAL_DATA_DOMAIN_C = GLOBAL_DATA_DOMAIN
+  integer, public, bind(C, name="BGRID_NE") :: BGRID_NE_C = BGRID_NE
+  integer, public, bind(C, name="CGRID_NE") :: CGRID_NE_C = CGRID_NE
+  integer, public, bind(C, name="DGRID_NE") :: DGRID_NE_C = DGRID_NE
+  integer, public, bind(C, name="AGRID") :: AGRID_C = AGRID
+  integer, public, bind(C, name="FOLD_SOUTH_EDGE") :: FOLD_SOUTH_EDGE_C = FOLD_SOUTH_EDGE
+  integer, public, bind(C, name="FOLD_WEST_EDGE")  :: FOLD_WEST_EDGE_C = FOLD_WEST_EDGE
+  integer, public, bind(C, name="FOLD_EAST_EDGE")  :: FOLD_EAST_EDGE_C = FOLD_EAST_EDGE
   integer, public, bind(C, name="CYCLIC_GLOBAL_DOMAIN") :: CYCLIC_GLOBAL_DOMAIN_C = CYCLIC_GLOBAL_DOMAIN
-  
+  integer, public, bind(C, name="NUPDATE") :: NUPDATE_C = NUPDATE
+  integer, public, bind(C, name="EUPDATE") :: EUPDATE_C = EUPDATE
+  integer, public, bind(C, name="XUPDATE") :: XUPDATE_C = XUPDATE
+  integer, public, bind(C, name="YUPDATE") :: YUPDATE_C = YUPDATE
+  integer, public, bind(C, name="NORTH") :: NORTH_C = NORTH
+  integer, public, bind(C, name="NORTH_EAST") :: NORTH_EAST_C = NORTH_EAST
+  integer, public, bind(C, name="EAST")  :: EAST_C = EAST
+  integer, public, bind(C, name="SOUTH_EAST") :: SOUTH_EAST_C = SOUTH_EAST
+  integer, public, bind(C, name="CORNER") :: CORNER_C = CORNER
+  integer, public, bind(C, name="CENTER") :: CENTER_C = CENTER
+  integer, public, bind(C, name="SOUTH") :: SOUTH_C = SOUTH
+  integer, public, bind(C, name="SOUTH_WEST") :: SOUTH_WEST_C = SOUTH_WEST  
+  integer, public, bind(C, name="WEST")  :: WEST_C = WEST
+  integer, public, bind(C, name="NORTH_WEST") :: NORTH_WEST_C = NORTH_WEST
+
   type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
 
