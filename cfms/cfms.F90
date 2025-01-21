@@ -35,6 +35,7 @@ module cFMS_mod
 
   use FMS, only : GLOBAL_DATA_DOMAIN, BGRID_NE, CGRID_NE, DGRID_NE, AGRID
   use FMS, only : FOLD_SOUTH_EDGE, FOLD_NORTH_EDGE, FOLD_WEST_EDGE, FOLD_EAST_EDGE
+
   use FMS, only : CYCLIC_GLOBAL_DOMAIN, NUPDATE,EUPDATE, XUPDATE, YUPDATE
   use FMS, only : NORTH, NORTH_EAST, EAST, SOUTH_EAST, CORNER, CENTER
   use FMS, only : SOUTH, SOUTH_WEST, WEST, NORTH_WEST
@@ -92,6 +93,7 @@ module cFMS_mod
   integer, public, bind(C, name="SOUTH_WEST") :: SOUTH_WEST_C = SOUTH_WEST  
   integer, public, bind(C, name="WEST")  :: WEST_C = WEST
   integer, public, bind(C, name="NORTH_WEST") :: NORTH_WEST_C = NORTH_WEST
+
 
   type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  

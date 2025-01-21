@@ -67,6 +67,7 @@ contains
     if(present(complete))   complete_f = logical(complete)
 
     nullify(maskmap_f)
+
     if(present(maskmap)) then
        call c_f_pointer(maskmap, maskmap_f, (/layout(2), layout(1)/))
        maskmap_f = reshape(maskmap_f, shape=(/layout(1), layout(2)/))
@@ -244,6 +245,7 @@ contains
     if(present(y_is_global)) y_is_global = logical(y_is_global,kind=4)
     
   end subroutine cFMS_get_data_domain
+
 
   !> cFMS_get_domain_name
   module subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")
