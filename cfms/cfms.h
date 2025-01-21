@@ -29,11 +29,32 @@
 extern const int NOTE;
 extern const int WARNING;
 extern const int FATAL;
-extern const int WEST;
-extern const int EAST;
-extern const int SOUTH;
-extern const int NORTH;
-extern const int CYCLIC_GLOBAL_DOMAIN;
+
+extern int GLOBAL_DATA_DOMAIN;
+extern int BGRID_NE;
+extern int CGRID_NE;
+extern int DGRID_NE;
+extern int AGRID;
+extern int FOLD_SOUTH_EDGE;
+extern int FOLD_NORTH_EDGE;
+extern int FOLD_WEST_EDGE;
+extern int FOLD_EAST_EDGE;  
+extern int CYCLIC_GLOBAL_DOMAIN;
+extern int NUPDATE;
+extern int EUPDATE;
+extern int XUPDATE;
+extern int YUPDATE;
+extern int NORTH;
+extern int NORTH_EAST;
+extern int EAST;
+extern int SOUTH_EAST;
+extern int CORNER;
+extern int CENTER;
+extern int SOUTH;
+extern int SOUTH_WEST;
+extern int WEST;
+extern int NORTH_WEST;
+extern int CYCLIC_GLOBAL_DOMAIN;
 
 extern void cFMS_init(int *localcomm, char *alt_input_nml_path, int *ndomain, int *nnest_domain);
 

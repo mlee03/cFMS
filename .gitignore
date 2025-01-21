@@ -1,0 +1,10 @@
+*.exe
+*.o
+*.so
+*.trs
+*.log
+*.la
+*.lo
+*.guess
+*.status
+*.out
