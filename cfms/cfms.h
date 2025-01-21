@@ -54,7 +54,6 @@ extern int SOUTH;
 extern int SOUTH_WEST;
 extern int WEST;
 extern int NORTH_WEST;
-extern int CYCLIC_GLOBAL_DOMAIN;
 
 extern void cFMS_init(int *localcomm, char *alt_input_nml_path, int *ndomain, int *nnest_domain);
 
