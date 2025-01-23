@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,31 +17,15 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# This is an automake file for the fms directory of the FMS
-# package.
+# Set common test settings.
+. ../test-lib.sh
 
-# Ed Hartnett 2/22/19
+if [ -f "input.nml" ] ; then rm -f input.nml ; fi
+touch input.nml
 
-# Include .h and .mod files.
-AM_CPPFLAGS = -I. -I./include
-AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
+test_expect_success "test update domains" 'mpirun -n 4  ./test_update_domains'
+test_done
 
-# Build these uninstalled convenience libraries.
-noinst_LTLIBRARIES = libcfms.la
-
-# Each convenience library depends on its source.
-libcfms_la_SOURCES = cfms.F90 cmpp.F90 cmpp_domains.F90
-
-cfms_mod@cmpp_domains_smod.smod: cmpp_domains.F90 cfms_mod.mod cfms_mod.smod
-cfms_mod@cmpp_smod.smod: cmpp.F90 cfms_mod.mod cfms_mod.smod
-cfms_mod.mod, cfms_mod.smod: cfms.F90 
-
-# Mod files are built and then installed as headers.
-MODFILES = cfms_mod.mod #cfms_mod.smod cfms_mod@cmpp_smod.smod cfms_mod@cmpp_domains_smod.smod
-BUILT_SOURCES = $(MODFILES)
-nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
-
-include_HEADERS = cfms.h cmpp.h cmpp_domains.h
-
-include $(top_srcdir)/mkmods.mk

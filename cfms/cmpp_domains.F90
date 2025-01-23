@@ -51,7 +51,7 @@ contains
     
     character(len=NAME_LENGTH) :: name_f = "cdomain"
     integer :: global_indices_f(4)
-    logical(c_bool), pointer :: maskmap_f(:,:)
+    logical(c_bool), pointer :: maskmap_f(:,:) => NULL()
     logical :: symmetry_f  = .False.
     logical :: is_mosaic_f = .False.
     logical :: complete_f  = .True.
@@ -66,8 +66,8 @@ contains
     if(present(is_mosaic))  is_mosaic_f = logical(is_mosaic)
     if(present(complete))   complete_f = logical(complete)
 
-    if(associated(maskmap_f)) nullify(maskmap_f)
-    
+    nullify(maskmap_f)
+
     if(present(maskmap)) then
        call c_f_pointer(maskmap, maskmap_f, (/layout(2), layout(1)/))
        maskmap_f = reshape(maskmap_f, shape=(/layout(1), layout(2)/))
@@ -454,8 +454,10 @@ contains
     if(present(ybegin)) ybegin = ybegin + yshift - 1
     if(present(yend))   yend   = yend   + yshift - 1
     if(present(tile_count)) tile_count = tile_count - 1
-
-    
+   
   end subroutine cFMS_set_global_domain
-
+  
+  !> cFMS_update_domains
+#include "cmpp_domains.fh"
+  
 end submodule cmpp_domains_smod
