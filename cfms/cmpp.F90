@@ -31,7 +31,7 @@ contains
     character(c_char), intent(in), optional :: name(NAME_LENGTH)
     integer, intent(out), optional :: commID
 
-    character(len=NAME_LENGTH) :: name_f=" " !mpp default
+    character(len=NAME_LENGTH-1) :: name_f=" " !mpp default
 
     if(present(name)) name_f = fms_string_utils_c2f_string(name)
     call fms_mpp_declare_pelist(pelist, name_f, commID)
@@ -44,7 +44,7 @@ contains
     implicit none
     integer, intent(in), value :: errortype
     character(c_char), intent(in), optional :: errormsg(MESSAGE_LENGTH)
-    character(len=MESSAGE_LENGTH) :: errormsg_f=""
+    character(len=MESSAGE_LENGTH-1) :: errormsg_f=""
 
     if(present(errormsg)) errormsg_f = fms_string_utils_c2f_string(errormsg)
     call fms_mpp_error(errortype, trim(errormsg_f))
@@ -60,7 +60,7 @@ contains
     character(c_char), intent(out), optional :: name(NAME_LENGTH)
     integer, intent(out), optional :: commID
 
-    character(len=NAME_LENGTH) :: name_f=" " !mpp default
+    character(len=NAME_LENGTH-1) :: name_f=" " !mpp default
     
     if(present(name)) name_f = fms_string_utils_c2f_string(name)
     call fms_mpp_get_current_pelist(pelist, name_f, commID)

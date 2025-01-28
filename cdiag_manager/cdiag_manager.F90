@@ -4,6 +4,9 @@ module cdiag_manager_mod
   use FMS, only : DIAG_OTHER, DIAG_OCEAN, DIAG_ALL
   use FMS, only : FmsTime_type, fms_time_manager_init, fms_set_time
   use FMS, only : fms_string_utils_c2f_string, fms_string_utils_f2c_string
+
+  use cFMS, only : CFMS_CFLOAT_TYPE, CFMS_CDOUBLE_TYPE, CFMS_CINT_TYPE
+
   use iso_c_binding
 
   private
@@ -13,10 +16,6 @@ module cdiag_manager_mod
   public :: cFMS_register_diag_field
   
   type(FmsTime_type), save :: field_init_time
-
-  integer, parameter, bind(C, name="C_FLOAT") :: c_float_kind = 1
-  integer, parameter, bind(C, name="C_DOUBLE") :: cdouble_kind = 2
-  integer, parameter, bind(C, name="C_INT") :: c_int_kind = 3
   
 contains
 
@@ -46,6 +45,7 @@ contains
     field_init_time = fms_time_set_time(seconds=seconds, days=days, ticks=ticks)
     
   end subroutine cFMS_diag_manager_set_field_init_time
+
   
   function cFMS_register_diag_field_scalar(module_name, field_name, long_name, units, standard_name, naxis, axis, &
        missing_value_int, missing_value_cfloat, missing_value_cdouble, range_int, range_cfloat, range_cdouble, &
