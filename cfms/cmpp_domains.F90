@@ -49,7 +49,7 @@ contains
     integer, intent(in), optional :: x_cyclic_offset
     integer, intent(in), optional :: y_cyclic_offset
     
-    character(len=NAME_LENGTH) :: name_f = "cdomain"
+    character(len=NAME_LENGTH-1) :: name_f = "cdomain"
     integer :: global_indices_f(4)
     logical(c_bool), pointer :: maskmap_f(:,:) => NULL()
     logical :: symmetry_f  = .False.
@@ -145,7 +145,7 @@ contains
 
     integer :: istart_coarse_f(num_nest), jstart_coarse_f(num_nest)
     integer :: tile_fine_f(num_nest), tile_coarse_f(num_nest)
-    character(100) :: name_f = "cnest_domain"    
+    character(NAME_LENGTH-1) :: name_f = "cnest_domain"    
 
     istart_coarse_f = istart_coarse + 1
     jstart_coarse_f = jstart_coarse + 1
@@ -253,7 +253,7 @@ contains
     implicit none
     character(c_char), intent(out) :: domain_name_c(NAME_LENGTH)
     integer, intent(in),  optional :: domain_id
-    character(len=NAME_LENGTH) :: domain_name_f
+    character(len=NAME_LENGTH-1) :: domain_name_f
     
     call cFMS_set_current_domain(domain_id)
     domain_name_f = fms_mpp_domains_get_domain_name(current_domain)
