@@ -45,6 +45,8 @@ module cFMS_mod
 
   implicit none
 
+  private
+
   public :: cFMS_init
   public :: cFMS_end, cFMS_error, cFMS_set_pelist_npes
   public :: cFMS_declare_pelist, cFMS_get_current_pelist, cFMS_npes, cFMS_pe, cFMS_set_current_pelist
@@ -61,39 +63,43 @@ module cFMS_mod
   public :: cFMS_set_data_domain
   public :: cFMS_set_global_domain
   
-  integer, parameter :: NAME_LENGTH = 64 !< value taken from mpp_domains
-  integer, parameter :: MESSAGE_LENGTH=128
-  character(NAME_LENGTH), parameter :: input_nml_path="./input.nml"
+  integer, public, parameter :: NAME_LENGTH    = 64 !< value taken from mpp_domains
+  integer, public, parameter :: MESSAGE_LENGTH = 128
+  integer, public, parameter :: PATH_LENGTH    = 128
+  character(PATH_LENGTH-1), parameter :: input_nml_path="./input.nml"
 
+  integer, public, bind(C, name="NAME_LENGTH")    :: NAME_LENGTH_C    = NAME_LENGTH
+  integer, public, bind(C, name="MESSAGE_LENGTH") :: MESSAGE_LENGTH_C = MESSAGE_LENGTH
+  integer, public, bind(C, name="PATH_LENGTH")    :: PATH_LENGTH_C    = PATH_LENGTH
+  
   integer, public, bind(C, name="cFMS_pelist_npes") :: npes
   integer, public, bind(C, name="NOTE")    :: NOTE_C    = NOTE
   integer, public, bind(C, name="WARNING") :: WARNING_C = WARNING
   integer, public, bind(C, name="FATAL")   :: FATAL_C   = FATAL
 
   integer, public, bind(C, name="GLOBAL_DATA_DOMAIN") :: GLOBAL_DATA_DOMAIN_C = GLOBAL_DATA_DOMAIN
-  integer, public, bind(C, name="BGRID_NE") :: BGRID_NE_C = BGRID_NE
-  integer, public, bind(C, name="CGRID_NE") :: CGRID_NE_C = CGRID_NE
-  integer, public, bind(C, name="DGRID_NE") :: DGRID_NE_C = DGRID_NE
-  integer, public, bind(C, name="AGRID") :: AGRID_C = AGRID
+  integer, public, bind(C, name="BGRID_NE") ::           BGRID_NE_C = BGRID_NE
+  integer, public, bind(C, name="CGRID_NE") ::           CGRID_NE_C = CGRID_NE
+  integer, public, bind(C, name="DGRID_NE") ::           DGRID_NE_C = DGRID_NE
+  integer, public, bind(C, name="AGRID")    ::           AGRID_C = AGRID
   integer, public, bind(C, name="FOLD_SOUTH_EDGE") :: FOLD_SOUTH_EDGE_C = FOLD_SOUTH_EDGE
-  integer, public, bind(C, name="FOLD_WEST_EDGE")  :: FOLD_WEST_EDGE_C = FOLD_WEST_EDGE
-  integer, public, bind(C, name="FOLD_EAST_EDGE")  :: FOLD_EAST_EDGE_C = FOLD_EAST_EDGE
+  integer, public, bind(C, name="FOLD_WEST_EDGE")  :: FOLD_WEST_EDGE_C  = FOLD_WEST_EDGE
+  integer, public, bind(C, name="FOLD_EAST_EDGE")  :: FOLD_EAST_EDGE_C  = FOLD_EAST_EDGE
   integer, public, bind(C, name="CYCLIC_GLOBAL_DOMAIN") :: CYCLIC_GLOBAL_DOMAIN_C = CYCLIC_GLOBAL_DOMAIN
   integer, public, bind(C, name="NUPDATE") :: NUPDATE_C = NUPDATE
   integer, public, bind(C, name="EUPDATE") :: EUPDATE_C = EUPDATE
   integer, public, bind(C, name="XUPDATE") :: XUPDATE_C = XUPDATE
   integer, public, bind(C, name="YUPDATE") :: YUPDATE_C = YUPDATE
-  integer, public, bind(C, name="NORTH") :: NORTH_C = NORTH
-  integer, public, bind(C, name="NORTH_EAST") :: NORTH_EAST_C = NORTH_EAST
-  integer, public, bind(C, name="EAST")  :: EAST_C = EAST
-  integer, public, bind(C, name="SOUTH_EAST") :: SOUTH_EAST_C = SOUTH_EAST
-  integer, public, bind(C, name="CORNER") :: CORNER_C = CORNER
-  integer, public, bind(C, name="CENTER") :: CENTER_C = CENTER
-  integer, public, bind(C, name="SOUTH") :: SOUTH_C = SOUTH
-  integer, public, bind(C, name="SOUTH_WEST") :: SOUTH_WEST_C = SOUTH_WEST  
-  integer, public, bind(C, name="WEST")  :: WEST_C = WEST
-  integer, public, bind(C, name="NORTH_WEST") :: NORTH_WEST_C = NORTH_WEST
-
+  integer, public, bind(C, name="NORTH")   :: NORTH_C = NORTH
+  integer, public, bind(C, name="NORTH_EAST") :: NORTH_EAST_C  = NORTH_EAST
+  integer, public, bind(C, name="EAST")       :: EAST_C        = EAST
+  integer, public, bind(C, name="SOUTH_EAST") :: SOUTH_EAST_C  = SOUTH_EAST
+  integer, public, bind(C, name="CORNER")     :: CORNER_C      = CORNER
+  integer, public, bind(C, name="CENTER")     :: CENTER_C      = CENTER
+  integer, public, bind(C, name="SOUTH")      :: SOUTH_C       = SOUTH
+  integer, public, bind(C, name="SOUTH_WEST") :: SOUTH_WEST_C  = SOUTH_WEST  
+  integer, public, bind(C, name="WEST")       :: WEST_C        = WEST
+  integer, public, bind(C, name="NORTH_WEST") :: NORTH_WEST_C  = NORTH_WEST
 
   type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
@@ -101,6 +107,10 @@ module cFMS_mod
   type(FmsMppDomainsNestDomain_type), allocatable, target, public :: nest_domain(:)
   type(FmsMppDomainsNestDomain_type), pointer :: current_nest_domain
 
+  !TODO
+  !domain1d
+  !domainUG
+  
   interface
 
      module subroutine cFMS_declare_pelist(pelist, name, commID) bind(C, name="cFMS_declare_pelist")
@@ -306,9 +316,9 @@ contains
     integer, intent(in), optional :: localcomm
     integer, intent(in), optional :: ndomain
     integer, intent(in), optional :: nnest_domain
-    character(c_char), intent(in), optional :: alt_input_nml_path(NAME_LENGTH)
+    character(c_char), intent(in), optional :: alt_input_nml_path(PATH_LENGTH)
     
-    character(100) :: alt_input_nml_path_f = input_nml_path
+    character(PATH_LENGTH-1) :: alt_input_nml_path_f = input_nml_path
     
     if(present(alt_input_nml_path)) &
          alt_input_nml_path_f = fms_string_utils_c2f_string(alt_input_nml_path)

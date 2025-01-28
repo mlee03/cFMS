@@ -23,38 +23,45 @@
 #include <cmpp.h>
 #include <cmpp_domains.h>
 
-#define NAME_LENGTH 64 
+#define NAME_LENGTH 64
 #define MESSAGE_LENGTH 128
+#define PATH_LENGTH 128
 
 extern const int NOTE;
 extern const int WARNING;
 extern const int FATAL;
 
-extern int GLOBAL_DATA_DOMAIN;
-extern int BGRID_NE;
-extern int CGRID_NE;
-extern int DGRID_NE;
-extern int AGRID;
-extern int FOLD_SOUTH_EDGE;
-extern int FOLD_NORTH_EDGE;
-extern int FOLD_WEST_EDGE;
-extern int FOLD_EAST_EDGE;  
-extern int CYCLIC_GLOBAL_DOMAIN;
-extern int NUPDATE;
-extern int EUPDATE;
-extern int XUPDATE;
-extern int YUPDATE;
-extern int NORTH;
-extern int NORTH_EAST;
-extern int EAST;
-extern int SOUTH_EAST;
-extern int CORNER;
-extern int CENTER;
-extern int SOUTH;
-extern int SOUTH_WEST;
-extern int WEST;
-extern int NORTH_WEST;
-extern int CYCLIC_GLOBAL_DOMAIN;
+/*
+extern const int NAME_LENGTH;
+extern const int MESSAGE_LENGTH;
+extern const int PATH_LENGTH;
+*/
+
+extern const int GLOBAL_DATA_DOMAIN;
+extern const int BGRID_NE;
+extern const int CGRID_NE;
+extern const int DGRID_NE;
+extern const int AGRID;
+extern const int FOLD_SOUTH_EDGE;
+extern const int FOLD_NORTH_EDGE;
+extern const int FOLD_WEST_EDGE;
+extern const int FOLD_EAST_EDGE;  
+extern const int CYCLIC_GLOBAL_DOMAIN;
+extern const int NUPDATE;
+extern const int EUPDATE;
+extern const int XUPDATE;
+extern const int YUPDATE;
+extern const int NORTH;
+extern const int NORTH_EAST;
+extern const int EAST;
+extern const int SOUTH_EAST;
+extern const int CORNER;
+extern const int CENTER;
+extern const int SOUTH;
+extern const int SOUTH_WEST;
+extern const int WEST;
+extern const int NORTH_WEST;
+extern const int CYCLIC_GLOBAL_DOMAIN;
 
 extern void cFMS_init(int *localcomm, char *alt_input_nml_path, int *ndomain, int *nnest_domain);
 
