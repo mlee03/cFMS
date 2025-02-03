@@ -1,51 +1,49 @@
-function cFMS_REGISTER_DIAG_FIELD_SCALAR_(module_name, field_name, long_name, units, missing_value, range, &
-     standard_name, do_not_log, err_msg, area, volume, realm, multiple_send_data) bind(C, name=CFMS_REGISTER_FIELD_SCALAR_C)
+function CFMS_DIAG_AXIS_INIT_(name, naxis_data, axis_data, units, cart_name, long_name, direction, &
+       set_name, edges, aux, req, tile_count, domain_position) bind(C, name=CFMS_DIAG_AXIS_INIT_BINDC_)
+    
+    implicit none
+    character(c_char), intent(in) :: name(NAME_LENGTH)
+    integer,           intent(in) :: naxis_data
+    real(CFMS_AXIS_DATA_KIND_), intent(in) :: axis_data(naxis_data)
+    character(c_char), intent(in) :: units(NAME_LENGTH)
+    character(c_char), intent(in) :: cart_name(NAME_LENGTH)
+    character(c_char), intent(in), optional :: long_name(NAME_LENGTH)
+    character(c_char), intent(in), optional :: set_name(NAME_LENGTH)
+    integer, intent(in), optional :: direction
+    integer, intent(in), optional :: edges
+    character(c_char), intent(in), optional :: aux
+    character(c_char), intent(in), optional :: req
+    integer, intent(in), optional :: tile_count
+    integer, intent(in), optional :: domain_position
 
-  implicit none
-  character, intent(in) :: module_name(NAME_LENGTH)
-  character, intent(in) :: field_name(NAME_LENGTH)
-  character, intent(in) :: long_name(NAME_LENGTH)
-  character, intent(in) :: units(NAME_LENGTH)
-  character, intent(in) :: standard_name(NAME_LENGTH)
-  CFMS_FIELD_TYPE_, intent(
+    type(FmsMppDomain2D), pointer :: domain
+    
+    character(NAME_LENGTH-1) :: name_f
+    character(NAME_LENGTH-1) :: units_f
+    character(NAME_LENGTH-1) :: cart_name_f
+    character(NAME_LENGTH-1) :: set_name_f
+    character(NAME_LENGTH-1) :: long_name_f
+    character(NAME_LENGTH-1) :: aux_f
+    character(NAME_LENGTH-1) :: req_f
+    
+    integer :: CFMS_DIAG_AXIS_INIT_
 
+    set_name_f = ""
+    aux_f = "none"
+    req_f = "none"
+    domain => cFMS_get_current_domain()
+    
+    name_f      = fms_string_utils_c2f_string(name)
+    units_f     = fms_string_utils_c2f_string(units)
+    cart_name_f = fms_string_utils_c2f_string(cart_name)
+    if(present(set_name))  set_name_f  = fms_string_utils_c2f_string(set_name)
+    if(present(long_name)) long_name_f = fms_string_utils_c2f_string(long_name)
+    
+    CFMS_DIAG_AXIS_INIT_ = fms_diag_axis_init(name=name_f, array_data=axis_data, units=units_f,  &
+         cart_name=cart_name_f, long_name=long_name_f, direction=direction, set_name=set_name_f, &
+         edges=edges, Domain2=domain, aux=aux, req=req, tile_count=tile_count, domain_position=domain_position)
+    
+    nullify(domain)
+    
+  end function CFMS_DIAG_AXIS_INIT_
 
-function CFMS_REGISTER_FIELD_ARRAY_(module_name, field_name, long_name, units, standard_name, naxis, axis, missing_value, &
-     range, do_not_log, err_msg, area, volume, realm, multiple_send_data) bind(C, name=CFMS_REGISTER_FIELD_ARRAY_C_)
-  
-  implicit none
-  character, intent(in) :: module_name(NAME_LENGTH)
-  character, intent(in) :: field_name(NAME_LENGTH)
-  integer, intent(in), optional :: naxis
-  integer, intent(in), optional :: axes(naxes)
-  integer, intent(in), optional :: field_type
-  character, intent(in), optional :: long_name(NAME_LENGTH)
-  character, intent(in), optional :: units(NAME_LENGTH)
-  CFMS_FIELD_TYPE_, intent(in), optional :: missing_value
-  CFMS_FIELD_TYPE_, intent(in), optional :: range(2)
-  logical, intent(in), optional :: mask_variant
-  character, intent(in), optional :: standard_name(NAME_LENGTH)
-  logical, intent(in), optional :: verbose    
-  logical, intent(in), optional :: do_not_log
-  character, intent(in), optional :: err_msg(NAME_LENGTH)
-  character, intent(in), optional :: interp_method(NAME_LENGTH)
-  integer, intent(in), optional :: tile_count    
-  integer, intent(in), optional :: area
-  integer, intent(in), optional :: volume
-  character, intent(in), optional :: realm
-  logical, intent(in), optional :: multiple_send_data
-  
-  integer :: cFMS_register_diag_field_scalar
-
-  if(present(long_name)) long_name_f = fms_string_utils_c2f_string(long_name)
-  if(present(units) units_f = fms_string_utils_c2f_string(units)
-  if(present(standard_name) standard_name_f = fms_string_utils_c2f_string(standard_name)
-  
-  cFMS_register_diag_field_scalar = fms_diag_register_diag_field_array(module_name, field_name, axes, &
-       field_init_time, long_name=long_name, units=units_f, missing_value=missing_value, range=range,   &
-       mask_variant=mask_variant, standard_name=standard_name, verbose=verbose, do_not_log=do_not_log, &
-       err_msg=err_msg, interp_method=interp_method, tile_count=tile_count, area=area, volume=volume, &
-       realm=realm, multiple_send_data=multiple_send_data)
-  
-end function CFMS_REGISTER_FIELD_ARRAY_
-  

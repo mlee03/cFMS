@@ -63,6 +63,8 @@ extern void cFMS_set_compute_domain(int *domain_id, int *xbegin, int *xend, int 
                                     int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count,
                                     int *whalo, int *shalo);
 
+extern void cFMS_set_current_domain(int *domain_id);
+
 extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
                                  int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count,
                                  int *whalo, int *shalo);

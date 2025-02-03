@@ -17,14 +17,28 @@
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
 
-# This is the automake file for the test_fms directory.
-# Ed Hartnett 9/20/2019
+# This is an automake file for the fms directory of the FMS
+# package.
 
-# This directory stores libtool macros, put there by aclocal.
-ACLOCAL_AMFLAGS = -I m4
+# Ed Hartnett 2/22/19
 
-# Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = cfms cdiag_manager
+# Include .h and .mod files.
+AM_CPPFLAGS = -I. -I./include
+AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
-# testing utility scripts to distribute
-EXTRA_DIST = test-lib.sh.in intel_coverage.sh.in tap-driver.sh
+# Build these uninstalled convenience libraries.
+noinst_LTLIBRARIES = libcdiag_manager.la
+
+# Each convenience library depends on its source.
+libcdiag_manager_la_SOURCES = cdiag_manager.F90
+
+cdiag_manager_mod.mod : cdiag_manager.F90
+
+# Mod files are built and then installed as headers.
+MODFILES = cdiag_manager_mod.mod
+BUILT_SOURCES = $(MODFILES)
+nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
+
+include_HEADERS = cdiag_manager.h
+
+include $(top_srcdir)/mkmods.mk

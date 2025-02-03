@@ -1,23 +1,16 @@
-#undef CFMS_REGISTER_FIELD_SCALAR_
-#undef CFMS_REGISTER_FIELD_ARRAY_C_
-#undef CFMS_FIELD_TYPE_
-#define CFMS_REGISTER_FIELD_ARRAY_   cFMS_register_field_scalar_int
-#define CFMS_REGISTER_FIELD_ARRAY_C_ "cFMS_register_field_scalar_int"
-#define cFMS_FIELD_TYPE_ integer
+#undef CFMS_DIAG_AXIS_INIT_
+#undef CFMS_DIAG_AXIS_INIT_BINDC_
+#undef CFMS_AXIS_DATA_KIND_
+#define CFMS_DIAG_AXIS_INIT_ cfms_diag_axis_init_cfloat
+#define CFMS_DIAG_AXIS_INIT_BINDC_ "cFMS_diag_axis_init_cfloat"
+#define CFMS_AXIS_DATA_KIND_ c_float
 #include "cdiag_manager.inc"
 
-#undef CFMS_REGISTER_FIELD_ARRAY_
-#undef CFMS_REGISTER_FIELD_ARRAY_C_
-#undef CFMS_FIELD_TYPE_
-#define CFMS_REGISTER_FIELD_ARRAY_   cFMS_register_field_scalar_cfloat
-#define CFMS_REGISTER_FIELD_ARRAY_C_ "cFMS_register_field_scalar_cfloat"
-#define cFMS_FIELD_TYPE_ real(c_float)
+#undef CFMS_DIAG_AXIS_INIT_
+#undef CFMS_DIAG_AXIS_INIT_BINDC_
+#undef CFMS_AXIS_DATA_KIND_
+#define CFMS_DIAG_AXIS_INIT_ cfms_diag_axis_init_cdouble
+#define CFMS_DIAG_AXIS_INIT_BINDC_ "cFMS_diag_axis_init_cdouble"
+#define CFMS_AXIS_DATA_KIND_ c_double
 #include "cdiag_manager.inc"
-
-#undef CFMS_REGISTER_FIELD_ARRAY_
-#undef CFMS_REGISTER_FIELD_ARRAY_C_
-#undef CFMS_FIELD_TYPE_
-#define CFMS_REGISTER_FIELD_ARRAY_   cFMS_register_field_scalar_cdouble
-#define CFMS_REGISTER_FIELD_ARRAY_C_ "cFMS_register_field_scalar_cdouble"
-#define cFMS_FIELD_TYPE_ real(c_float)
-#include "cdiag_manager.inc"
+  

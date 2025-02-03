@@ -34,6 +34,7 @@ endif
 
 # Make targets will be run in each subdirectory. Order is significant.
 SUBDIRS = cfms \
+  cdiag_manager \
 	libcFMS \
 	test_cfms
 

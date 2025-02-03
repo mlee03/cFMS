@@ -48,18 +48,27 @@ module cFMS_mod
   private
 
   public :: cFMS_init
-  public :: cFMS_end, cFMS_error, cFMS_set_pelist_npes
-  public :: cFMS_declare_pelist, cFMS_get_current_pelist, cFMS_npes, cFMS_pe, cFMS_set_current_pelist
+  public :: cFMS_end
+  public :: cFMS_error
+  public :: cFMS_set_pelist_npes
+  public :: cFMS_declare_pelist
+  public :: cFMS_get_current_pelist
+  public :: cFMS_npes
+  public :: cFMS_pe
+  public :: cFMS_set_current_pelist
+
   public :: cFMS_define_domains
   public :: cFMS_define_io_domain
   public :: cFMS_define_layout
   public :: cFMS_define_nest_domains
   public :: cFMS_domain_is_initialized  
   public :: cFMS_get_compute_domain
+  public :: cFMS_get_current_domain
   public :: cFMS_get_data_domain
   public :: cFMS_get_domain_name
   public :: cFMS_get_layout
   public :: cFMS_set_compute_domain
+  public :: cFMS_set_current_domain
   public :: cFMS_set_data_domain
   public :: cFMS_set_global_domain
   
@@ -96,7 +105,7 @@ module cFMS_mod
   integer, public, bind(C, name="WEST")               :: WEST_C        = WEST
   integer, public, bind(C, name="NORTH_WEST")         :: NORTH_WEST_C  = NORTH_WEST
 
-  integer, public, bind(C, name="CFMS_CFLOAT_TYPE")  :: CFMS_FLOAT_TYPE   = 1
+  integer, public, bind(C, name="CFMS_CFLOAT_TYPE")  :: CFMS_CFLOAT_TYPE  = 1
   integer, public, bind(C, name="CFMS_CDOUBLE_TYPE") :: CFMS_CDOUBLE_TYPE = 2
   integer, public, bind(C, name="CFMS_CINT_TYPE")    :: CFMS_CINT_TYPE    = 3
   
@@ -120,13 +129,17 @@ module cFMS_mod
      end subroutine
 
      !> cFMS_error
-     module subroutine cFMS_error(errortype, errormsg) bind(C, name="cFMS_error")
-       
+     module subroutine cFMS_error(errortype, errormsg) bind(C, name="cFMS_error")       
        implicit none
        integer, intent(in), value :: errortype
        character(c_char), intent(in), optional :: errormsg(MESSAGE_LENGTH)
        character(len=MESSAGE_LENGTH) :: errormsg_f
      end subroutine
+
+     module function cFMS_get_current_domain()
+       implicit none
+       type(FmsMppDomain2D), pointer :: cFMS_get_current_domain
+     end function
      
      module subroutine cFMS_get_current_pelist(pelist, name, commID) bind(C, name="cFMS_get_current_pelist")
        implicit none
@@ -270,7 +283,7 @@ module cFMS_mod
        implicit none
        integer, intent(in), optional :: domain_id
      end subroutine
-
+     
      module subroutine cFMS_set_current_nest_domain(nest_domain_id) bind(C, name="cFMS_set_current_nest_domain")
        implicit none
        integer, intent(in), optional :: nest_domain_id

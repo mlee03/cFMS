@@ -31,7 +31,8 @@ lib_LTLIBRARIES = libcFMS.la
 libcFMS_la_LDFLAGS = -version-info 21:0:0
 
 # Add the convenience libraries to the FMS library.
-libcFMS_la_LIBADD = $(top_builddir)/cfms/libcfms.la
+libcFMS_la_LIBADD  = $(top_builddir)/cfms/libcfms.la
+libcFMS_la_LIBADD += $(top_builddir)/cdiag_manager/libcdiag_manager.la
 
 libcFMS_la_SOURCES =
 nodist_EXTRA_libcFMS_la_SOURCES = dummy.f90

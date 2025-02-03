@@ -1,3 +1,4 @@
+
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -355,11 +356,13 @@ AC_SUBST([MODDIR],[\$\(top_builddir\)/.mods])
 AC_CONFIG_FILES([
   Makefile
   cfms/Makefile
+  cdiag_manager/Makefile
   libcFMS/Makefile
   test_cfms/test-lib.sh
   test_cfms/intel_coverage.sh
   test_cfms/Makefile
   test_cfms/cfms/Makefile
+  test_cfms/cdiag_manager/Makefile
 ])
 
 AC_OUTPUT()
