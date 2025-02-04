@@ -24,6 +24,9 @@ module cdiag_manager_mod
   public :: cFMS_register_diag_field_scalar_int
   public :: cFMS_register_diag_field_scalar_cfloat
   public :: cFMS_register_diag_field_scalar_cdouble
+  public :: cFMS_register_diag_field_array_int
+  public :: cFMS_register_diag_field_array_cfloat
+  public :: cFMS_register_diag_field_array_cdouble
   
   type(FmsTime_type), save :: field_init_time
 
@@ -54,7 +57,9 @@ contains
     call fms_time_manager_init()
     call fms_time_manager_set_calendar_type(calendar_type_f)
 
-    call fms_diag_init(diag_model_subset=diag_model_subset, time_init=time_init, err_msg=err_msg_f)
+    call fms_diag_init(diag_model_subset = diag_model_subset, &
+                       time_init = time_init, &
+                       err_msg = err_msg_f)
     
     if(present(err_msg) .and. err_msg_f /= '' ) call fms_string_utils_f2c_string(err_msg, err_msg_f)
     
@@ -72,65 +77,10 @@ contains
     
   end subroutine cFMS_diag_set_field_init_time
   
-  function cFMS_register_diag_field_scalar(module_name, field_name, long_name, units, &
-       missing_value_int, missing_value_cfloat, missing_value_cdouble, range_int, range_cfloat, range_cdouble, &
-       standard_name, do_not_log, err_msg, area, volume, realm, multiple_send_data) &
-       bind(C, name='cFMS_register_diag_field_scalar')
-    
-    implicit none
-    character(c_char), intent(in) :: module_name(NAME_LENGTH)
-    character(c_char), intent(in) :: field_name(NAME_LENGTH)
-    character(c_char), intent(in), optional :: long_name(NAME_LENGTH)
-    character(c_char), intent(in), optional :: units(NAME_LENGTH)
-    character(c_char), intent(in),  optional :: standard_name(NAME_LENGTH)
-    integer,        intent(in), optional :: missing_value_int
-    real(c_float),  intent(in), optional :: missing_value_cfloat
-    real(c_double), intent(in), optional :: missing_value_cdouble
-    integer,        intent(in), optional :: range_int(2)
-    real(c_float),  intent(in), optional :: range_cfloat(2)
-    real(c_double), intent(in), optional :: range_cdouble(2)
-    logical(c_bool),   intent(in),  optional :: do_not_log
-    character(c_char), intent(out), optional :: err_msg(NAME_LENGTH)
-    integer,   intent(in), optional :: area
-    integer,   intent(in), optional :: volume
-    character(c_char), intent(in), optional :: realm(NAME_LENGTH)
-    logical(c_bool),   intent(in), optional :: multiple_send_data
+#include "cfms_diag_axis_init.fh"
+#include "cfms_register_diag_field.fh"
 
-    class(*), allocatable :: missing_value
-    class(*), allocatable :: range(:)
-    character(len=NAME_LENGTH-1) :: module_name_f = ''
-    character(len=NAME_LENGTH-1) :: field_name_f  = ''
-    character(len=NAME_LENGTH-1) :: long_name_f   = ''
-    character(len=NAME_LENGTH-1) :: standard_name_f  = ''
-    character(len=NAME_LENGTH-1) :: units_f   = ''
-    character(len=NAME_LENGTH-1) :: err_msg_f = ''
-    character(len=NAME_LENGTH-1) :: realm_f   = ''
-    integer :: cFMS_register_diag_field_scalar
-
-    if(present(range_int))     allocate(range, source=range_int)
-    if(present(range_cfloat))  allocate(range, source=range_cfloat)
-    if(present(range_cdouble)) allocate(range, source=range_cdouble)
-    if(present(missing_value_int))     allocate(missing_value, source=missing_value_int)
-    if(present(missing_value_cfloat))  allocate(missing_value, source=missing_value_cfloat)
-    if(present(missing_value_cdouble)) allocate(missing_value, source=missing_value_cdouble)
-
-    module_name_f = fms_string_utils_c2f_string(module_name)
-    field_name_f  = fms_string_utils_c2f_string(field_name)
-    if(present(units))     units_f = fms_string_utils_c2f_string(units)
-    if(present(realm))     realm_f = fms_string_utils_c2f_string(realm)
-    if(present(long_name)) long_name_f = fms_string_utils_c2f_string(long_name)
-    if(present(standard_name)) standard_name_f = fms_string_utils_c2f_string(standard_name)
-    
-    cFMS_register_diag_field_scalar = fms_diag_register_diag_field(module_name_f, field_name_f,        &
-         init_time=field_init_time, long_name=long_name_f, units=units_f, missing_value=missing_value, &
-         range=range, standard_name=standard_name_f, do_not_log=logical(do_not_log), err_msg=err_msg_f,&
-         area=area, volume=volume, realm=realm_f, multiple_send_data=logical(multiple_send_data))
-       
-    if(present(err_msg) .and. err_msg_f /= '') call fms_string_utils_f2c_string(err_msg, err_msg_f)
-    
-  end function cFMS_register_diag_field_scalar
-
-
+  
   !subroutine register_diag_field
   !subroutine register_static_field
   
@@ -148,7 +98,5 @@ contains
   !subroutine diag_send_complete
   !subroutine diag_send_complete_instant
   
-#include "cfms_diag_axis_init.fh"
-#include "cfms_register_diag_field.fh"
   
 end module cdiag_manager_mod

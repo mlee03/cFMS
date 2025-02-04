@@ -7,7 +7,7 @@
 void set_domain(int *domain_id);
 void test_cFMS_diag_init();
 void test_cFMS_diag_axis_init_cfloat(int *domain_id);
-  //void test_register_diag_field_scalar_int(int *domain_id);
+void test_cFMS_register_diag_field_scalar_int();
 
 int main() 
 {
@@ -19,6 +19,7 @@ int main()
   
   test_cFMS_diag_init();
   test_cFMS_diag_axis_init_cfloat(&domain_id);
+  test_cFMS_register_diag_field_scalar_int();
 
   return EXIT_SUCCESS;
 
@@ -104,8 +105,7 @@ void test_cFMS_diag_axis_init_cfloat(int *domain_id)
   
 }
 
-
-void test_register_diag_field_scalar()
+void test_cFMS_register_diag_field_scalar_int()
 {
   char    module_name[NAME_LENGTH] = "atm_mod";
   char    field_name[NAME_LENGTH] = "var1";
@@ -114,8 +114,6 @@ void test_register_diag_field_scalar()
   char    standard_name[NAME_LENGTH] = "var1 standard name";
   int     missing_value = -99;
   int     range[2] = {-10,10};
-  float  *range_float = NULL;
-  double *range_double = NULL;
   bool   *do_not_log = NULL;
   char    err_msg[NAME_LENGTH] = "NONE";
   int     area = 1;
@@ -127,16 +125,14 @@ void test_register_diag_field_scalar()
   int days    = 14;
   int ticks   = 2;
 
-  int field_id;
-  
   cFMS_diag_set_field_init_time(&seconds, &days, &ticks);  
 
-  field_id = cFMS_register_diag_field_scalar_int(module_name, field_name, long_name, units, &missing_value,
-                                                 range, standard_name, do_not_log, err_msg, &area,
-                                                 &volume, realm, multiple_send_data);
+  int field_id = cFMS_register_diag_field_scalar_int(module_name, field_name, long_name, units, &missing_value,
+                                                     range, standard_name, do_not_log, err_msg, &area,
+                                                     &volume, realm, multiple_send_data);
 
 }
-  
+
 
 
   
