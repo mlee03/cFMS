@@ -1,0 +1,15 @@
+#undef  CFMS_DIAG_AXIS_INIT_
+#undef  CFMS_DIAG_AXIS_INIT_BINDC_
+#undef  CFMS_AXIS_DATA_KIND_
+#define CFMS_DIAG_AXIS_INIT_        cFMS_diag_axis_init_cfloat
+#define CFMS_DIAG_AXIS_INIT_BINDC_ "cFMS_diag_axis_init_cfloat"
+#define CFMS_AXIS_DATA_KIND_        c_float
+#include "cfms_diag_axis_init.inc"
+  
+#undef  CFMS_DIAG_AXIS_INIT_
+#undef  CFMS_DIAG_AXIS_INIT_BINDC_
+#undef  CFMS_AXIS_DATA_KIND_
+#define CFMS_DIAG_AXIS_INIT_        cFMS_diag_axis_init_cdouble
+#define CFMS_DIAG_AXIS_INIT_BINDC_ "cFMS_diag_axis_init_cdouble"
+#define CFMS_AXIS_DATA_KIND_        c_double
+#include "cfms_diag_axis_init.inc"

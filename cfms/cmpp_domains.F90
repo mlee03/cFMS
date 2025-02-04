@@ -214,7 +214,7 @@ contains
   function cFMS_get_current_domain()
     implicit none
     type(FmsMppDomain2D), pointer :: cFMS_get_current_domain
-    cFMS_get_current_domain = current_domain
+    cFMS_get_current_domain => current_domain
   end function cFMS_get_current_domain
 
   

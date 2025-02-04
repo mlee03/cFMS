@@ -22,11 +22,20 @@ extern int cFMS_diag_axis_init_cdouble(char *name, int *naxis_data, double *axis
                                        char *long_name, char *set_name, int *direction, int *edges, char *aux,
                                        char *req, int *tile_count, int *domain_position);
 
-extern int cFMS_register_diag_field_scalar(char *module_name, char *field_name, char *long_name, char *units,
-                                           int *missing_value_int, float *missing_value_cfloat,
-                                           double *missing_value_cdouble, int *range_int, float *range_cfloat,
-                                           double *range_cdouble, char *standard_name, bool *do_not_log,
-                                           char *err_msg, int *area, int *volume, char *realm, bool *multiple_send_data);
+extern int cFMS_register_diag_field_scalar_int(char *module_name, char *field_name, char *long_name,
+                                               char *units, int *missing_value, int *range,
+                                               char *standard_name, bool *do_not_log, char *err_msg,
+                                               int *area, int *volume, char *realm, bool *multiple_send_data);
+
+extern int cFMS_register_diag_field_scalar_cfloat(char *module_name, char *field_name, char *long_name,
+                                                  char *units, float *missing_value, float *range,
+                                                  char *standard_name, bool *do_not_log, char *err_msg,
+                                                  int *area, int *volume, char *realm, bool *multiple_send_data);
+
+extern int cFMS_register_diag_field_scalar_cdouble(char *module_name, char *field_name, char *long_name,
+                                                   char *units, double *missing_value, double *range,
+                                                   char *standard_name, bool *do_not_log, char *err_msg,
+                                                   int *area, int *volume, char *realm, bool *multiple_send_data);
 
 extern void cFMS_diag_set_field_init_time(int *seconds, int *days, int *ticks);
 

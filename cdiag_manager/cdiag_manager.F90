@@ -21,24 +21,21 @@ module cdiag_manager_mod
   public :: cFMS_diag_axis_init_cdouble  
   public :: cFMS_diag_init
   public :: cFMS_diag_set_field_init_time
-  public :: cFMS_register_diag_field_scalar
-  public :: cFMS_set_diag_axis_type
-  public :: cFMS_set_diag_data_type
+  public :: cFMS_register_diag_field_scalar_int
+  public :: cFMS_register_diag_field_scalar_cfloat
+  public :: cFMS_register_diag_field_scalar_cdouble
   
   type(FmsTime_type), save :: field_init_time
 
   integer, public, bind(C, name="DIAG_OTHER") :: DIAG_OTHER_C = DIAG_OTHER
   integer, public, bind(C, name="DIAG_OCEAN") :: DIAG_OCEAN_C = DIAG_OCEAN
-  integer, public, bind(C, name="DIAG_ALL")   :: DIAG_ALL_C = DIAG_ALL
+  integer, public, bind(C, name="DIAG_ALL")   :: DIAG_ALL_C   = DIAG_ALL
 
   integer, public, bind(C, name="THIRTY_DAY_MONTHS") :: THIRTY_DAY_MONTHS_C = THIRTY_DAY_MONTHS
   integer, public, bind(C, name="GREGORIAN")         :: GREGORIAN_C = GREGORIAN
-  integer, public, bind(C, name="JULIAN")            :: JULIAN_C   = JULIAN
+  integer, public, bind(C, name="JULIAN")            :: JULIAN_C    = JULIAN
   integer, public, bind(C, name="NOLEAP")            :: NOLEAP_C    = NOLEAP
 
-  integer, public :: CFMS_DIAG_AXIS_TYPE
-  integer, public :: CFMS_DIAG_DATA_TYPE
-  
 contains
 
   subroutine cFMS_diag_init(diag_model_subset, time_init, err_msg, calendar_type) bind(C, name='cFMS_diag_init')
@@ -134,19 +131,6 @@ contains
   end function cFMS_register_diag_field_scalar
 
 
-  subroutine cFMS_set_diag_axis_type(axis_type) bind(C, name="cFMS_set_axis_type")
-    implicit none
-    integer, intent(in), value :: axis_type
-    CFMS_DIAG_AXIS_TYPE = axis_type
-  end subroutine cFMS_set_diag_axis_type
-
-  
-  subroutine cFMS_set_diag_data_type(data_type) bind(C, name="cFMS_set_data_type")
-    implicit none
-    integer, intent(in), value :: data_type
-    CFMS_DIAG_DATA_TYPE = data_type
-  end subroutine cFMS_set_diag_data_type
-    
   !subroutine register_diag_field
   !subroutine register_static_field
   
@@ -164,6 +148,7 @@ contains
   !subroutine diag_send_complete
   !subroutine diag_send_complete_instant
   
-#include "cdiag_manager.fh"
+#include "cfms_diag_axis_init.fh"
+#include "cfms_register_diag_field.fh"
   
 end module cdiag_manager_mod
