@@ -20,8 +20,8 @@
 #define CFMS_H
 
 #include <stdbool.h>
-#include <cmpp.h>
-#include <cmpp_domains.h>
+#include <c_mpp.h>
+#include <c_mpp_domains.h>
 
 #define NAME_LENGTH 64 
 #define MESSAGE_LENGTH 128

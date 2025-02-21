@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <cfms.h>
+#include <c_fms.h>
 
 #define NX 8
 #define NY 8

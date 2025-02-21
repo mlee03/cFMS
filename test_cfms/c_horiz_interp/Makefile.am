@@ -16,23 +16,27 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
+#
 
-# This is an automake file for the libFMS directory of the FMS
-# package. This is the final packaging of the library.
+# Find the needed mod and .inc files.
+AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_horiz_interp -I${top_builddir}/c_fms
 
-# Ed Hartnett 2/22/19
+# Link to the FMS library.
+LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
-# This builds the FMS library file.
-lib_LTLIBRARIES = libcFMS.la
+check_PROGRAMS = test_create_xgrid
 
-# These linker flags specify libtool version info.
-# See http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
-# for information regarding incrementing `-version-info`.
-libcFMS_la_LDFLAGS = -version-info 21:0:0
+TESTS = test_create_xgrid.sh
 
-# Add the convenience libraries to the FMS library.
-libcFMS_la_LIBADD  = $(top_builddir)/c_fms/lib_c_fms.la
-libcFMS_la_LIBADD += $(top_builddir)/c_horiz_interp/lib_c_horiz_interp.la
+test_create_xgrid_SOURCES = test_create_xgrid.c
 
-libcFMS_la_SOURCES =
-nodist_EXTRA_libcFMS_la_SOURCES = dummy.f90
+TEST_EXTENSIONS = .sh
+SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
+                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
+
+# Include these files with the distribution.
+EXTRA_DIST = test_create_xgrid.sh
+
+# Clean up
+CLEANFILES = input.nml *.nc* *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs
+

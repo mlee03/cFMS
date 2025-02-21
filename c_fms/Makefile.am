@@ -27,20 +27,20 @@ AM_CPPFLAGS = -I. -I./include
 AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
 # Build these uninstalled convenience libraries.
-noinst_LTLIBRARIES = libcfms.la
+noinst_LTLIBRARIES = lib_c_fms.la
 
 # Each convenience library depends on its source.
-libcfms_la_SOURCES = cfms.F90 cmpp.F90 cmpp_domains.F90
+lib_c_fms_la_SOURCES = c_fms.F90 c_mpp.F90 c_mpp_domains.F90
 
-cfms_mod@cmpp_domains_smod.smod: cmpp_domains.F90 cfms_mod.mod cfms_mod.smod
-cfms_mod@cmpp_smod.smod: cmpp.F90 cfms_mod.mod cfms_mod.smod
-cfms_mod.mod, cfms_mod.smod: cfms.F90 
+c_fms_mod@cmpp_domains_smod.smod: c_mpp_domains.F90 c_fms_mod.mod c_fms_mod.smod
+c_fms_mod@cmpp_smod.smod: c_mpp.F90 c_fms_mod.mod c_fms_mod.smod
+c_fms_mod.mod, c_fms_mod.smod: c_fms.F90 
 
 # Mod files are built and then installed as headers.
-MODFILES = cfms_mod.mod #cfms_mod.smod cfms_mod@cmpp_smod.smod cfms_mod@cmpp_domains_smod.smod
+MODFILES = c_fms_mod.mod 
 BUILT_SOURCES = $(MODFILES)
 nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
 
-include_HEADERS = cfms.h cmpp.h cmpp_domains.h
+include_HEADERS = c_fms.h c_mpp.h c_mpp_domains.h
 
 include $(top_srcdir)/mkmods.mk

@@ -16,8 +16,8 @@
 !* You should have received a copy of the GNU Lesser General Public
 !* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************/
-#ifndef CMPP_DOMAINS_STRUCT_H
-#define CMPP_DOMAINS_STRUCT_H
+#ifndef C_MPP_DOMAINS_STRUCT_H
+#define C_MPP_DOMAINS_STRUCT_H
 
 enum DatatypeEnum{ inttype=1, floattype=3, doubletype=4 };
 enum DatatypeEnum Datatype;

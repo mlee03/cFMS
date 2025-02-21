@@ -16,7 +16,7 @@
 !* You should have received a copy of the GNU Lesser General Public
 !* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 !***********************************************************************
-module cFMS_mod
+module c_FMS_mod
 
   use FMS, only : FATAL, NOTE, WARNING
   use FMS, only : FmsMppDomain2D, FmsMppDomainsNestDomain_type
@@ -287,7 +287,7 @@ module cFMS_mod
        integer, intent(in),    optional :: whalo, shalo
      end subroutine     
 
-#include "cfms_interfaces.fh"
+#include "c_fms_interfaces.fh"
 
   end interface
 
@@ -337,4 +337,4 @@ contains
     npes = npes_in
   end subroutine cFMS_set_pelist_npes
 
-end module cFMS_mod
+end module c_FMS_mod

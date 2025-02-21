@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,23 +17,15 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# This is an automake file for the libFMS directory of the FMS
-# package. This is the final packaging of the library.
+# Set common test settings.
+. ../test-lib.sh
 
-# Ed Hartnett 2/22/19
+if [ -f "input.nml" ] ; then rm -f input.nml ; fi
+touch input.nml
 
-# This builds the FMS library file.
-lib_LTLIBRARIES = libcFMS.la
+test_expect_success "c_horiz_interp/create_xgrid" 'mpirun -n 1 create_xgrid'
+test_done
 
-# These linker flags specify libtool version info.
-# See http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
-# for information regarding incrementing `-version-info`.
-libcFMS_la_LDFLAGS = -version-info 21:0:0
-
-# Add the convenience libraries to the FMS library.
-libcFMS_la_LIBADD  = $(top_builddir)/c_fms/lib_c_fms.la
-libcFMS_la_LIBADD += $(top_builddir)/c_horiz_interp/lib_c_horiz_interp.la
-
-libcFMS_la_SOURCES =
-nodist_EXTRA_libcFMS_la_SOURCES = dummy.f90

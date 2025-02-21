@@ -5,7 +5,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_int_2d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_int_2d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   2
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
 
 !int 3d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -14,7 +14,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_int_3d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_int_3d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   3
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !int 4d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -23,7 +23,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_int_4d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_int_4d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   4
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !int 5d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -32,7 +32,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_int_5d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_int_5d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   5
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
 
 !float 2d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -41,7 +41,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_float_2d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_float_2d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   2
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
 
 !float 3d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -50,7 +50,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_float_3d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_float_3d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   3
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !float 4d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -59,7 +59,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_float_4d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_float_4d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   4
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !float 5d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -68,7 +68,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_float_5d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_float_5d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   5
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !double 2d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -77,7 +77,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_double_2d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_double_2d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   2
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
 
 !double 3d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -87,7 +87,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_double_3d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_double_3d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   3
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !double 4d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -97,7 +97,7 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_double_4d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_double_4d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   4
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
   
 !double 5d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -107,5 +107,5 @@
 #define CFMS_UPDATE_DOMAINS_SUB_NAME_     cFMS_update_domains_double_5d
 #define CFMS_UPDATE_DOMAINS_BINDC_        "cFMS_update_domains_double_5d"
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_   5
-#include "cfms_interfaces.inc"
+#include "c_fms_interfaces.inc"
 

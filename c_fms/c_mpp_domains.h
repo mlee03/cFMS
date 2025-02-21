@@ -16,11 +16,11 @@
 !* You should have received a copy of the GNU Lesser General Public
 !* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************/
-#ifndef CMPP_DOMAINS_H
-#define CMPP_DOMAINS_H
+#ifndef C_MPP_DOMAINS_H
+#define C_MPP_DOMAINS_H
 
 #include <stdbool.h>
-#include <cmpp_domains_structs.h>
+#include <c_mpp_domains_structs.h>
 
 extern void cFMS_define_domains(int global_indices[4], int layout[2], int *domain_id, int pelist[], 
                                 int *xflags, int *yflags, int *xhalo, int *yhalo, int xextent[], int yextent[],

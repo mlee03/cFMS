@@ -16,7 +16,7 @@
 !* You should have received a copy of the GNU Lesser General Public
 !* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 !***********************************************************************
-submodule(cfms_mod) cmpp_domains_smod
+submodule(c_fms_mod) c_mpp_domains_smod
   
   implicit none
 
@@ -457,7 +457,6 @@ contains
    
   end subroutine cFMS_set_global_domain
   
-  !> cFMS_update_domains
-#include "cmpp_domains.fh"
+#include "c_mpp_domains_update.fh"
   
-end submodule cmpp_domains_smod
+end submodule c_mpp_domains_smod

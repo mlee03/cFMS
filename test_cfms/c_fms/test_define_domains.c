@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cfms.h>
+#include <c_fms.h>
 #include <test_cfms.h>
 
 #define NX 96

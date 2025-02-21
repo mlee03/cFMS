@@ -33,7 +33,8 @@ DOCS = docs
 endif
 
 # Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = cfms \
+SUBDIRS = c_fms \
+  c_horiz_interp \
 	libcFMS \
 	test_cfms
 
