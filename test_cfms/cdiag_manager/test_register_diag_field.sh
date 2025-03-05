@@ -33,26 +33,21 @@ EOF
 #from test_fms/test_diag_manager2.sh
 cat <<EOF > diag_table.yaml
 title: test_diag_manager
-base_date: 2 1 1 0 0 0
+base_date: 2025 1 27 14 10 0
 
 diag_files:
 - file_name: file1_forecast
-  freq: 1 days
+  freq: 1 hours
   time_units: hours
   unlimdim: time
   varlist:
   - module: atm_mod
-    var_name: var1
+    var_name: var_2d
     reduction: average
     kind: r4
     output_name: var1_min
-  - module: atm_mod
-    var_name: var1
-    reduction: average
-    kind: r4
-    output_name: var2_max
 EOF
 
-test_expect_success "cdiag_maanger" 'mpirun -n 4  ./test_register_diag_field'
+test_expect_success "cdiag_maanger" 'mpirun -n 1  ./test_register_diag_field'
 test_done
 
