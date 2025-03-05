@@ -1,4 +1,4 @@
-module cdiag_manager_mod
+module c_diag_manager_mod
 
   use FMS, only : fms_diag_init, fms_diag_end
   use FMS, only : fms_diag_register_diag_field, fms_diag_register_static_field, fms_diag_axis_init
@@ -17,8 +17,8 @@ module cdiag_manager_mod
   
   use FMS, only : FmsMppDomain2D
 
-  use cFMS_mod, only : cFMS_get_current_domain
-  use cFMS_mod, only : CFMS_CFLOAT_TYPE, CFMS_CDOUBLE_TYPE, CFMS_CINT_TYPE, NAME_LENGTH, MESSAGE_LENGTH
+  use c_fms_mod, only : cFMS_get_current_domain
+  use c_fms_mod, only : CFMS_CFLOAT_TYPE, CFMS_CDOUBLE_TYPE, CFMS_CINT_TYPE, NAME_LENGTH, MESSAGE_LENGTH
 
   use iso_c_binding
 
@@ -209,8 +209,8 @@ contains
     
   end subroutine cFMS_diag_set_time_end
   
-#include "cdiag_axis_init.fh"
-#include "cregister_diag_field.fh"
+#include "c_diag_axis_init.fh"
+#include "c_register_diag_field.fh"
 #include "c_send_data.fh"  
   
   !subroutine register_diag_field
@@ -231,4 +231,4 @@ contains
   !subroutine diag_send_complete_instant
   
   
-end module cdiag_manager_mod
+end module c_diag_manager_mod

@@ -1,4 +1,3 @@
-#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -17,15 +16,29 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
-# This is part of the GFDL FMS package. This is a shell script to
-# execute tests in the test_fms/coupler directory.
 
-# Set common test settings.
-. ../test-lib.sh
+# This is an automake file for the fms directory of the FMS
+# package.
 
-if [ -f "input.nml" ] ; then rm -f input.nml ; fi
-touch input.nml
+# Ed Hartnett 2/22/19
 
-test_expect_success "cfms" 'mpirun -n 8  ./test_define_domains'
-test_done
+# Include .h and .mod files.
+AM_CPPFLAGS = -I. -I./include
+AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
+# Build these uninstalled convenience libraries.
+noinst_LTLIBRARIES = libcdiag_manager.la
+
+# Each convenience library depends on its source.
+libcdiag_manager_la_SOURCES = c_diag_manager.F90
+
+c_diag_manager_mod.mod : c_diag_manager.F90
+
+# Mod files are built and then installed as headers.
+MODFILES = c_diag_manager_mod.mod
+BUILT_SOURCES = $(MODFILES)
+nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
+
+include_HEADERS = c_diag_manager.h
+
+include $(top_srcdir)/mkmods.mk

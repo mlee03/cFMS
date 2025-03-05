@@ -1,0 +1,165 @@
+!cints
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_2d_cint
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_2d_cint"
+#define CFMS_SEND_DATA_FIELD_NDIM_              2
+#define CFMS_SEND_DATA_FIELD_TYPE_              integer
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/2,1/)
+#include "c_send_data.inc"
+
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_3d_cint
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_3d_cint"
+#define CFMS_SEND_DATA_FIELD_NDIM_              3
+#define CFMS_SEND_DATA_FIELD_TYPE_              integer
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(3),field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2),field_shape(3)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/3,2,1/)
+#include "c_send_data.inc"
+  
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_4d_cint
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_4d_cint"
+#define CFMS_SEND_DATA_FIELD_NDIM_              4
+#define CFMS_SEND_DATA_FIELD_TYPE_              integer
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:,:,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(4),field_shape(3),field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2),field_shape(3),field_shape(4)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/4,3,2,1/)
+#include "c_send_data.inc"
+
+
+!c_float
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_2d_cfloat
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_2d_cfloat"
+#define CFMS_SEND_DATA_FIELD_NDIM_              2
+#define CFMS_SEND_DATA_FIELD_TYPE_              real(c_float)
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/2,1/)
+#include "c_send_data.inc"
+
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_3d_cfloat
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_3d_cfloat"
+#define CFMS_SEND_DATA_FIELD_NDIM_              3
+#define CFMS_SEND_DATA_FIELD_TYPE_              real(c_float)
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(3),field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2),field_shape(3)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/3,2,1/)
+#include "c_send_data.inc"
+
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_4d_cfloat
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_4d_cfloat"
+#define CFMS_SEND_DATA_FIELD_NDIM_              4
+#define CFMS_SEND_DATA_FIELD_TYPE_              real(c_float)
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:,:,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(4),field_shape(3),field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2),field_shape(3),field_shape(4)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/4,3,2,1/)
+#include "c_send_data.inc"
+
+!c_double
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_2d_cdouble
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_2d_cdouble"
+#define CFMS_SEND_DATA_FIELD_NDIM_              2
+#define CFMS_SEND_DATA_FIELD_TYPE_              real(c_double)
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/2,1/)
+#include "c_send_data.inc"
+
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_3d_cdouble
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_3d_cdouble"
+#define CFMS_SEND_DATA_FIELD_NDIM_              3
+#define CFMS_SEND_DATA_FIELD_TYPE_              real(c_double)
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(3),field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2),field_shape(3)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/3,2,1/)
+#include "c_send_data.inc"
+
+#undef  CFMS_SEND_DATA_
+#undef  CFMS_SEND_DATA_BINDC_
+#undef  CFMS_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_CF_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_SHAPE_
+#undef  CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_
+#define CFMS_SEND_DATA_                         cfms_send_data_4d_cdouble
+#define CFMS_SEND_DATA_BINDC_                   "cFMS_send_data_4d_cdouble"
+#define CFMS_SEND_DATA_FIELD_NDIM_              4
+#define CFMS_SEND_DATA_FIELD_TYPE_              real(c_double)
+#define CFMS_SEND_DATA_FIELD_CF_ASSUMED_SHAPE_  :,:,:,:
+#define CFMS_SEND_DATA_FIELD_CF_SHAPE_          field_shape(4),field_shape(3),field_shape(2),field_shape(1)
+#define CFMS_SEND_DATA_FIELD_F_SHAPE_           field_shape(1),field_shape(2),field_shape(3),field_shape(4)
+#define CFMS_SEND_DATA_FIELD_F_RESHAPE_ORDER_   (/4,3,2,1/)
+#include "c_send_data.inc"

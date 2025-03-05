@@ -355,14 +355,14 @@ AC_SUBST([MODDIR],[\$\(top_builddir\)/.mods])
 # These files will be created when the configure script is run.
 AC_CONFIG_FILES([
   Makefile
-  cfms/Makefile
-  cdiag_manager/Makefile
+  c_fms/Makefile
+  c_diag_manager/Makefile
   libcFMS/Makefile
   test_cfms/test-lib.sh
   test_cfms/intel_coverage.sh
   test_cfms/Makefile
-  test_cfms/cfms/Makefile
-  test_cfms/cdiag_manager/Makefile
+  test_cfms/c_fms/Makefile
+  test_cfms/c_diag_manager/Makefile
 ])
 
 AC_OUTPUT()

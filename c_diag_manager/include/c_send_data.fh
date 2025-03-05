@@ -1,0 +1,15 @@
+!cints
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_ASSUMED_SHAPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_F_REVERSED_SHAPE_
+#define CFMS_DIAG_SEND_DATA_                        cFMS_diag_send_data_2d_cfloat
+#define CFMS_DIAG_SEND_DATA_BINDC_                  "cFMS_diag_send_data_2d_cfloat"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_             2
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_             real(c_float)
+#define CFMS_DIAG_SEND_DATA_FIELD_ASSUMED_SHAPE_    :,:
+#define CFMS_DIAG_SEND_DATA_FIELD_REVERSED_SHAPE_ field_shape(2),field_shape(1)
+#include "c_send_data.inc"
+
