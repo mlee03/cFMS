@@ -34,11 +34,11 @@ endif
 
 # Make targets will be run in each subdirectory. Order is significant.
 SUBDIRS = cfms \
-  c_constants \
-  c_grid_utils \
-  c_horiz_interp \
-	libcFMS \
-	test_cfms
+          c_constants \
+          c_grid_utils \
+          c_horiz_interp \
+          libcFMS \
+          test_cfms
 
 ## Build libFMS module
 AM_CPPFLAGS = -I${top_srcdir}/include
