@@ -355,11 +355,16 @@ AC_SUBST([MODDIR],[\$\(top_builddir\)/.mods])
 AC_CONFIG_FILES([
   Makefile
   cfms/Makefile
+  c_constants/Makefile
+  c_grid_utils/Makefile
+  c_horiz_interp/Makefile
   libcFMS/Makefile
   test_cfms/test-lib.sh
   test_cfms/intel_coverage.sh
   test_cfms/Makefile
   test_cfms/cfms/Makefile
+  test_cfms/c_grid_utils/Makefile
+  test_cfms/c_horiz_interp/Makefile
 ])
 
 AC_OUTPUT()
