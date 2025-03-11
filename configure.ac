@@ -354,7 +354,7 @@ AC_SUBST([MODDIR],[\$\(top_builddir\)/.mods])
 # These files will be created when the configure script is run.
 AC_CONFIG_FILES([
   Makefile
-  cfms/Makefile
+  c_fms/Makefile
   c_constants/Makefile
   c_grid_utils/Makefile
   c_horiz_interp/Makefile
@@ -362,7 +362,7 @@ AC_CONFIG_FILES([
   test_cfms/test-lib.sh
   test_cfms/intel_coverage.sh
   test_cfms/Makefile
-  test_cfms/cfms/Makefile
+  test_cfms/c_fms/Makefile
   test_cfms/c_grid_utils/Makefile
   test_cfms/c_horiz_interp/Makefile
 ])

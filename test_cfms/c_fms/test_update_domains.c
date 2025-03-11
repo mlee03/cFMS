@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <cfms.h>
+#include <c_fms.h>
+#include <c_mpp_domains_helper.h>
 
 #define NX 8
 #define NY 8

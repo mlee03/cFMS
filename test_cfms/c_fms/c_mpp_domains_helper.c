@@ -16,63 +16,10 @@
 !* You should have received a copy of the GNU Lesser General Public
 !* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************/
-#ifndef CMPP_DOMAINS_H
-#define CMPP_DOMAINS_H
-
-#include <stdbool.h>
-#include <cmpp_domains_structs.h>
-
-extern void cFMS_define_domains(int global_indices[4], int layout[2], int *domain_id, int pelist[], 
-                                int *xflags, int *yflags, int *xhalo, int *yhalo, int xextent[], int yextent[],
-                                bool **maskmap, char *name, bool *symmetry, int memory_size[2],
-                                int *whalo, int *ehalo, int *shalo, int *nhalo, bool *is_mosaic,
-                                int *tile_count, int *tile_id, bool *complete, int *x_cyclic_offset, int *y_cyclic_offset);
-
-extern void cFMS_define_io_domain(int io_layout[2], int *domain_id);
-
-extern void cFMS_define_layout(int global_indices[4], int *ndivs, int layout[2]);
-
-extern void cFMS_define_nest_domains(int *num_nest, int *ntiles, int nest_level[], int tile_fine[], int tile_course[],
-                                     int istart_coarse[], int icount_coarse[], int jstart_coarse[], int jcount_coarse[],
-                                     int npes_nest_tile[], int x_refine[], int y_refine[], int *nest_domain_id,
-                                     int* domain_id, int *extra_halo, char *name);
-
-extern bool cFMS_domain_is_initialized(int *domain_id);
-
-extern void cFMS_define_domains_easy(cDomainStruct cdomain);
-
-extern void cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain);
-
-extern void cFMS_get_compute_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                    int *xsize, int *xmax_size, int *ysize, int *ymax_size,
-                                    bool *x_is_global, bool *y_is_global, int *tile_count, int *position,
-                                    int *whalo, int *shalo);
-  
-extern void cFMS_get_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                 int *xsize, int *xmax_size, int *ysize, int *ymax_size,
-                                 bool *x_is_global, bool *y_is_global, int *tile_count, int *position,
-                                 int *whalo, int *shalo);
-
-extern void cFMS_get_domain_name(char *domain_name_c, int *domain_id);
-
-extern void cFMS_get_domain_pelist(int pelist[], int *domain_id);
-
-extern void cFMS_get_layout(int layout[2], int *domain_id);
-
-extern void cFMS_set_compute_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                    int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count,
-                                    int *whalo, int *shalo);
-
-extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                 int *xsize, int *ysize, bool *x_is_global, bool *y_is_global, int *tile_count,
-                                 int *whalo, int *shalo);
-
-extern void cFMS_set_global_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
-                                   int *xsize, int *ysize, int *tile_count);
-
-extern void cFMS_update_domains_float_2d(int *field_shape, float **field, int *domain_id, int *flags, int *complete,
-                                         int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
-                                         char *name, int *tile_count);
+#include <stdio.h>
+#include <stdlib.h>
+#include <c_fms.h>
+#include <c_mpp_domains_helper.h>
 
 void cFMS_define_domains_easy(cDomainStruct cdomain)
 {
@@ -94,6 +41,7 @@ void cFMS_define_domains_easy(cDomainStruct cdomain)
                       cdomain.x_cyclic_offset, cdomain.y_cyclic_offset);
 }
 
+
 void cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain)
 {
 
@@ -114,6 +62,7 @@ void cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain)
                            cnestdomain.extra_halo,
                            cnestdomain.name);
 }
+
 
 void cFMS_null_cdomain(cDomainStruct *cdomain)
 {
@@ -143,6 +92,7 @@ void cFMS_null_cdomain(cDomainStruct *cdomain)
   cdomain->y_cyclic_offset = NULL;
 }
 
+
 void cFMS_null_cnest_domain(cNestDomainStruct *cnest_domain)
 {
   cnest_domain->num_nest = NULL;
@@ -163,8 +113,18 @@ void cFMS_null_cnest_domain(cNestDomainStruct *cnest_domain)
   cnest_domain->name = NULL;
 }
 
-
-#endif
-
-                   
-      
+int any(int n, int* array, int value)
+{
+  for(int i=0 ; i<n ; i++){
+    if(value == array[i]) return TRUE;
+  }
+  return FALSE;
+}
+                            
+int errmsg_int(int answer, int test, char *message)
+{
+  printf("\nEXPECTED %d BUT GOT %d FOR %s\n", answer, test, message);
+  printf("HEREHERE %d\n", FATAL);
+  cFMS_error(FATAL, "GOODBYE!");
+  exit(FAIL);
+}
