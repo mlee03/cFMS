@@ -192,14 +192,14 @@ contains
   end subroutine cFMS_get_current_pelist
 
   !> cFMS_npes
-  module function cFMS_npes() bind(C, name="cFMS_npes")
+  function cFMS_npes() bind(C, name="cFMS_npes")
     implicit none
     integer :: cFMS_npes
     cFMS_npes = fms_mpp_npes()
   end function cFMS_npes  
 
   !> cFMS_pes
-  module function cFMS_pe() bind(C, name="cFMS_pe")
+  function cFMS_pe() bind(C, name="cFMS_pe")
     implicit none
     integer :: cFMS_pe
     cFMS_pe = fms_mpp_pe()
