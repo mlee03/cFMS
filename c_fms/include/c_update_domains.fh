@@ -15,7 +15,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! int 3d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -34,7 +34,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! int 4d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -53,7 +53,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3),field_shape(4)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(4),field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/4,3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! int 5d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -72,7 +72,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3),field_shape(4),field_shape(5)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/5,4,3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   
     ! cfloat 2d
@@ -92,7 +92,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! cfloat 3d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -111,7 +111,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! cfloat 4d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -130,7 +130,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3),field_shape(4)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(4),field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/4,3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! cfloat 5d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -149,7 +149,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3),field_shape(4),field_shape(5)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/5,4,3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
 
   ! cdouble 2d
@@ -169,7 +169,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! cdouble 3d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -188,7 +188,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! cdouble 4d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -207,7 +207,7 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3),field_shape(4)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(4),field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/4,3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 
   ! cdouble 5d
 #undef  CFMS_UPDATE_DOMAINS_SUB_NAME_
@@ -226,5 +226,5 @@
 #define CFMS_UPDATE_DOMAINS_SHAPE_F_       field_shape(1),field_shape(2),field_shape(3),field_shape(4),field_shape(5)
 #define CFMS_UPDATE_DOMAINS_SHAPE_CF_      field_shape(5),field_shape(4),field_shape(3),field_shape(2),field_shape(1)
 #define CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_ (/5,4,3,2,1/)
-#include "cmpp_domains.inc"
+#include "c_update_domains.inc"
 

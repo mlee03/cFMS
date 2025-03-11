@@ -1,4 +1,4 @@
-module subroutine CFMS_UPDATE_DOMAINS_SUB_NAME_(field_shape, field, domain_id, flags, complete, position, &
+subroutine CFMS_UPDATE_DOMAINS_SUB_NAME_(field_shape, field, domain_id, flags, complete, position, &
      whalo, ehalo, shalo, nhalo, name_c, tile_count) bind(C, name=CFMS_UPDATE_DOMAINS_BINDC_)
 
   implicit none

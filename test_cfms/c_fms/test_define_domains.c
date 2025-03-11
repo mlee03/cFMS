@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cfms.h>
-#include <test_cfms.h>
+#include <c_fms.h>
+#include <c_mpp_domains_helper.h>
 
 #define NX 96
 #define NY 96

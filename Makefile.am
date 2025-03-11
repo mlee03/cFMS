@@ -33,7 +33,7 @@ DOCS = docs
 endif
 
 # Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = cfms \
+SUBDIRS = c_fms \
           c_constants \
           c_grid_utils \
           c_horiz_interp \

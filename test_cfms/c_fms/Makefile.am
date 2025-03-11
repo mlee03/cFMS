@@ -19,7 +19,7 @@
 #
 
 # Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/cfms
+AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_fms
 
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
@@ -32,9 +32,9 @@ TESTS = test_define_domains.sh \
 	test_getset_domains.sh \
   test_update_domains.sh
 
-test_define_domains_SOURCES = test_define_domains.c
-test_getset_domains_SOURCES = test_getset_domains.c
-test_update_domains_SOURCES = test_update_domains.c
+test_define_domains_SOURCES = c_mpp_domains_helper.c test_define_domains.c 
+test_getset_domains_SOURCES = c_mpp_domains_helper.c test_getset_domains.c
+test_update_domains_SOURCES = c_mpp_domains_helper.c test_update_domains.c 
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \

@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <cfms.h>
-#include <test_cfms.h>
-
+#include <c_fms.h>
+#include <c_mpp_domains_helper.h>
 
 int main()
 {
@@ -17,7 +16,7 @@ int main()
   //      *      *     *     *
   //      *      *     *     *
 
-  cDomainStruct domain = cDomainStruct_init;  
+  cDomainStruct domain;  
   int domain_id = 0;
   int ndiv = 4;
   int global_indices[] = {0,3,0,3};
@@ -28,7 +27,8 @@ int main()
   char name[NAME_LENGTH] = "test domain";
   
   cFMS_init(NULL,NULL, NULL, NULL);
-
+  cFMS_null_cdomain(&domain);
+  
   //set domain 
   { 
     domain.global_indices = global_indices;
