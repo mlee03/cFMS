@@ -1,5 +1,6 @@
 module c_horiz_interp_mod
 
+  use FMS, only : fms_horiz_interp_init
   use iso_c_binding
   implicit none
 
@@ -7,6 +8,7 @@ module c_horiz_interp_mod
 
   public :: cFMS_create_xgrid_2dx2d_order1
   public :: cFMS_get_maxxgrid
+  public :: cFMS_horiz_interp_init
   
 contains
 
@@ -48,6 +50,15 @@ contains
     cFMS_get_maxxgrid = get_maxxgrid()
 
   end function cFMS_get_maxxgrid
+
+  !cFMS_horiz_interp_init
+  subroutine cFMS_horiz_interp_init() bind(C, name="cFMS_horiz_interp_init")
+
+    call fms_horiz_interp_init
+
+  end subroutine cFMS_horiz_interp_init
+
+
 
   
 end module c_horiz_interp_mod
