@@ -55,7 +55,7 @@ contains
   subroutine cFMS_horiz_interp_init() bind(C, name="cFMS_horiz_interp_init")
 
     implicit none
-    call fms_horiz_inter_init
+    call fms_horiz_interp_init
 
   end subroutine cFMS_horiz_interp_init
 
