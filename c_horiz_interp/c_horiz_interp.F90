@@ -52,7 +52,7 @@ contains
   end function cFMS_get_maxxgrid
 
   !cFMS_horiz_interp_init
-  subroutine cFMS_horiz_interp_init bind(C, name="cFMS_horiz_interp_init")
+  subroutine cFMS_horiz_interp_init() bind(C, name="cFMS_horiz_interp_init")
 
     implicit none
     call fms_horiz_inter_init
