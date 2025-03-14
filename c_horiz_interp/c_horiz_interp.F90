@@ -59,6 +59,6 @@ contains
   end subroutine cFMS_horiz_interp_init
 
 
-
+#include "c_horiz_interp.fh"
   
 end module c_horiz_interp_mod
