@@ -32,7 +32,7 @@
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_LAT_OUT_SHAPE_CF_      lat_out_shape(2),lat_out_shape(1)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_IN_SHAPE_F_       mask_in_shape(1),mask_in_shape(2)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_IN_SHAPE_CF_      mask_in_shape(2),mask_in_shape(1)
-#define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_OUT_SHAPE_F_       mask_out_in_shape(1),mask_out_shape(2)
+#define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_OUT_SHAPE_F_       mask_out_shape(1),mask_out_shape(2)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_OUT_SHAPE_CF_      mask_out_shape(2),mask_out_shape(1)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_RESHAPE_ORDER_ (/2,1/)
 #include "c_horiz_interp.inc"
@@ -71,7 +71,7 @@
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_LAT_OUT_SHAPE_CF_      lat_out_shape(2),lat_out_shape(1)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_IN_SHAPE_F_       mask_in_shape(1),mask_in_shape(2)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_IN_SHAPE_CF_      mask_in_shape(2),mask_in_shape(1)
-#define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_OUT_SHAPE_F_       mask_out_in_shape(1),mask_out_shape(2)
+#define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_OUT_SHAPE_F_       mask_out_shape(1),mask_out_shape(2)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_MASK_OUT_SHAPE_CF_      mask_out_shape(2),mask_out_shape(1)
 #define CFMS_HORIZ_INTERP_CONSERVE_NEW_2DX2D_RESHAPE_ORDER_ (/2,1/)
 #include "c_horiz_interp.inc"
