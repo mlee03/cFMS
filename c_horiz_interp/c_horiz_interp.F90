@@ -1,6 +1,7 @@
 module c_horiz_interp_mod
 
   use FMS, only : fms_horiz_interp_init
+  use FMS, only : FmsHorizInterp_type
   use iso_c_binding
   implicit none
 
