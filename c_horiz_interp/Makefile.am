@@ -23,7 +23,7 @@
 # Ed Hartnett 2/22/19
 
 # Include .h and .mod files.
-AM_CPPFLAGS = -I. -I$(top_srcdir)/FMS/horiz_interp/include
+AM_CPPFLAGS = -I. -I$(top_srcdir)/FMS/horiz_interp/include -I./include
 AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
 # Build these uninstalled convenience libraries.
