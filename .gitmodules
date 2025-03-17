@@ -1,4 +1,4 @@
 [submodule "FMS"]
-  branch = 2024.03
+  branch = main
   path = FMS
 	url = https://github.com/NOAA-GFDL/FMS.git

@@ -34,6 +34,7 @@ endif
 
 # Make targets will be run in each subdirectory. Order is significant.
 SUBDIRS = c_fms \
+          c_fms_utils \
           c_constants \
           c_grid_utils \
           c_horiz_interp \
