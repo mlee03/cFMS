@@ -16,15 +16,28 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
+#
 
-# This is the automake file for the test_fms directory.
-# Ed Hartnett 9/20/2019
+# Find the needed mod and .inc files.
+AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_diag_manager \
+              -I${top_builddir}/c_fms -I${top_builddir}/test_cfms/c_fms
 
-# This directory stores libtool macros, put there by aclocal.
-ACLOCAL_AMFLAGS = -I m4
+# Link to the FMS library.
+LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
-# Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = c_diag_manager c_fms c_fms_utils c_grid_utils c_horiz_interp 
+check_PROGRAMS = test_send_data
 
-# testing utility scripts to distribute
-EXTRA_DIST = test-lib.sh.in intel_coverage.sh.in tap-driver.sh
+TESTS = test_send_data.sh
+
+test_send_data_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data.c
+
+TEST_EXTENSIONS = .sh
+SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
+                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
+
+# Include these files with the distribution.
+EXTRA_DIST = test_send_data.sh
+
+# Clean up
+CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs #*.nc*
+

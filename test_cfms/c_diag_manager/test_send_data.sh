@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,15 +17,37 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# This is the automake file for the test_fms directory.
-# Ed Hartnett 9/20/2019
+# Set common test settings.
+. ../test-lib.sh
 
-# This directory stores libtool macros, put there by aclocal.
-ACLOCAL_AMFLAGS = -I m4
+if [ -f "input.nml" ] ; then rm -f input.nml ; fi
+cat <<EOF > input.nml
+&diag_manager_nml
+    use_modern_diag = .true.
+/
+EOF
 
-# Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = c_diag_manager c_fms c_fms_utils c_grid_utils c_horiz_interp 
+#from test_fms/test_diag_manager2.sh
+cat <<EOF > diag_table.yaml
+title: test_diag_manager
+base_date: 2 1 1 1 1 1
 
-# testing utility scripts to distribute
-EXTRA_DIST = test-lib.sh.in intel_coverage.sh.in tap-driver.sh
+diag_files:
+- file_name: test
+  freq: 1 hours
+  time_units: hours
+  unlimdim: time
+  varlist:
+  - module: atm_mod
+    var_name: var_3d
+    reduction: average
+    kind: r4
+    output_name: var3_avg
+EOF
+
+test_expect_success "cdiag_manager" 'mpirun -n 1  ./test_send_data'
+test_done
+
