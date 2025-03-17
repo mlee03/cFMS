@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,32 +17,14 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
-#
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_constants -I${top_builddir}/c_grid_utils \
-              -I${top_builddir}/c_horiz_interp -I${top_builddir}/c_fms
+# Set common test settings.
+. ../test-lib.sh
 
-# Link to the FMS library.
-LDADD = ${top_builddir}/libcFMS/libcFMS.la
+if [ -f "input.nml" ] ; then rm -f input.nml ; fi
+touch input.nml
 
-check_PROGRAMS = test_create_xgrid \
-  test_horiz_interp_conserve
-
-TESTS = test_create_xgrid.sh \
-  test_horiz_interp_conserve.sh
-
-test_create_xgrid_SOURCES = test_create_xgrid.c
-test_horiz_interp_conserve_SOURCES = test_horiz_interp_conserve.c
-
-TEST_EXTENSIONS = .sh
-SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
-                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
-
-# Include these files with the distribution.
-EXTRA_DIST = test_create_xgrid.sh \
-  test_horiz_interp_conserve.sh
-
-# Clean up
-CLEANFILES = input.nml *.nc* *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs
-
+test_expect_success "test horiz_interp_conserve" 'mpirun -n 1  ./test_horiz_interp_conserve'
+test_done
