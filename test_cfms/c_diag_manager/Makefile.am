@@ -39,5 +39,6 @@ SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 EXTRA_DIST = test_send_data.sh
 
 # Clean up
-CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc*
+CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* *.yaml*
+>>>>>>> origin/main
 
