@@ -9,7 +9,7 @@ cd FMS
 autoreconf -iv
 export FCFLAGS="$FCFLAGS -fPIC"
 export CFLAGS="$CFLAGS -fPIC"
-./configure --enable-portable-kinds --prefix=$install_fms
+./configure --enable-portable-kinds --with-yaml --prefix=$install_fms
 make install
 cd $curr_dir
 
