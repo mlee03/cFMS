@@ -7,7 +7,6 @@
 
 #define NX 8
 #define NY 8
-#define NZ 2
 
 void set_domain(int *domain_id);
 
@@ -15,19 +14,17 @@ int main()
 {
   
   int domain_id = 0;
-  int id_x, id_y, id_z;
+  int id_x, id_y;
   
-  int id_var3;
-  int var3_shape[3] = {NX, NY, NZ};
-  float *var3;
+  int id_var2;
+  int var2_shape[2] = {NX, NY};
+  float *var2;
   
-  var3 = (float *)malloc(NX*NY*NZ*sizeof(float));
-  int ijk = 0;  
+  var2 = (float *)malloc(NX*NY*sizeof(float));
+  int ij = 0;  
   for(int i=0; i<NX; i++) {
     for(int j=0; j<NY; j++) {
-      for(int k=0; k<NZ; k++) {
-        var3[ijk++] = i*100. + j*10. + k*1.;
-      }
+      var2[ij++] = i*100. + j*10.;
     }
   }
   
@@ -102,34 +99,11 @@ int main()
                                        set_name, edges, aux, req, tile_count, domain_position, NULL);
   }
 
-  //diag axis init z
-  {    
-    char name[NAME_LENGTH] = "z";
-    int naxis_data = NZ;
-    double z[NZ];
-    char units[NAME_LENGTH] = "pointer_Z";
-    char cart_name[NAME_LENGTH] = "z";
-    char long_name[NAME_LENGTH] = "point_Z";
-    char set_name[NAME_LENGTH] = "atm";
-    int *direction = NULL;
-    int *edges = NULL;
-    char *aux = NULL;
-    char *req = NULL;
-    int *tile_count = NULL;
-    int *domain_position = NULL;
-    bool not_xy = true;
-
-    for(int k=0; k<NZ; k++) z[k] = k;
-    
-    id_z = cFMS_diag_axis_init_cdouble(name, &naxis_data, z, units, cart_name, long_name, direction, 
-                                       set_name, edges, aux, req, tile_count, domain_position, &not_xy);
-  }
-  
-  // register_diag_field var3
+  // register_diag_field var2
   {
     char module_name[NAME_LENGTH] = "atm_mod";
-    char field_name[NAME_LENGTH] = "var_3d";
-    int axes[5] = {id_x, id_y, id_z, 0, 0};
+    char field_name[NAME_LENGTH] = "var_2d";
+    int axes[5] = {id_x, id_y, 0, 0, 0};
     char long_name[NAME_LENGTH] = "Var in a lon/lat domain";
     char units[NAME_LENGTH] = "muntin";
     float missing_value = -99.99;
@@ -156,13 +130,13 @@ int main()
     int *tick = NULL;
     
     cFMS_diag_set_field_init_time(&year, &month, &day, &hour, &minute, &second, tick, err_msg);
-    id_var3 = cFMS_register_diag_field_array_cfloat(module_name, field_name, axes, long_name, units, &missing_value, range,
+    id_var2 = cFMS_register_diag_field_array_cfloat(module_name, field_name, axes, long_name, units, &missing_value, range,
                                                     mask_variant, standard_name, verbose, do_not_log, err_msg, interp_method,
                                                     tile_count, area, volume, realm, multiple_send_data);
     int ddays = 0;
     int dseconds = 60*60;
     int dticks = 0;
-    cFMS_diag_set_field_timestep(&id_var3, &dseconds, &ddays, &dticks,  NULL);
+    cFMS_diag_set_field_timestep(&id_var2, &dseconds, &ddays, &dticks,  NULL);
   }
 
   // cFMS_diag_set_time_end
@@ -178,20 +152,17 @@ int main()
   }
 
   // send_data
-  cFMS_diag_send_data_3d_cfloat(&id_var3, var3_shape, var3, NULL);
   for(int itime=0; itime<24; itime++) {    
-    int ijk = 0;
+    int ij = 0;
     for(int i=0; i<NX; i++){
       for(int j=0; j<NY; j++){
-        for(int k=0; k<NZ; k++){
-          var3[ijk] = -1.0 * var3[ijk];
-          ijk++;
-        }
+        var2[ij] = -1.0 * var2[ij];
+        ij++;
       }
     }
-    cFMS_diag_advance_field_time(&id_var3);
-    cFMS_diag_send_data_3d_cfloat(&id_var3, var3_shape, var3, NULL);
-    cFMS_diag_send_complete(&id_var3, NULL);
+    cFMS_diag_advance_field_time(&id_var2);
+    cFMS_diag_send_data_2d_cfloat(&id_var2, var2_shape, var2, NULL);
+    cFMS_diag_send_complete(&id_var2, NULL);
   }
   
   cFMS_diag_end();

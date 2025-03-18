@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,29 +17,37 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
-#
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_diag_manager \
-              -I${top_builddir}/c_fms -I${top_builddir}/test_cfms/c_fms
+# Set common test settings.
+. ../test-lib.sh
 
-# Link to the FMS library.
-LDADD = ${top_builddir}/libcFMS/libcFMS.la
+if [ -f "input.nml" ] ; then rm -f input.nml ; fi
+cat <<EOF > input.nml
+&diag_manager_nml
+    use_modern_diag = .true.
+/
+EOF
 
-check_PROGRAMS = test_send_data_3d test_send_data_2d
+#from test_fms/test_diag_manager2.sh
+cat <<EOF > diag_table.yaml
+title: test_diag_manager
+base_date: 2 1 1 1 1 1
 
-TESTS = test_send_data_3d.sh test_send_data_2d.sh
+diag_files:
+- file_name: test_3d
+  freq: 1 hours
+  time_units: hours
+  unlimdim: time
+  varlist:
+  - module: atm_mod
+    var_name: var_3d
+    reduction: average
+    kind: r4
+    output_name: var3_avg
+EOF
 
-test_send_data_3d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data_3d.c
-test_send_data_2d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data_2d.c
-
-TEST_EXTENSIONS = .sh
-SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
-                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
-
-# Include these files with the distribution.
-EXTRA_DIST = test_send_data_3d.sh test_send_data_2d.sh
-
-# Clean up
-CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc*
+test_expect_success "cdiag_manager 3d" 'mpirun -n 1  ./test_send_data_3d'
+test_done
 
