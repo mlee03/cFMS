@@ -106,8 +106,8 @@ int main()
     }
     int lat_out_shape = {(iec-isc), (jec-jsc)};
 
-    cFMS_horiz_interp_conserve_new_2dx2d_cfloat(lon_in_2d, lon_in_shape, lat_in_2d, lat_in_shape, lon_out_2d,
-                                                lon_out_shape, lat_out_2d, lat_out_shape, )
+    // cFMS_horiz_interp_conserve_new_2dx2d_cfloat(lon_in_2d, lon_in_shape, lat_in_2d, lat_in_shape, lon_out_2d,
+    //                                             lon_out_shape, lat_out_2d, lat_out_shape, )
     
 
     cFMS_init(NULL,NULL,NULL,NULL);
