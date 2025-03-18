@@ -2,7 +2,6 @@
 #*                   GNU Lesser General Public License
 #*
 #* This file is part of the GFDL Flexible Modeling System (FMS).
-#*
 #* FMS is free software: you can redistribute it and/or modify it under
 #* the terms of the GNU Lesser General Public License as published by
 #* the Free Software Foundation, either version 3 of the License, or (at
@@ -36,6 +35,7 @@ endif
 SUBDIRS = c_fms \
           c_fms_utils \
           c_constants \
+          c_diag_manager \
           c_grid_utils \
           c_horiz_interp \
           libcFMS \

@@ -1,0 +1,148 @@
+!cints
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_2d_cint
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_2d_cint"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  2
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  integer
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_3d_cint
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_3d_cint"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  3
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  integer
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(3)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_4d_cint
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_4d_cint"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  4
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  integer
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(4)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_5d_cint
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_5d_cint"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  5
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  integer
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(4),field_shape(5)
+#include "c_send_data.inc"
+
+!cdouble
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_2d_cfloat
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_2d_cfloat"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  2
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_float)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_3d_cfloat
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_3d_cfloat"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  3
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_float)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(3)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_4d_cfloat
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_4d_cfloat"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  4
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_float)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(4)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_5d_cfloat
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_5d_cfloat"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  5
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_float)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(4),field_shape(5)
+#include "c_send_data.inc"
+
+
+!cdoubles
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_2d_cdouble
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_2d_cdouble"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  2
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_double)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_3d_cdouble
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_3d_cdouble"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  3
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_double)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(3)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_4d_cdouble
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_4d_cdouble"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  4
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_double)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(4)
+#include "c_send_data.inc"
+
+#undef  CFMS_DIAG_SEND_DATA_
+#undef  CFMS_DIAG_SEND_DATA_BINDC_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_NDIM_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_TYPE_
+#undef  CFMS_DIAG_SEND_DATA_FIELD_SHAPE_
+#define CFMS_DIAG_SEND_DATA_             cFMS_diag_send_data_5d_cdouble
+#define CFMS_DIAG_SEND_DATA_BINDC_       "cFMS_diag_send_data_5d_cdouble"
+#define CFMS_DIAG_SEND_DATA_FIELD_NDIM_  5
+#define CFMS_DIAG_SEND_DATA_FIELD_TYPE_  real(c_double)
+#define CFMS_DIAG_SEND_DATA_FIELD_SHAPE_ field_shape(1),field_shape(2),field_shape(4),field_shape(5)
+#include "c_send_data.inc"
+

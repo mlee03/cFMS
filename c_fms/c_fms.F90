@@ -54,10 +54,12 @@ module c_fms_mod
   public :: cFMS_define_nest_domains
   public :: cFMS_domain_is_initialized  
   public :: cFMS_get_compute_domain
+  public :: cFMS_get_current_domain
   public :: cFMS_get_data_domain
   public :: cFMS_get_domain_name
   public :: cFMS_get_layout
   public :: cFMS_set_compute_domain
+  public :: cFMS_set_current_domain
   public :: cFMS_set_data_domain
   public :: cFMS_set_global_domain
   
@@ -409,6 +411,12 @@ contains
   end subroutine cFMS_get_compute_domain
 
 
+  function cFMS_get_current_domain()
+    implicit none
+    type(FmsMppDomain2D), pointer :: cFMS_get_current_domain
+    cFMS_get_current_domain => current_domain
+  end function cFMS_get_current_domain
+    
   !> cFMS_get_data_domain
   subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &
        x_is_global, y_is_global, tile_count, position, whalo, shalo) bind(C, name="cFMS_get_data_domain")
@@ -541,7 +549,7 @@ contains
   
   !> cFMS_set_current_domain sets the domain to the current_domain where the
   !! current_domain has id=domain_id
-  subroutine cFMS_set_current_domain(domain_id)
+  subroutine cFMS_set_current_domain(domain_id) bind(C, name="cFMS_set_current_domain")
 
     implicit none
     integer, intent(in), optional :: domain_id

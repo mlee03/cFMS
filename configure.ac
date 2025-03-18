@@ -357,12 +357,14 @@ AC_CONFIG_FILES([
   c_fms/Makefile
   c_fms_utils/Makefile
   c_constants/Makefile
+  c_diag_manager/Makefile
   c_grid_utils/Makefile
   c_horiz_interp/Makefile
   libcFMS/Makefile
   test_cfms/test-lib.sh
   test_cfms/intel_coverage.sh
   test_cfms/Makefile
+  test_cfms/c_diag_manager/Makefile
   test_cfms/c_fms/Makefile
   test_cfms/c_fms_utils/Makefile
   test_cfms/c_grid_utils/Makefile
