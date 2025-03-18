@@ -11,6 +11,8 @@
 
 void set_domain(int *domain_id);
 
+//TODO:  add reading in the outputted file for correctness
+//Currently, answers have been checked separately/manually for correctness
 int main() 
 {
   
