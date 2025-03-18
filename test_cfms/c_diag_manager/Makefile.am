@@ -25,19 +25,18 @@ AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_diag_manager \
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
-check_PROGRAMS = test_send_data_3d test_send_data_2d
+check_PROGRAMS = test_send_data
 
-TESTS = test_send_data_3d.sh test_send_data_2d.sh
+TESTS = test_send_data.sh
 
-test_send_data_3d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data_3d.c
-test_send_data_2d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data_2d.c
+test_send_data_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data.c
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(abs_top_srcdir)/test_cfms/tap-driver.sh
 
 # Include these files with the distribution.
-EXTRA_DIST = test_send_data_3d.sh test_send_data_2d.sh
+EXTRA_DIST = test_send_data.sh
 
 # Clean up
 CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc*

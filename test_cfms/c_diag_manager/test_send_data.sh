@@ -36,11 +36,16 @@ title: test_diag_manager
 base_date: 2 1 1 1 1 1
 
 diag_files:
-- file_name: test_2d
+- file_name: test_send_data
   freq: 1 hours
   time_units: hours
   unlimdim: time
   varlist:
+  - module: atm_mod
+    var_name: var_3d
+    reduction: average
+    kind: r4
+    output_name: var3_avg
   - module: atm_mod
     var_name: var_2d
     reduction: average
@@ -48,6 +53,6 @@ diag_files:
     output_name: var2_avg
 EOF
 
-test_expect_success "cdiag_manager 2d" 'mpirun -n 1  ./test_send_data_2d'
+test_expect_success "c_diag_manager send_data" 'mpirun -n 1  ./test_send_data'
 test_done
 
