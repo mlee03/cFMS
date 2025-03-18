@@ -24,7 +24,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
 # Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = c_fms c_grid_utils c_horiz_interp 
+SUBDIRS = c_fms c_fms_utils c_grid_utils c_horiz_interp 
 
 # testing utility scripts to distribute
 EXTRA_DIST = test-lib.sh.in intel_coverage.sh.in tap-driver.sh

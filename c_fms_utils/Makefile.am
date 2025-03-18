@@ -17,26 +17,26 @@
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
 
-# This is an automake file for the libFMS directory of the FMS
-# package. This is the final packaging of the library.
+# This is an automake file for the fms directory of the FMS
+# package.
 
 # Ed Hartnett 2/22/19
 
-# This builds the FMS library file.
-lib_LTLIBRARIES = libcFMS.la
+# Include .h and .mod files.
+AM_CPPFLAGS = -I. -I./include
+AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
-# These linker flags specify libtool version info.
-# See http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
-# for information regarding incrementing `-version-info`.
-libcFMS_la_LDFLAGS = -version-info 21:0:0
+# Build these uninstalled convenience libraries.
+noinst_LTLIBRARIES = lib_c_fms_utils.la
 
-# Add the convenience libraries to the FMS library.
-libcFMS_la_LIBADD = $(top_builddir)/c_fms/lib_c_fms.la
-libcFMS_la_LIBADD += $(top_builddir)/c_constants/lib_c_constants.la
-libcFMS_la_LIBADD += $(top_builddir)/c_horiz_interp/lib_c_horiz_interp.la
-libcFMS_la_LIBADD += $(top_builddir)/c_grid_utils/lib_c_grid_utils.la
-libcFMS_la_LIBADD += $(top_builddir)/c_fms_utils/lib_c_fms_utils.la
+# Each convenience library depends on its source.
+lib_c_fms_utils_la_SOURCES = c_fms_utils.F90
 
-libcFMS_la_SOURCES =
+# Mod files are built and then installed as headers.
+MODFILES = c_fms_utils_mod.$(FC_MODEXT)
+BUILT_SOURCES = $(MODFILES)
+nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
 
-nodist_EXTRA_libcFMS_la_SOURCES = dummy.f90
+include_HEADERS = c_fms_utils.h
+
+include $(top_srcdir)/mkmods.mk
