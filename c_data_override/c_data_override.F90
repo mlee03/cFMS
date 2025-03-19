@@ -11,6 +11,7 @@ module c_data_override_mod
   implicit none
   
   private
+
   public :: cFMS_data_override_0d_cfloat
   public :: cFMS_data_override_0d_cdouble  
   public :: cFMS_data_override_init
@@ -93,5 +94,7 @@ contains
   end subroutine cFMS_data_override_set_time
 
 #include "c_data_override_0d.fh"
+=======
+>>>>>>> origin/main
   
 end module c_data_override_mod
