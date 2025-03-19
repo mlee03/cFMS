@@ -63,7 +63,7 @@ contains
                                 mode = mode)
     
   end subroutine cFMS_data_override_init
-
+  
 
   subroutine cFMS_data_override_set_time(year, month, day, hour, minute, second, tick, err_msg)&
        bind(C, name="cFMS_data_override_set_time")
@@ -94,7 +94,5 @@ contains
   end subroutine cFMS_data_override_set_time
 
 #include "c_data_override_0d.fh"
-=======
->>>>>>> origin/main
   
 end module c_data_override_mod

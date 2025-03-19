@@ -105,6 +105,7 @@ module c_fms_mod
   integer, public, bind(C, name="GREGORIAN")         :: GREGORIAN_C = GREGORIAN
   integer, public, bind(C, name="JULIAN")            :: JULIAN_C    = JULIAN
   integer, public, bind(C, name="NOLEAP")            :: NOLEAP_C    = NOLEAP
+
   type(FmsMppDomain2D), allocatable, target, public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
 

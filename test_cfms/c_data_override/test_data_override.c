@@ -80,15 +80,5 @@ int main()
     }
   }
   
-=======
-    int *ocn_domain_id = NULL;
-    int *ice_domain_id = NULL;
-    int *land_domain_id = NULL;
-    int *land_domainUG_id = NULL;
-    int mode = CDOUBLE_MODE; //for r8
-    cFMS_data_override_init(&domain_id, ocn_domain_id, ice_domain_id, land_domain_id, land_domainUG_id, &mode);
-  }
-    
->>>>>>> origin/main
   return EXIT_SUCCESS;
 }
