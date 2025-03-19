@@ -26,7 +26,7 @@ int main()
   int nhalo = 2;
   char name[NAME_LENGTH] = "test domain";
   
-  cFMS_init(NULL,NULL, NULL, NULL);
+  cFMS_init(NULL,NULL, NULL, NULL, NULL);
   cFMS_null_cdomain(&domain);
   
   //set domain 

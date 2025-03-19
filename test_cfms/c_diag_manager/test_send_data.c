@@ -26,6 +26,8 @@ int main()
   int id_var2;
   int var2_shape[2] = {NX, NY};
   float *var2;
+
+  int calendar_type = NOLEAP;
     
   var3 = (float *)malloc(NX*NY*NZ*sizeof(float));
   int ijk = 0;  
@@ -45,7 +47,7 @@ int main()
     }
   }    
   
-  cFMS_init(NULL, NULL, NULL, NULL);  
+  cFMS_init(NULL, NULL, NULL, NULL, &calendar_type);  
 
   // define domain
   {
@@ -65,9 +67,8 @@ int main()
   {
     int  diag_model_subset = DIAG_ALL;
     int *time_init = NULL;
-    int  calendar_type = NOLEAP;
     char err_msg[NAME_LENGTH] = "None";
-    cFMS_diag_init(&diag_model_subset, time_init, &calendar_type, err_msg);
+    cFMS_diag_init(&diag_model_subset, time_init, err_msg);
   }
   
   cFMS_set_current_domain(&domain_id);

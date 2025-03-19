@@ -33,6 +33,10 @@ module c_fms_mod
   use FMS, only : fms_mpp_domains_set_compute_domain, fms_mpp_domains_set_data_domain, fms_mpp_domains_set_global_domain
   use FMS, only : fms_mpp_domains_update_domains
 
+  use FMS, only : THIRTY_DAY_MONTHS, GREGORIAN, JULIAN, NOLEAP
+  use FMS, only : fms_time_manager_init, fms_time_manager_set_calendar_type
+
+
   use FMS, only : GLOBAL_DATA_DOMAIN, BGRID_NE, CGRID_NE, DGRID_NE, AGRID
   use FMS, only : FOLD_SOUTH_EDGE, FOLD_NORTH_EDGE, FOLD_WEST_EDGE, FOLD_EAST_EDGE
 
@@ -64,8 +68,8 @@ module c_fms_mod
   public :: cFMS_set_data_domain
   public :: cFMS_set_global_domain
   
-  integer, parameter :: NAME_LENGTH = 64 !< value taken from mpp_domains
-  integer, parameter :: MESSAGE_LENGTH=128
+  integer, public, parameter :: NAME_LENGTH = 64 !< value taken from mpp_domains
+  integer, public, parameter :: MESSAGE_LENGTH=128
   character(NAME_LENGTH), parameter :: input_nml_path="./input.nml"
 
   integer, public, bind(C, name="cFMS_pelist_npes") :: npes
@@ -97,6 +101,11 @@ module c_fms_mod
   integer, public, bind(C, name="WEST")  :: WEST_C = WEST
   integer, public, bind(C, name="NORTH_WEST") :: NORTH_WEST_C = NORTH_WEST
 
+  integer, public, bind(C, name="THIRTY_DAY_MONTHS") :: THIRTY_DAY_MONTHS_C = THIRTY_DAY_MONTHS
+  integer, public, bind(C, name="GREGORIAN")         :: GREGORIAN_C = GREGORIAN
+  integer, public, bind(C, name="JULIAN")            :: JULIAN_C    = JULIAN
+  integer, public, bind(C, name="NOLEAP")            :: NOLEAP_C    = NOLEAP
+
   type(FmsMppDomain2D), allocatable, target, public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
 
@@ -112,12 +121,13 @@ contains
   end subroutine cFMS_end
 
   !> cfms_init
-  subroutine cFMS_init(localcomm, alt_input_nml_path, ndomain, nnest_domain) bind(C,  name="cFMS_init")
+  subroutine cFMS_init(localcomm, alt_input_nml_path, ndomain, nnest_domain, calendar_type) bind(C,  name="cFMS_init")
     
     implicit none
     integer, intent(in), optional :: localcomm
     integer, intent(in), optional :: ndomain
     integer, intent(in), optional :: nnest_domain
+    integer, intent(in), optional :: calendar_type
     character(c_char), intent(in), optional :: alt_input_nml_path(NAME_LENGTH)
     
     character(100) :: alt_input_nml_path_f = input_nml_path
@@ -127,6 +137,13 @@ contains
     
     call fms_init(localcomm=localcomm, alt_input_nml_path=alt_input_nml_path_f)
     call fms_mpp_domains_init()
+
+    call fms_time_manager_init()
+    if(present(calendar_type)) then
+       call fms_time_manager_set_calendar_type(calendar_type)
+    else
+       call fms_time_manager_set_calendar_type(NOLEAP)
+    end if
     
     if(present(ndomain)) then
        allocate(domain(0:ndomain-1))
