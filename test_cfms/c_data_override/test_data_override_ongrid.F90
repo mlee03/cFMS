@@ -19,8 +19,9 @@
 
 program test_data_override_ongrid
 
-!>@brief This file was copied from test_fms/data_override and is used to generate test input files 
-!!"This programs tests data_override ability to override data for an
+!> @brief This file was copied from test_fms/data_override and is used to generate test input files 
+!! This file will eventually be replaced 
+!! from FMS: "This programs tests data_override ability to override data for an
 !! on grid case and when using bilinear interpolation"
 
 use platform_mod,      only: r4_kind, r8_kind
