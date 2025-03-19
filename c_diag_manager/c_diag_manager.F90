@@ -9,10 +9,9 @@ module c_diag_manager_mod
 
   use FMS, only : fms_string_utils_c2f_string, fms_string_utils_f2c_string  
   
-  use FMS, only : THIRTY_DAY_MONTHS, GREGORIAN, JULIAN, NOLEAP, FmsTime_type, Operator(+)
-  use FMS, only : fms_time_manager_init, fms_time_manager_set_date
-  use FMS, only : fms_time_manager_set_calendar_type, fms_time_manager_set_time
-
+  use FMS, only : FmsTime_type, Operator(+)
+  use FMS, only : fms_time_manager_set_date, fms_time_manager_set_time
+  
   use FMS, only : fms_time_manager_get_date
   
   use FMS, only : FmsMppDomain2D
@@ -22,7 +21,7 @@ module c_diag_manager_mod
   use c_fms_utils_mod, only : cFMS_pointer_to_array
 
   use iso_c_binding
-
+  
   implicit none
 
   private
@@ -66,11 +65,6 @@ module c_diag_manager_mod
   integer, public, bind(C, name="DIAG_OCEAN") :: DIAG_OCEAN_C = DIAG_OCEAN
   integer, public, bind(C, name="DIAG_ALL")   :: DIAG_ALL_C   = DIAG_ALL
 
-  integer, public, bind(C, name="THIRTY_DAY_MONTHS") :: THIRTY_DAY_MONTHS_C = THIRTY_DAY_MONTHS
-  integer, public, bind(C, name="GREGORIAN")         :: GREGORIAN_C = GREGORIAN
-  integer, public, bind(C, name="JULIAN")            :: JULIAN_C    = JULIAN
-  integer, public, bind(C, name="NOLEAP")            :: NOLEAP_C    = NOLEAP
-
 contains
 
   subroutine cFMS_diag_end() bind(C, name="cFMS_diag_end")
@@ -81,23 +75,15 @@ contains
   end subroutine cFMS_diag_end
 
   !cFMS_diag_init
-  subroutine cFMS_diag_init(diag_model_subset, time_init, err_msg, calendar_type) bind(C, name='cFMS_diag_init')
+  subroutine cFMS_diag_init(diag_model_subset, time_init, err_msg) bind(C, name='cFMS_diag_init')
 
     implicit none
     integer, intent(in), optional :: diag_model_subset
     integer, intent(in), optional :: time_init(6)
-    integer, intent(in), optional :: calendar_type
     character(c_char), intent(out), optional :: err_msg(MESSAGE_LENGTH)
 
-    integer :: nfields
-    
+    integer :: nfields    
     character(len=MESSAGE_LENGTH-1) :: err_msg_f = "None"
-    integer :: calendar_type_f = NOLEAP
-    
-    if(present(calendar_type)) calendar_type_f = NOLEAP
-    
-    call fms_time_manager_init()
-    call fms_time_manager_set_calendar_type(calendar_type_f)
     
     call fms_diag_init(diag_model_subset = diag_model_subset, &
                        time_init = time_init, &

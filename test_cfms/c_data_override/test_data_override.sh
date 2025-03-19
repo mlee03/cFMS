@@ -24,7 +24,31 @@
 . ../test-lib.sh
 
 if [ -f "input.nml" ] ; then rm -f input.nml ; fi
-touch -a input.nml
+
+make test_data_override_ongrid
+mkdir INPUT
+
+#generate input for scalar
+cat <<EOF > input.nml
+&test_data_override_ongrid_nml
+  test_case=3
+  write_only=.True.
+/
+EOF
+
+cat <<_EOF > data_table.yaml
+data_table:
+ - grid_name: ATM
+   fieldname_in_model: co2
+   override_file:
+   - fieldname_in_file: co2
+     file_name: INPUT/scalar.nc
+     interp_method: none
+   factor : 1.0
+_EOF
+fi
+
+./test_data_override_ongrid
 
 test_expect_success "c_data_override" 'mpirun -n 1  ./test_data_override'
 test_done

@@ -31,6 +31,9 @@ TESTS = test_data_override.sh
 
 test_data_override_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_override.c
 
+test_data_override_ongrid : test_data_override_ongrid.F90
+	$(FC) $(FCFLAGS) $(LDFLAGS) -I./include test_data_override_ongrid.F90 -o test_data_override_ongrid
+
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(abs_top_srcdir)/test_cfms/tap-driver.sh

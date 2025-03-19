@@ -40,5 +40,5 @@ EXTRA_DIST = test_send_data.sh
 
 # Clean up
 CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* *.yaml*
->>>>>>> origin/main
+
 
