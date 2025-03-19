@@ -16,29 +16,29 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
-#
 
-# Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_diag_manager \
-              -I${top_builddir}/c_fms -I${top_builddir}/test_cfms/c_fms
+# This is an automake file for the fms directory of the FMS
+# package.
 
-# Link to the FMS library.
-LDADD = ${top_builddir}/libcFMS/libcFMS.la
+# Ed Hartnett 2/22/19
 
-check_PROGRAMS = test_send_data
+# Include .h and .mod files.
+AM_CPPFLAGS = -I. -I./include
+AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
-TESTS = test_send_data.sh
+# Build these uninstalled convenience libraries.
+noinst_LTLIBRARIES = lib_c_data_override.la
 
-test_send_data_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data.c
+# Each convenience library depends on its source.
+lib_c_data_override_la_SOURCES = c_data_override.F90
 
-TEST_EXTENSIONS = .sh
-SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
-                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
+c_data_override_mod.mod : c_data_override.F90
 
-# Include these files with the distribution.
-EXTRA_DIST = test_send_data.sh
+# Mod files are built and then installed as headers.
+MODFILES = c_data_override_mod.mod
+BUILT_SOURCES = $(MODFILES)
+nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
 
-# Clean up
-CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* *.yaml*
+include_HEADERS = c_data_override.h
 
-
+include $(top_srcdir)/mkmods.mk

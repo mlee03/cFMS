@@ -19,26 +19,25 @@
 #
 
 # Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_diag_manager \
+AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_data_override \
               -I${top_builddir}/c_fms -I${top_builddir}/test_cfms/c_fms
 
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
-check_PROGRAMS = test_send_data
+check_PROGRAMS = test_data_override
 
-TESTS = test_send_data.sh
+TESTS = test_data_override.sh
 
-test_send_data_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data.c
+test_data_override_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_override.c
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(abs_top_srcdir)/test_cfms/tap-driver.sh
 
 # Include these files with the distribution.
-EXTRA_DIST = test_send_data.sh
+EXTRA_DIST = test_data_override.sh
 
 # Clean up
-CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* *.yaml*
-
+CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc*
 
