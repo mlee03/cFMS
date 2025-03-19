@@ -42,5 +42,4 @@ SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 EXTRA_DIST = test_data_override.sh
 
 # Clean up
-CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc*
-
+CLEANFILES = *.nml*  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* 

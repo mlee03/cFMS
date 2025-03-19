@@ -60,7 +60,6 @@ contains
                                 land_domain_in = land_domain,  &
                                 land_domainUG_in = land_domainUG, &
                                 mode = mode)
->>>>>>> origin/data_override
     
   end subroutine cFMS_data_override_init
 

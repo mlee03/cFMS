@@ -26,6 +26,8 @@
 if [ -f "input.nml" ] ; then rm -f input.nml ; fi
 
 make test_data_override_ongrid
+
+if [ -d INPUT ] ; then rm -rf INPUT; fi
 mkdir INPUT
 
 #generate input for scalar
@@ -34,11 +36,14 @@ cat <<EOF > input.nml
   test_case=3
   write_only=.True.
 /
+&data_override_nml
+  use_data_table_yaml = .True.
+/
 EOF
 
 cat <<_EOF > data_table.yaml
 data_table:
- - grid_name: ATM
+ - grid_name: OCN
    fieldname_in_model: co2
    override_file:
    - fieldname_in_file: co2
@@ -46,10 +51,10 @@ data_table:
      interp_method: none
    factor : 1.0
 _EOF
-fi
 
 ./test_data_override_ongrid
 
-test_expect_success "c_data_override" 'mpirun -n 1  ./test_data_override'
+test_expect_success "c_data_override" 'mpirun -n 2  ./test_data_override'
 test_done
 
+rm -rf INPUT test_data_override_ongrid
