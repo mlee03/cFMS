@@ -3,14 +3,19 @@ module c_horiz_interp_mod
   use FMS, only : fms_horiz_interp_init
   use FMS, only : FmsHorizInterp_type
   use FMS,  only: fms_horiz_interp_new
-  use iso_c_binding
-  implicit none
 
-  private
+  use c_fms_utils_mod, only : cFMS_pointer_to_array
+
+  use iso_c_binding
+
+  implicit none
 
   public :: cFMS_create_xgrid_2dx2d_order1
   public :: cFMS_get_maxxgrid
   public :: cFMS_horiz_interp_init
+
+  type(FmsHorizInterp_type), allocatable, target, public :: interp(:)
+  type(fmshorizinterp_type), pointer :: current_interp
   
 contains
 
@@ -59,6 +64,21 @@ contains
     call fms_horiz_interp_init
 
   end subroutine cFMS_horiz_interp_init
+
+  !cFMS_set_current_interp
+  subroutine cFMS_set_current_interp(interp_id) bind(C, name="cFMS_set_current_interp")
+
+    implicit none
+    integer, intent(in), optional :: interp_id
+    
+    if(present(interp_id)) then
+       current_interp => interp(interp_id)
+    else
+       current_interp => interp(0)
+    end if
+    
+  end subroutine cFMS_set_current_interp
+
 
 
 #include "c_horiz_interp.fh"
