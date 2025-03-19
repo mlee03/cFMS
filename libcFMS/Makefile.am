@@ -33,6 +33,7 @@ libcFMS_la_LDFLAGS = -version-info 21:0:0
 # Add the convenience libraries to the FMS library.
 libcFMS_la_LIBADD = $(top_builddir)/c_fms/lib_c_fms.la
 libcFMS_la_LIBADD += $(top_builddir)/c_constants/lib_c_constants.la
+libcFMS_la_LIBADD += $(top_builddir)/c_data_override/lib_c_data_override.la
 libcFMS_la_LIBADD += $(top_builddir)/c_diag_manager/lib_c_diag_manager.la
 libcFMS_la_LIBADD += $(top_builddir)/c_horiz_interp/lib_c_horiz_interp.la
 libcFMS_la_LIBADD += $(top_builddir)/c_grid_utils/lib_c_grid_utils.la

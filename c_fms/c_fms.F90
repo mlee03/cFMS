@@ -56,6 +56,7 @@ module c_fms_mod
   public :: cFMS_get_compute_domain
   public :: cFMS_get_current_domain
   public :: cFMS_get_data_domain
+  public :: cFMS_get_domain_from_id
   public :: cFMS_get_domain_name
   public :: cFMS_get_layout
   public :: cFMS_set_compute_domain
@@ -96,8 +97,7 @@ module c_fms_mod
   integer, public, bind(C, name="WEST")  :: WEST_C = WEST
   integer, public, bind(C, name="NORTH_WEST") :: NORTH_WEST_C = NORTH_WEST
 
-
-  type(FmsMppDomain2D), allocatable, target,  public :: domain(:)
+  type(FmsMppDomain2D), allocatable, target, public :: domain(:)
   type(FmsMppDomain2D), pointer  :: current_domain  
 
   type(FmsMppDomainsNestDomain_type), allocatable, target, public :: nest_domain(:)
@@ -452,6 +452,14 @@ contains
     
   end subroutine cFMS_get_data_domain
 
+
+  function cFMS_get_domain_from_id(domain_id)
+    implicit none
+    integer, intent(in) :: domain_id
+    type(FmsMppDomain2D), pointer :: cFMS_get_domain_from_id
+    cFMS_get_domain_from_id => domain(domain_id)
+  end function cFMS_get_domain_from_id
+  
 
   !> cFMS_get_domain_name
   subroutine cFMS_get_domain_name(domain_name_c, domain_id) bind(C, name="cFMS_get_domain_name")

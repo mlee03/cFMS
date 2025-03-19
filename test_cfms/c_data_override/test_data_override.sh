@@ -1,3 +1,4 @@
+#!/bin/sh
 #***********************************************************************
 #*                   GNU Lesser General Public License
 #*
@@ -16,29 +17,15 @@
 #* You should have received a copy of the GNU Lesser General Public
 #* License along with FMS.  If not, see <http://www.gnu.org/licenses/>.
 #***********************************************************************
-#
+# This is part of the GFDL FMS package. This is a shell script to
+# execute tests in the test_fms/coupler directory.
 
-# Find the needed mod and .inc files.
-AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_diag_manager \
-              -I${top_builddir}/c_fms -I${top_builddir}/test_cfms/c_fms
+# Set common test settings.
+. ../test-lib.sh
 
-# Link to the FMS library.
-LDADD = ${top_builddir}/libcFMS/libcFMS.la
+if [ -f "input.nml" ] ; then rm -f input.nml ; fi
+touch -a input.nml
 
-check_PROGRAMS = test_send_data
-
-TESTS = test_send_data.sh
-
-test_send_data_SOURCES = ../c_fms/c_mpp_domains_helper.c test_send_data.c
-
-TEST_EXTENSIONS = .sh
-SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
-                  $(abs_top_srcdir)/test_cfms/tap-driver.sh
-
-# Include these files with the distribution.
-EXTRA_DIST = test_send_data.sh
-
-# Clean up
-CLEANFILES = input.nml  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* *.yaml*
-
+test_expect_success "c_data_override" 'mpirun -n 1  ./test_data_override'
+test_done
 
