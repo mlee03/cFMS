@@ -25,6 +25,16 @@ module c_fms_utils_mod
   interface cFMS_array_to_pointer
      module procedure cFMS_array_to_pointer_2d_int
      module procedure cFMS_array_to_pointer_3d_int
+     module procedure cFMS_array_to_pointer_4d_int
+     module procedure cFMS_array_to_pointer_5d_int
+     module procedure cFMS_array_to_pointer_2d_cfloat
+     module procedure cFMS_array_to_pointer_3d_cfloat
+     module procedure cFMS_array_to_pointer_4d_cfloat
+     module procedure cFMS_array_to_pointer_5d_cfloat
+     module procedure cFMS_array_to_pointer_2d_cdouble
+     module procedure cFMS_array_to_pointer_3d_cdouble
+     module procedure cFMS_array_to_pointer_4d_cdouble
+     module procedure cFMS_array_to_pointer_5d_cdouble
   end interface cFMS_array_to_pointer
   
 contains
