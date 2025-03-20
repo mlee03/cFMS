@@ -9,8 +9,8 @@ subroutine test_3d_cdouble(array_shape, c_pointer) bind(C, name="test_3d_cdouble
   type(c_ptr), value, intent(in) :: c_pointer
   
   integer :: i, j, k
-  integer, allocatable :: f_array(:,:,:)
-  integer, allocatable :: answers(:,:,:)
+  real(c_double), allocatable :: f_array(:,:,:)
+  real(c_double), allocatable :: answers(:,:,:)
   
   allocate(answers(array_shape(1),array_shape(2),array_shape(3)))
   do k=1, array_shape(3)
