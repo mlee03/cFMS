@@ -4,7 +4,7 @@ module c_horiz_interp_mod
   use FMS, only : FmsHorizInterp_type
   use FMS,  only: fms_horiz_interp_new
 
-  use c_fms_utils_mod, only : cFMS_pointer_to_array
+  use c_fms_utils_mod, only : cFMS_pointer_to_array, cFMS_array_to_pointer
 
   use iso_c_binding
 
@@ -82,5 +82,6 @@ contains
 
 
 #include "c_horiz_interp.fh"
+#include "c_get_interp.fh"
   
 end module c_horiz_interp_mod
