@@ -79,8 +79,6 @@ contains
     
   end subroutine cFMS_set_current_interp
 
-
-
 #include "c_horiz_interp_new.fh"
 #include "c_get_interp.fh"
   
