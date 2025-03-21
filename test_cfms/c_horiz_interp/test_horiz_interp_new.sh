@@ -26,5 +26,5 @@
 if [ -f "input.nml" ] ; then rm -f input.nml ; fi
 touch input.nml
 
-test_expect_success "test horiz_interp_conserve" 'mpirun -n 1  ./test_horiz_interp_conserve'
+test_expect_success "test horiz_interp_new" 'mpirun -n 1  ./test_horiz_interp_new'
 test_done

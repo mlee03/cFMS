@@ -81,7 +81,7 @@ contains
 
 
 
-#include "c_horiz_interp.fh"
+#include "c_horiz_interp_new.fh"
 #include "c_get_interp.fh"
   
 end module c_horiz_interp_mod

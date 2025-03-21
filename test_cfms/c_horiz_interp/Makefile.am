@@ -26,13 +26,13 @@ AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_constants -I${top_builddir}/c_
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
 check_PROGRAMS = test_create_xgrid \
-  test_horiz_interp_conserve
+  test_horiz_interp_new
 
 TESTS = test_create_xgrid.sh \
-  test_horiz_interp_conserve.sh
+  test_horiz_interp_new.sh
 
 test_create_xgrid_SOURCES = test_create_xgrid.c
-test_horiz_interp_conserve_SOURCES = test_horiz_interp_conserve.c
+test_horiz_interp_new_SOURCES = test_horiz_interp_new.c
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
@@ -40,7 +40,7 @@ SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 
 # Include these files with the distribution.
 EXTRA_DIST = test_create_xgrid.sh \
-  test_horiz_interp_conserve.sh
+  test_horiz_interp_new.sh
 
 # Clean up
 CLEANFILES = input.nml *.nc* *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs
