@@ -62,39 +62,105 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(ilon_ptr, ilon_shape, jlat_ptr, jlat_shape,
 
     call cFMS_set_current_interp(interp_id)
 
-    call cFMS_array_to_pointer(current_interp%ilon, ilon_shape, ilon_ptr)
-    call cFMS_array_to_pointer(current_interp%jlat, jlat_shape, jlat_ptr)
-    call cFMS_array_to_pointer(current_interp%i_lon, i_lon_shape, i_lon_ptr)
-    call cFMS_array_to_pointer(current_interp%j_lat, j_lat_shape, j_lat_ptr)
-    call cFMS_array_to_pointer(current_interp%found_neighbors, found_neighbors_shape, found_neighbors_ptr)
-    call cFMS_array_to_pointer(current_interp%num_found, num_found_shape, num_found_ptr)
-    nlon_src = current_interp%nlon_src
-    nlat_src = current_interp%nlat_src
-    nlon_dst = current_interp%nlon_dst
-    nlat_dst = current_interp%nlat_dst
-    interp_method = current_interp%interp_method
-    I_am_initialized = current_interp%I_am_initialized
-    version = current_interp%version
-    nxgrid = current_interp%nxgrid
-    i_src = current_interp%i_src
-    j_src = current_interp%j_src
-    i_dst = current_interp%i_dst
-    j_dst = current_interp%j_dst
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%faci, faci_shape, faci_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%facj, facj_shape, facj_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%area_src, area_src_shape, area_src_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%area_dst, area_dst_shape, area_dst_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%wti, wti_shape, wti_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%wtj, wtj_shape, wtj_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%src_dist, src_dist_shape, src_dist_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%rat_x, rat_x_shape, rat_x_ptr)
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%rat_y, rat_y_shape, rat_y_ptr)
-    lon_in = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%lon_in
-    lat_in = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%lat_in
-    area_frac_dst = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%area_frac_dst
-    call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%mask_in, mask_in_shape, mask_in_ptr)
-    max_src_dist = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%max_src_dist
-    is_allocated = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%is_allocated
+    if(c_associated(ilon_ptr)) then
+        call cFMS_array_to_pointer(current_interp%ilon, ilon_shape, ilon_ptr)
+    end if
+    if(c_associated(j_lat_ptr)) then
+        call cFMS_array_to_pointer(current_interp%jlat, jlat_shape, jlat_ptr)
+    end if
+    if(c_associated(i_lon_ptr)) then
+        call cFMS_array_to_pointer(current_interp%i_lon, i_lon_shape, i_lon_ptr)
+    end if
+    if(c_associated(j_lat_ptr)) then
+        call cFMS_array_to_pointer(current_interp%j_lat, j_lat_shape, j_lat_ptr)
+    end if
+    if(c_associated(found_neighbors_ptr)) then
+        call cFMS_array_to_pointer(current_interp%found_neighbors, found_neighbors_shape, found_neighbors_ptr)
+    end if
+    if(c_associated(num_found_ptr)) then
+        call cFMS_array_to_pointer(current_interp%num_found, num_found_shape, num_found_ptr)
+    end if
+    if(present(nlon_src)) then
+        nlon_src = current_interp%nlon_src
+    end if
+    if(present(nlat_src)) then
+        nlat_src = current_interp%nlat_src
+    end if
+    if(present(nlon_dst)) then
+        nlon_dst = current_interp%nlon_dst
+    end if
+    if(present(nlat_dst)) then
+        nlat_dst = current_interp%nlat_dst
+    end if
+    if(present(interp_method)) then
+        interp_method = current_interp%interp_method
+    end if
+    if(present(I_am_initialized)) then
+        I_am_initialized = current_interp%I_am_initialized
+    end if
+    if(present(version)) then
+        version = current_interp%version
+    end if
+    if(present(nxgrid)) then
+        nxgrid = current_interp%nxgrid
+    end if
+    if(present(i_src)) then
+        i_src = current_interp%i_src
+    end if
+    if(present(j_src)) then
+        j_src = current_interp%j_src
+    end if
+    if(present(i_dst)) then
+        i_dst = current_interp%i_dst
+    end if
+    if(present(j_dst)) then
+        j_dst = current_interp%j_dst
+    end if
+    if(c_associated(faci_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%faci, faci_shape, faci_ptr)
+    end if
+    if(c_associated(facj_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%facj, facj_shape, facj_ptr)
+    end if
+    if(c_associated(area_src_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%area_src, area_src_shape, area_src_ptr)
+    end if
+    if(c_associated(area_dst_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%area_dst, area_dst_shape, area_dst_ptr)
+    end if
+    if(c_associated(wti_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%wti, wti_shape, wti_ptr)
+    end if
+    if(c_associated(wtj_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%wtj, wtj_shape, wtj_ptr)
+    end if
+    if(c_associated(src_dist_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%src_dist, src_dist_shape, src_dist_ptr)
+    end if
+    if(c_associated(rat_x_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%rat_x, rat_x_shape, rat_x_ptr)
+    end if
+    if(c_associated(rat_y_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%rat_y, rat_y_shape, rat_y_ptr)
+    end if
+    if(present(lon_in)) then
+        lon_in = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%lon_in
+    end if
+    if(present(lat_in)) then
+        lat_in = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%lat_in
+    end if
+    if(present(area_frac_dst)) then
+        area_frac_dst = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%area_frac_dst
+    end if
+    if(c_associated(mask_in_ptr)) then
+        call cFMS_array_to_pointer(current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%mask_in, mask_in_shape, mask_in_ptr)
+    end if
+    if(present(max_src_dist)) then
+        max_src_dist = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%max_src_dist
+    end if
+    if(present(is_allocated)) then
+        is_allocated = current_interp%CFMS_GET_INTERP_OBJ_DATA_TYPE_%is_allocated
+    end if
 
 end subroutine CFMS_GET_INTERP_SUB_NAME_
 

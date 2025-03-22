@@ -46,18 +46,30 @@ subroutine CFMS_HORIZ_INTERP_NEW_2D_ (lon_in_ptr, lon_in_shape, lat_in_ptr, lat_
     call cFMS_pointer_to_array(lat_in_ptr, lat_in_shape, lat_in)
     call cFMS_pointer_to_array(lon_out_ptr, lon_out_shape, lon_out)
     call cFMS_pointer_to_array(lat_out_ptr, lat_out_shape, lat_out)
-    call cFMS_pointer_to_array(mask_in_ptr, mask_in_shape, mask_in)
-    call cFMS_pointer_to_array(mask_out_ptr, mask_out_shape, mask_out)
+    if(c_associated(mask_in_ptr)) then
+        call cFMS_pointer_to_array(mask_in_ptr, mask_in_shape, mask_in)
+    end if
+    if(c_associated(mask_out_ptr)) then
+        call cFMS_pointer_to_array(mask_out_ptr, mask_out_shape, mask_out)
+    end if
 
     call cFMS_set_current_interp(interp_id)
 
-    if(present(interp_method)) interp_method_f = fms_c2f_string(interp_method)
+    if(present(interp_method)) then
+        interp_method_f = fms_c2f_string(interp_method)
+    end if
 
     call fms_horiz_interp_new(Interp=current_interp, lon_in=lon_in, lat_in=lat_in, &
                               lat_out=lat_out, verbose=verbose, interp_method=interp_method_f, &
                               num_nbrs=num_nbrs, max_dist=max_dist, src_modulo=src_modulo, &
                               mask_in=mask_in, mask_out=mask_out, is_latlon_in=is_latlon_in, &
                               is_latlon_out=is_latlon_out)
+
+    deallocate(lon_in)
+    deallocate(lat_in)
+    deallocate(lon_out)
+    deallocate(mask_in)
+    deallocate(mask_out)
 
 end subroutine CFMS_HORIZ_INTERP_NEW_2D_
 
