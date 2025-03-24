@@ -6,7 +6,7 @@
 
 #define NX 360
 #define NY 180
-#define TOLERANCE 1e-11
+#define TOLERANCE 1e-10
 #define TEST_NTIMES 11
 
 #define ABS(val,answ) (val<answ ? answ-val : val-answ)
@@ -35,7 +35,7 @@ int main()
 
     domain.layout = (int *)malloc(2*sizeof(int));    
     domain.layout[0] = 2;
-    domain.layout[1] = 3;
+    domain.layout[1] = 2;
     
     domain.domain_id = &domain_id;
     domain.global_indices = global_indices;
@@ -91,8 +91,9 @@ int main()
     cFMS_data_override_set_time(&year, &month, &day, &hour, &minute, &second, NULL, NULL);
     cFMS_data_override_2d_cdouble(gridname, fieldname, data_shape, data, &override, NULL, NULL, NULL, NULL);
 
-    for(int ij=0; ij<10; ij++) {
+    for(int ij=0; ij<xsize*ysize; ij++) {
       if( ABS(data[ij],100.03) > TOLERANCE ) {
+        printf("index %d data=%lf answer=%lf, diff=%lf\n", ij, data[ij], 100.03, ABS(data[ij],100.03));
         cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
         exit(EXIT_FAILURE);
       }

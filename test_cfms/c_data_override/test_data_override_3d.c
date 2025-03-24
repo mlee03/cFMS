@@ -101,6 +101,7 @@ int main()
         for(int k=0; k<NZ; k++){
           double answ = (k+1)*100.+.03;
           if( ABS(data[ijk], answ) > TOLERANCE ) {
+            printf("index %d data=%lf answer=%lf, diff=%lf\n", ijk, data[ijk], answ, ABS(data[ijk],answ));
             cFMS_error(FATAL, "FAILURE IN 3D DATA_OVERRIDE");
             exit(EXIT_FAILURE);
           }
