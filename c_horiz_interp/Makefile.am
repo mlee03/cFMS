@@ -30,11 +30,7 @@ AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 noinst_LTLIBRARIES = lib_c_horiz_interp.la
 
 # Each convenience library depends on its source.
-lib_c_horiz_interp_la_SOURCES = c_horiz_interp.F90 \
-                                include/c_get_interp.inc \
-                                include/c_get_interp.fh \
-                                include/c_horiz_interp_new.inc \
-                                include/c_horiz_interp_new.fh
+lib_c_horiz_interp_la_SOURCES = c_horiz_interp.F90
 
 c_horiz_interp_mod.mod : c_horiz_interp.F90
 

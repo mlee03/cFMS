@@ -3,11 +3,13 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(ilon_ptr, ilon_shape, jlat_ptr, jlat_shape,
                             found_neighbors_shape, num_found_ptr, num_found_shape, &
                             nlon_src, nlat_src, nlon_dst, nlat_dst, interp_method, & 
                             I_am_initialized, version, nxgrid, i_src, j_src, i_dst, &
-                            j_dst, faci_ptr, faci_shape, area_src_ptr, area_src_shape, &
-                            area_dst_ptr, area_dst_shape, wti_ptr, wti_shape, wtj_ptr, &
+                            j_dst, faci_ptr, faci_shape, facj_ptr, facj_shape, &
+                            area_src_ptr, area_src_shape, area_dst_ptr, &
+                            area_dst_shape, wti_ptr, wti_shape, wtj_ptr, &
                             wtj_shape, src_dist_ptr, src_dist_shape, rat_x_ptr, rat_x_shape, &
-                            rat_y_ptr, rat_y_shape, lon_in, lat_in, area_frac_dst, mask_in, &
-                            max_src_dist, is_allocated, interp_id) bind(C, CFMS_GET_INTERP_BINDC_)
+                            rat_y_ptr, rat_y_shape, lon_in, lat_in, area_frac_dst, mask_in_ptr, &
+                            mask_in_shape, max_src_dist, is_allocated, interp_id) &
+                            bind(C, name=CFMS_GET_INTERP_BINDC_)
 
     type(c_ptr), intent(in), value :: ilon_ptr
     integer, intent(in), optional :: ilon_shape(2)  
@@ -28,7 +30,7 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(ilon_ptr, ilon_shape, jlat_ptr, jlat_shape,
     integer, intent(out), optional :: interp_method
     logical, intent(out), optional :: I_am_initialized
     integer, intent(out), optional :: version           
-    integer, intent(inout), optional :: nxgrid                  
+    integer, intent(inout) :: nxgrid                  
     integer, intent(out), optional :: i_src(nxgrid)            
     integer, intent(out), optional :: j_src(nxgrid)             
     integer, intent(out), optional :: i_dst(nxgrid)             
@@ -101,9 +103,9 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(ilon_ptr, ilon_shape, jlat_ptr, jlat_shape,
     if(present(version)) then
         version = current_interp%version
     end if
-    if(present(nxgrid)) then
-        nxgrid = current_interp%nxgrid
-    end if
+
+    nxgrid = current_interp%nxgrid
+
     if(present(i_src)) then
         i_src = current_interp%i_src
     end if

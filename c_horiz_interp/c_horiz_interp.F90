@@ -2,9 +2,11 @@ module c_horiz_interp_mod
 
   use FMS, only : fms_horiz_interp_init
   use FMS, only : FmsHorizInterp_type
-  use FMS,  only: fms_horiz_interp_new
+  use FMS, only : fms_horiz_interp_new
+  use FMS, only : fms_string_utils_c2f_string
 
   use c_fms_utils_mod, only : cFMS_pointer_to_array, cFMS_array_to_pointer
+  use c_fms_mod, only : MESSAGE_LENGTH
 
   use iso_c_binding
 
