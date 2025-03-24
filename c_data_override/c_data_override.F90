@@ -5,7 +5,8 @@ module c_data_override_mod
   use FMS, only: fms_string_utils_c2f_string, fms_string_utils_f2c_string
   use FMS, only: fms_time_manager_set_time, fms_time_manager_set_date, FmsTime_type
   
-  use c_fms_mod, only : cFMS_get_domain_from_id, NAME_LENGTH, MESSAGE_LENGTH
+  use c_fms_mod, only: cFMS_get_domain_from_id, NAME_LENGTH, MESSAGE_LENGTH
+  use c_fms_utils_mod, only: cFMS_array_to_pointer
   
   use iso_c_binding
   implicit none
@@ -14,6 +15,8 @@ module c_data_override_mod
 
   public :: cFMS_data_override_0d_cfloat
   public :: cFMS_data_override_0d_cdouble  
+  public :: cFMS_data_override_2d_cfloat
+  public :: cFMS_data_override_2d_cdouble
   public :: cFMS_data_override_init
   public :: cFMS_data_override_set_time
 
@@ -94,5 +97,6 @@ contains
   end subroutine cFMS_data_override_set_time
 
 #include "c_data_override_0d.fh"
+#include "c_data_override_2d.fh"
   
 end module c_data_override_mod
