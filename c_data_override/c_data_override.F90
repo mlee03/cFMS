@@ -17,6 +17,8 @@ module c_data_override_mod
   public :: cFMS_data_override_0d_cdouble  
   public :: cFMS_data_override_2d_cfloat
   public :: cFMS_data_override_2d_cdouble
+  public :: cFMS_data_override_3d_cfloat
+  public :: cFMS_data_override_3d_cdouble
   public :: cFMS_data_override_init
   public :: cFMS_data_override_set_time
 
@@ -98,5 +100,6 @@ contains
 
 #include "c_data_override_0d.fh"
 #include "c_data_override_2d.fh"
+#include "c_data_override_3d.fh"
   
 end module c_data_override_mod

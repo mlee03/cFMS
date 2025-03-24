@@ -35,10 +35,8 @@ test_data_override_scalar_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_ov
 test_data_override_2d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_override_2d.c
 
 test_data_override_ongrid : test_data_override_ongrid.F90
-	$(FC) $(FCFLAGS) $(LDFLAGS) -I./include test_data_override_ongrid.F90 -o test_data_override_ongrid
+	$(FC) $(FCFLAGS) $(LDFLAGS) test_data_override_ongrid.F90 -o test_data_override_ongrid
 
-test_data_override_ongrid : test_data_override_ongrid.F90
-	$(FC) $(FCFLAGS) $(LDFLAGS) -I./include test_data_override_ongrid.F90 -o test_data_override_ongrid
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \

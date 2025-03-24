@@ -34,7 +34,6 @@ mkdir INPUT
 cat <<EOF > input.nml
 &test_data_override_ongrid_nml
   test_case=3
-  write_only=.True.
 /
 &data_override_nml
   use_data_table_yaml = .True.
