@@ -34,7 +34,6 @@ mkdir INPUT
 cat <<EOF > input.nml
 &test_data_override_ongrid_nml
   test_case=2
-  write_only=.True.
 /
 &data_override_nml
   use_data_table_yaml = .True.
@@ -44,17 +43,10 @@ EOF
 cat <<_EOF > data_table.yaml
 data_table:
 - grid_name: OCN
-  fieldname_in_model: runoff_increasing
+  fieldname_in_model: runoff
   override_file:
   - fieldname_in_file: runoff
-    file_name: ./INPUT/bilinear_increasing.nc
-    interp_method: bilinear
-  factor: 1.0
-- grid_name: OCN
-  fieldname_in_model: runoff_decreasing
-  override_file:
-  - fieldname_in_file: runoff
-    file_name: ./INPUT/bilinear_decreasing.nc
+    file_name: ./INPUT/array_2d.nc
     interp_method: bilinear
   factor: 1.0
 _EOF

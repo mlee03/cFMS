@@ -30,10 +30,10 @@ make test_data_override_ongrid
 if [ -d INPUT ] ; then rm -rf INPUT; fi
 mkdir INPUT
 
-#generate input for scalar
+#generate input for bilinear 3d
 cat <<EOF > input.nml
 &test_data_override_ongrid_nml
-  test_case=3
+  test_case=1
 /
 &data_override_nml
   use_data_table_yaml = .True.
@@ -42,18 +42,18 @@ EOF
 
 cat <<_EOF > data_table.yaml
 data_table:
- - grid_name: OCN
-   fieldname_in_model: co2
-   override_file:
-   - fieldname_in_file: co2
-     file_name: INPUT/scalar.nc
-     interp_method: none
-   factor : 1.0
+- grid_name: OCN
+  fieldname_in_model: runoff
+  override_file:
+  - fieldname_in_file: runoff
+    file_name: ./INPUT/array_3d.nc
+    interp_method: bilinear
+  factor: 1.0
 _EOF
 
 ./test_data_override_ongrid
 
-test_expect_success "c_data_override_scalar" 'mpirun -n 2  ./test_data_override_scalar'
+test_expect_success "c_data_override_3d" 'mpirun -n 6  ./test_data_override_3d'
 test_done
 
-rm -rf INPUT test_data_override_ongrid INPUT data_table.yaml
+rm -rf INPUT test_data_override_ongrid

@@ -1,12 +1,13 @@
-subroutine CFMS_DATA_OVERRIDE_2D_(gridname, fieldname, data_shape, data, override, is, ie, js, je) &
-     bind(C, name=CFMS_DATA_OVERRIDE_2D_BINDC_)
+subroutine CFMS_DATA_OVERRIDE_3D_(gridname, fieldname, data_shape, data, override, data_index, is, ie, js, je) &
+     bind(C, name=CFMS_DATA_OVERRIDE_3D_BINDC_)
 
   implicit none
   character(c_char), intent(in) :: gridname(NAME_LENGTH)
   character(c_char), intent(in) :: fieldname(NAME_LENGTH)
-  integer,           intent(in) :: data_shape(2)
+  integer,           intent(in) :: data_shape(3)
   type(c_ptr), value,intent(in) :: data
   logical(c_bool),   intent(out), optional :: override
+  integer, intent(in), optional :: data_index
   integer, intent(in), optional :: is
   integer, intent(in), optional :: ie
   integer, intent(in), optional :: js
@@ -16,18 +17,19 @@ subroutine CFMS_DATA_OVERRIDE_2D_(gridname, fieldname, data_shape, data, overrid
   character(len=NAME_LENGTH-1) :: fieldname_f
   logical :: override_f
   
-  CFMS_DATA_OVERRIDE_2D_TYPE_, allocatable :: data_f(:,:)
+  CFMS_DATA_OVERRIDE_2D_TYPE_, allocatable :: data_f(:,:,:)
 
   gridname_f = fms_string_utils_c2f_string(gridname)
   fieldname_f = fms_string_utils_c2f_string(fieldname)
 
-  allocate(data_f(data_shape(1),data_shape(2)))  
+  allocate(data_f(data_shape(1),data_shape(2),data_shape(3)))  
   
-  call fms_data_override(gridname = gridname_f,   &
-                         fieldname = fieldname_f, &
-                         data_2D = data_f, &
+  call fms_data_override(gridname = gridname_f,        &
+                         fieldname_code = fieldname_f, &
+                         return_data = data_f,      &
                          time = data_override_time, &
-                         override = override_f,   &
+                         override = override_f,   & 
+                         data_index = data_index, &
                          is_in = is, &
                          js_in = js, &
                          ie_in = ie, &
@@ -38,4 +40,4 @@ subroutine CFMS_DATA_OVERRIDE_2D_(gridname, fieldname, data_shape, data, overrid
   
   if(present(override)) override = logical(override, c_bool)
 
-end subroutine CFMS_DATA_OVERRIDE_2D_
+end subroutine CFMS_DATA_OVERRIDE_3D_
