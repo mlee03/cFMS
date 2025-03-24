@@ -4,8 +4,10 @@
 #include <c_data_override.h>
 #include <c_mpp_domains_helper.h>
 
-#define NX 384
-#define NY 384
+#define NX 360
+#define NY 180
+
+#define TEST_NTIMES 11
 
 int main()
 {
@@ -13,8 +15,10 @@ int main()
   int ndomain = 1;
   int nnest_domain = 0;
   int domain_id = 0;
-
-  cFMS_init(NULL, NULL, &ndomain, &nnest_domain);
+  int calendar_type = NOLEAP;
+  float answers[TEST_NTIMES] = {1., 2., 3., 3.5, 4., 5., 6., 7., 8., 9., 10.};
+  
+  cFMS_init(NULL, NULL, &ndomain, &nnest_domain, &calendar_type);
 
   // define domain
   {
@@ -43,13 +47,38 @@ int main()
 
   //data override init
   {
-    int *ocn_domain_id = NULL;
+    int *atm_domain_id = NULL;
     int *ice_domain_id = NULL;
     int *land_domain_id = NULL;
     int *land_domainUG_id = NULL;
-    int mode = CDOUBLE_MODE; //for r8
-    cFMS_data_override_init(&domain_id, ocn_domain_id, ice_domain_id, land_domain_id, land_domainUG_id, &mode);
+    cFMS_data_override_init(atm_domain_id, &domain_id, ice_domain_id, land_domain_id, land_domainUG_id, NULL);
   }
+
+  //data override scalar
+  {
+    char gridname[NAME_LENGTH] = "OCN";
+    char fieldname_code[NAME_LENGTH] = "co2";
+    float data = -100.;
+    bool override = false;
+    int *data_index = NULL;
+    int start_day = 1;
     
+    for(int i=0; i<TEST_NTIMES; i++) {
+      int year = 1;
+      int month = 1;
+      int day = start_day + i + 1; //start day 1,1,1,0,0,0
+      int hour = 0;
+      int minute = 0;
+      int second = 0;
+      
+      cFMS_data_override_set_time(&year, &month, &day, &hour, &minute, &second, NULL, NULL);      
+      cFMS_data_override_0d_cfloat(gridname, fieldname_code, &data, &override, NULL);
+      if( data != answers[i] ) {
+        printf("Expected %f but got %f\n", answers[i], data);        
+        exit(EXIT_FAILURE);
+      }
+    }
+  }
+  
   return EXIT_SUCCESS;
 }
