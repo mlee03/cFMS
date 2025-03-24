@@ -30,13 +30,15 @@ AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 noinst_LTLIBRARIES = lib_c_fms_utils.la
 
 # Each convenience library depends on its source.
-lib_c_fms_utils_la_SOURCES = c_fms_utils.F90
+lib_c_fms_utils_la_SOURCES = c_fms_utils.F90 \
+                             include/pointer_to_array.inc \
+                             include/pointer_to_array.fh \
+                             include/array_to_pointer.inc \
+                             include/array_to_pointer.fh
 
 # Mod files are built and then installed as headers.
 MODFILES = c_fms_utils_mod.$(FC_MODEXT)
 BUILT_SOURCES = $(MODFILES)
 nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
-
-include_HEADERS = c_fms_utils.h
 
 include $(top_srcdir)/mkmods.mk

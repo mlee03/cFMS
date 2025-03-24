@@ -10,8 +10,9 @@ function CFMS_DIAG_SEND_DATA_(diag_field_id, field_shape, field_ptr, err_msg) bi
   character(MESSAGE_LENGTH-1) :: err_msg_f
   logical(c_bool) :: CFMS_DIAG_SEND_DATA_  
 
-  CFMS_DIAG_SEND_DATA_FIELD_TYPE_ :: field(CFMS_DIAG_SEND_DATA_FIELD_SHAPE_)
+  CFMS_DIAG_SEND_DATA_FIELD_TYPE_, allocatable :: field(CFMS_DIAG_SEND_DATA_FIELD_ASSUMED_SHAPE_)
   
+  allocate(field(CFMS_DIAG_SEND_DATA_FIELD_SHAPE_))
   call cFMS_pointer_to_array(field_ptr, field_shape, field)  
   
   CFMS_DIAG_SEND_DATA_ = fms_diag_send_data(diag_field_id = diag_field_id, &
@@ -22,5 +23,6 @@ function CFMS_DIAG_SEND_DATA_(diag_field_id, field_shape, field_ptr, err_msg) bi
   CFMS_DIAG_SEND_DATA_ = logical(CFMS_DIAG_SEND_DATA_, kind=c_bool)
 
   if(present(err_msg) .and. err_msg_f /= '' ) call fms_string_utils_f2c_string(err_msg, err_msg_f)
+  deallocate(field)
 
 end function CFMS_DIAG_SEND_DATA_
