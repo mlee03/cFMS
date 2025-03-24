@@ -18,4 +18,3 @@ subroutine CFMS_ARRAY_TO_POINTER_(f_array, c_shape, c_pointer)
   nullify(cf_pointer)
   
 end subroutine CFMS_ARRAY_TO_POINTER_
->>>>>>> origin/main
