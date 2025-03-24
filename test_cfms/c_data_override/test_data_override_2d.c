@@ -46,7 +46,7 @@ int main()
     cFMS_define_domains_easy(domain);
   }
 
-  //get_data_domain
+  //get_compute_domain
   {
     int *xmax_size = NULL;
     int *ymax_size = NULL;
@@ -92,7 +92,6 @@ int main()
 
     for(int ij=0; ij<xsize*ysize; ij++) {
       if( abs(data[ij]-100.04) > TOLERANCE ) {
-        printf("%f\n", data[ij]-100.);
         cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
         exit(EXIT_FAILURE);
       }
