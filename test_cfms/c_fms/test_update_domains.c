@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <c_fms.h>
 #include <c_mpp_domains_helper.h>
 
@@ -31,7 +30,7 @@ int main()
 {
   int domain_id = 0;
 
-  cFMS_init(NULL,NULL,NULL,NULL);
+  cFMS_init(NULL,NULL,NULL,NULL,NULL);
 
   define_domain(&domain_id);
   cFMS_set_current_pelist(NULL,NULL);

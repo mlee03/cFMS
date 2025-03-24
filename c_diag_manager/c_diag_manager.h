@@ -7,12 +7,7 @@ extern const int DIAG_OTHER;
 extern const int DIAG_OCEAN;
 extern const int DIAG_ALL;
 
-extern const int THIRTY_DAY_MONTHS;
-extern const int GREGORIAN;
-extern const int JULIAN;
-extern const int NOLEAP;
-
-extern void cFMS_diag_init(int *diag_model_subset, int *time_init, int *calendar_type, char *err_msg);
+extern void cFMS_diag_init(int *diag_model_subset, int *time_init, char *err_msg);
 
 extern int cFMS_diag_axis_init_cfloat(char *name, int *naxis_data, float *axis_data, char *units, char *cart_name,
                                       char *long_name, int *direction, char *set_name, int *edges, char *aux,

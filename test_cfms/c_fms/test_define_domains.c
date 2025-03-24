@@ -68,7 +68,7 @@ int main() {
   int fine_shalo=2;
   int fine_nhalo=2;
   
-  cFMS_init(NULL, NULL, &ndomain, &nnest_domain);
+  cFMS_init(NULL, NULL, &ndomain, &nnest_domain, NULL);
   cFMS_null_cdomain(&cdomain);
   cFMS_null_cnest_domain(&cnest_domain);
 
