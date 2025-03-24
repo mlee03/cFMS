@@ -33,10 +33,8 @@ subroutine CFMS_DATA_OVERRIDE_2D_(gridname, fieldname, data_shape, data, overrid
                          js_in = js, &
                          ie_in = ie, &
                          je_in = je)
-
-  write(*,*) data_f(1:4, 1:4), override
-  call cfms_pointer_to_array(data, data_shape, data_f)
   
+  call cfms_array_to_pointer(data_f, data_shape, data)  
   deallocate(data_f)
   
   if(present(override)) override = logical(override, c_bool)

@@ -248,10 +248,10 @@ subroutine create_bilinear_data_file(increasing_grid)
 
   type(FmsNetcdfFile_t)         :: fileobj          !< Fms2_io fileobj
   character(len=10)             :: dimnames(3)      !< dimension names for the variable
-  real(r4_kind), allocatable    :: runoff_in(:,:,:) !< Data to write
-  real(r4_kind), allocatable    :: time_data(:)     !< Time dimension data
-  real(r4_kind), allocatable    :: lat_data(:)      !< Lat dimension data
-  real(r4_kind), allocatable    :: lon_data(:)      !< Lon dimension data
+  real(r8_kind), allocatable    :: runoff_in(:,:,:) !< Data to write
+  real(r8_kind), allocatable    :: time_data(:)     !< Time dimension data
+  real(r8_kind), allocatable    :: lat_data(:)      !< Lat dimension data
+  real(r8_kind), allocatable    :: lon_data(:)      !< Lon dimension data
   character(len=:), allocatable :: filename         !< Name of the file
   integer                       :: factor           !< This is used when creating the grid data
                                                       !! -1 if the grid is decreasing
@@ -268,46 +268,47 @@ subroutine create_bilinear_data_file(increasing_grid)
 
   if (.not. increasing_grid) then
     filename = 'INPUT/bilinear_decreasing.nc'
-    lon_data(1) = 360.0_r4_kind
-    lat_data(1) = 89.0_r4_kind
+    lon_data(1) = 360.0_r8_kind
+    lat_data(1) = 89.0_r8_kind
     factor = -1
     do i = 1, nlon_data
       do j = 1, nlat_data
         do k = 1, 10
-          runoff_in(i, j, k) = real(362-i, kind=r4_kind) * 1000._r4_kind + &
-            real(180-j, kind=r4_kind) + real(k, kind=r4_kind)/100._r4_kind
+           runoff_in(i, j, k) = 100._r8_kind + k*.01_r8_kind
+           != real(-i, kind=r8_kind) * 100._r8_kind + &
+           ! real(-j, kind=r8_kind) + real(-k, kind=r8_kind)/100._r8_kind
         enddo
       enddo
     enddo
   else
     filename = 'INPUT/bilinear_increasing.nc'
-    lon_data(1) = 0.0_r4_kind
-    lat_data(1) = -89.0_r4_kind
+    lon_data(1) = 0.0_r8_kind
+    lat_data(1) = -89.0_r8_kind
     factor = 1
 
     do i = 1, nlon_data
       do j = 1, nlat_data
         do k = 1, 10
-          runoff_in(i, j, k) = real(i, kind=r4_kind) * 1000._r4_kind + real(j, kind=r4_kind) + &
-            real(k, kind=r4_kind)/100._r4_kind
+          runoff_in(i, j, k) = real(i, kind=r8_kind) * 1000._r8_kind + real(j, kind=r8_kind) + &
+            real(k, kind=r8_kind)/100._r8_kind
         enddo
       enddo
     enddo
   endif
 
   do i = 2, nlon_data
-    lon_data(i) = real(lon_data(i-1) + 1*factor, r4_kind)
+    lon_data(i) = real(lon_data(i-1) + 1*factor, r8_kind)
   enddo
 
   do i = 2, nlat_data
-    lat_data(i) =real(lat_data(i-1) + 1*factor, r4_kind)
+    lat_data(i) =real(lat_data(i-1) + 1*factor, r8_kind)
   enddo
 
-  time_data = (/1_r4_kind, 2_r4_kind, &
-                3_r4_kind, 5_r4_kind, &
-                6_r4_kind, 7_r4_kind, &
-                8_r4_kind, 9_r4_kind, &
-                10_r4_kind, 11_r4_kind/)
+  time_data = (/1_r8_kind, 2_r8_kind, &
+                3_r8_kind, 5_r8_kind, &
+                6_r8_kind, 7_r8_kind, &
+                8_r8_kind, 9_r8_kind, &
+                10_r8_kind, 11_r8_kind/)
 
   dimnames(1) = 'i'
   dimnames(2) = 'j'
@@ -329,7 +330,7 @@ subroutine create_bilinear_data_file(increasing_grid)
     call register_variable_attribute(fileobj, "time", "calendar", "noleap", str_len=6)
     call register_variable_attribute(fileobj, "time", "units", "days since 0001-01-01 00:00:00", str_len=30)
 
-    call register_field(fileobj, "runoff", "float", dimnames)
+    call register_field(fileobj, "runoff", "double", dimnames)
     call write_data(fileobj, "runoff", runoff_in)
     call write_data(fileobj, "i", lon_data)
     call write_data(fileobj, "j", lat_data)

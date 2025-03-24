@@ -6,6 +6,7 @@
 
 #define NX 360
 #define NY 180
+#define TOLERANCE 1e-10
 
 #define TEST_NTIMES 11
 
@@ -58,18 +59,6 @@ int main()
                             x_is_global, y_is_global, tile_count, position, NULL, NULL);
   }
 
-  //answers for each pe
-  {
-    int ij = 0;
-    float *answers; //answers for time = 4  
-    answers = (float *)malloc(xsize*ysize*sizeof(float));
-    for(int i=is+1; i<ie+1; i++) {
-      for(int j=js+1; j<je+1; j++) {
-        answers[ij++] = (float)(362-i)*1000 + (float)180*j + (float)400;
-      }
-    }
-  }
-  
   //data override init
   {
     int *atm_domain_id = NULL;
@@ -82,9 +71,9 @@ int main()
   // data override 2d
   {
     char gridname[NAME_LENGTH] = "OCN";
-    char fieldname[NAME_LENGTH] = "runoff_increasing";
+    char fieldname[NAME_LENGTH] = "runoff_decreasing";
     int data_shape[2];
-    float *data = NULL;
+    double *data = NULL;
     bool override = false;
 
     int year = 1;
@@ -96,16 +85,20 @@ int main()
 
     data_shape[0] = xsize;
     data_shape[1] = ysize;
-    data = (float *)malloc(xsize*ysize*sizeof(float));
+    data = (double *)malloc(xsize*ysize*sizeof(double));
     
     cFMS_data_override_set_time(&year, &month, &day, &hour, &minute, &second, NULL, NULL);
-    cFMS_data_override_2d_cfloat(gridname, fieldname, data_shape, data, &override, NULL, NULL, NULL, NULL);
+    cFMS_data_override_2d_cdouble(gridname, fieldname, data_shape, data, &override, NULL, NULL, NULL, NULL);
 
-    for(int ij=0; ij<10; ij++) {
-      printf("pe=%d, ij=%d, data=%f\n", cFMS_pe(), ij, data[ij]);
-    }
-    
+    for(int ij=0; ij<xsize*ysize; ij++) {
+      if( abs(data[ij]-100.04) > TOLERANCE ) {
+        printf("%f\n", data[ij]-100.);
+        cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
+        exit(EXIT_FAILURE);
+      }
+    }        
   }
-  
+
+  cFMS_end();  
   return EXIT_SUCCESS;
 }

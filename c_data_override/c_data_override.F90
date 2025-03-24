@@ -7,7 +7,7 @@ module c_data_override_mod
   
 
   use c_fms_mod, only: cFMS_get_domain_from_id, NAME_LENGTH, MESSAGE_LENGTH
-  use c_fms_utils_mod, only: cFMS_pointer_to_array
+  use c_fms_utils_mod, only: cFMS_array_to_pointer
   
   use iso_c_binding
   implicit none
