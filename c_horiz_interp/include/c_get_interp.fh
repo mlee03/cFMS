@@ -1,4 +1,4 @@
-    ! cdouble 2d
+! cdouble 2d
 # undef CFMS_GET_INTERP_SUB_NAME_ 
 # undef CFMS_GET_INTERP_BINDC_ 
 # undef CFMS_GET_INTERP_DATA_TYPE_ 
@@ -8,7 +8,7 @@
 # define CFMS_GET_INTERP_DATA_TYPE_ real(c_double)
 # define CFMS_GET_INTERP_OBJ_DATA_TYPE_ real(kind=8)
 
-    ! cfloat 2d
+! cfloat 2d
 # undef CFMS_GET_INTERP_SUB_NAME_ 
 # undef CFMS_GET_INTERP_BINDC_ 
 # undef CFMS_GET_INTERP_DATA_TYPE_ 

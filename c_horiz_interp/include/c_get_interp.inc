@@ -10,17 +10,17 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(ilon_ptr, ilon_shape, jlat_ptr, jlat_shape,
                             max_src_dist, is_allocated, interp_id) bind(C, CFMS_GET_INTERP_BINDC_)
 
     type(c_ptr), intent(in), value :: ilon_ptr
-    integer, intent(in) :: ilon_shape(2)  
+    integer, intent(in), optional :: ilon_shape(2)  
     type(c_ptr), intent(in), value :: jlat_ptr
-    integer, intent(in) :: jlat_shape(2)
+    integer, intent(in), optional :: jlat_shape(2)
     type(c_ptr), intent(in), value :: i_lon_ptr
-    integer, intent(in) :: i_lon_shape(3)
+    integer, intent(in), optional :: i_lon_shape(3)
     type(c_ptr), intent(in), value  :: j_lat_ptr
-    integer, intent(in) :: j_lat_shape(3)
+    integer, intent(in), optional :: j_lat_shape(3)
     type(c_ptr), intent(in), value :: found_neighbors_ptr
-    integer, intent(in) :: found_neighbors_shape(2)
+    integer, intent(in), optional :: found_neighbors_shape(2)
     type(c_ptr), intent(in), value :: num_found_ptr
-    integer, intent(in) :: num_found_shape(2)         
+    integer, intent(in), optional :: num_found_shape(2)         
     integer, intent(out), optional :: nlon_src                  
     integer, intent(out), optional :: nlat_src                  
     integer, intent(out), optional :: nlon_dst                  
@@ -34,30 +34,30 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(ilon_ptr, ilon_shape, jlat_ptr, jlat_shape,
     integer, intent(out), optional :: i_dst(nxgrid)             
     integer, intent(out), optional :: j_dst(nxgrid)
     type(c_ptr), intent(in), value :: faci_ptr
-    integer, intent(in) :: faci_shape(2)
+    integer, intent(in), optional :: faci_shape(2)
     type(c_ptr), intent(in), value :: facj_ptr
-    integer, intent(in) :: facj_shape(2)
+    integer, intent(in), optional :: facj_shape(2)
     type(c_ptr), intent(in), value :: area_src_ptr
-    integer, intent(in) :: area_src_shape(2)
+    integer, intent(in), optional :: area_src_shape(2)
     type(c_ptr), intent(in), value :: area_dst_ptr
-    integer, intent(in) :: area_dst_shape(2)
+    integer, intent(in), optional :: area_dst_shape(2)
     type(c_ptr), intent(in), value :: wti_ptr
-    integer, intent(in) :: wti_shape(3)
+    integer, intent(in), optional :: wti_shape(3)
     type(c_ptr), intent(in), value :: wtj_ptr
-    integer, intent(in) :: wtj_shape(3)
+    integer, intent(in), optional :: wtj_shape(3)
     type(c_ptr), intent(in), value :: src_dist_ptr
-    integer, intent(in) :: src_dist_shape(3)
+    integer, intent(in), optional :: src_dist_shape(3)
     type(c_ptr), intent(in), value :: rat_x_ptr
-    integer, intent(in) :: rat_x_shape(2)
+    integer, intent(in), optional :: rat_x_shape(2)
     type(c_ptr), intent(in), value :: rat_y_ptr
-    integer, intent(in) :: rat_y_shape(2)
+    integer, intent(in), optional :: rat_y_shape(2)
     CFMS_GET_INTERP_DATA_TYPE_, intent(out), optional :: lon_in(nxgrid)
     CFMS_GET_INTERP_DATA_TYPE_, intent(out), optional :: lat_in(nxgrid)       
     CFMS_GET_INTERP_DATA_TYPE_, intent(out), optional :: area_frac_dst(nxgrid)
     type(c_ptr), intent(in), value :: mask_in_ptr
-    integer, intent(in) :: mask_in_shape
-    CFMS_GET_INTERP_DATA_TYPE_, intent(out) :: max_src_dist
-    logical(c_bool), intent(out) :: is_allocated
+    integer, intent(in), optional :: mask_in_shape(2)
+    CFMS_GET_INTERP_DATA_TYPE_, intent(out), optional :: max_src_dist
+    logical(c_bool), intent(out), optional :: is_allocated
     integer, intent(in), optional :: interp_id
 
     call cFMS_set_current_interp(interp_id)

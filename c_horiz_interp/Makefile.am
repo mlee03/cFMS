@@ -23,17 +23,23 @@
 # Ed Hartnett 2/22/19
 
 # Include .h and .mod files.
-AM_CPPFLAGS = -I. -I$(top_srcdir)/FMS/horiz_interp/include -I./include
+AM_CPPFLAGS = -I. -I./include
 AM_FCFLAGS = $(FC_MODINC). $(FC_MODOUT)$(MODDIR)
 
 # Build these uninstalled convenience libraries.
 noinst_LTLIBRARIES = lib_c_horiz_interp.la
 
 # Each convenience library depends on its source.
-lib_c_horiz_interp_la_SOURCES = c_horiz_interp.F90
+lib_c_horiz_interp_la_SOURCES = c_horiz_interp.F90 \
+                                include/c_get_interp.inc \
+                                include/c_get_interp.fh \
+                                include/c_horiz_interp_new.inc \
+                                include/c_horiz_interp_new.fh
+
+c_horiz_interp_mod.mod : c_horiz_interp.F90
 
 # Mod files are built and then installed as headers.
-MODFILES = c_horiz_interp_mod.$(FC_MODEXT)
+MODFILES = c_horiz_interp_mod.mod
 BUILT_SOURCES = $(MODFILES)
 nodist_include_HEADERS =  $(FMS_INC_FILES) $(MODFILES)
 

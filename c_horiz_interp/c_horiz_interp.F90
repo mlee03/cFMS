@@ -13,6 +13,13 @@ module c_horiz_interp_mod
   public :: cFMS_create_xgrid_2dx2d_order1
   public :: cFMS_get_maxxgrid
   public :: cFMS_horiz_interp_init
+  public :: cFMS_set_current_interp
+
+  public :: cFMS_horiz_interp_new_2d_cdouble
+  public :: cFMS_horiz_interp_new_2d_cfloat
+
+  public :: cFMS_get_interp_cdouble
+  public :: cFMS_get_interp_cfloat
 
   type(FmsHorizInterp_type), allocatable, target, public :: interp(:)
   type(fmshorizinterp_type), pointer :: current_interp
