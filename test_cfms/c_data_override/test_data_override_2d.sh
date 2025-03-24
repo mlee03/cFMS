@@ -57,4 +57,3 @@ test_expect_success "c_data_override_2d" 'mpirun -n 4  ./test_data_override_2d'
 test_done
 
 rm -rf INPUT test_data_override_ongrid
-
