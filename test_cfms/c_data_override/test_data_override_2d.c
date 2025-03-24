@@ -35,7 +35,7 @@ int main()
 
     domain.layout = (int *)malloc(2*sizeof(int));    
     domain.layout[0] = 2;
-    domain.layout[1] = 3;
+    domain.layout[1] = 2;
     
     domain.domain_id = &domain_id;
     domain.global_indices = global_indices;
@@ -72,7 +72,7 @@ int main()
   // data override 2d
   {
     char gridname[NAME_LENGTH] = "OCN";
-    char fieldname[NAME_LENGTH] = "runoff";
+    char fieldname[NAME_LENGTH] = "runoff_decreasing";
     int data_shape[2];
     double *data = NULL;
     bool override = false;
@@ -93,6 +93,7 @@ int main()
 
     for(int ij=0; ij<xsize*ysize; ij++) {
       if( ABS(data[ij],100.03) > TOLERANCE ) {
+        printf("index %d data=%lf answer=%lf, diff=%lf\n", ij, data[ij], 100.03, ABS(data[ij],100.03));
         cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
         exit(EXIT_FAILURE);
       }
