@@ -1,30 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <c_fms.h>
 
 #define NX 10
 #define NY 5
 #define NZ 2
 
-// array(NX, NY, NZ)
+extern void test_3d_cdouble(int *array_shape, double *c_pointer);
 
-
-void test_(int *c_shape, double *c_pointer)
+int main()
 {
 
-  c_shape[0] = NX;
-  c_shape[1] = NY;
-  c_shape[2] = NZ;
+  double *array_3d;
+  int shape[3] = {NX, NY, NZ};
+  int ijk;
   
-  int ijk = 0;
-  for(int i=0; i<NX; i++) {
-    for(int j=0; j<NY; j++) {
-      for(int k=0; k<NZ; k++) {
-        c_pointer[ijk] =(i+1)*100. + (j+1)*10. + k+1;
-        ijk++;
+  array_3d = (double *)malloc(NX*NY*NZ*sizeof(double));
+  
+  ijk = 0;
+  for(int i=0; i<NX; i++){
+    for(int j=0; j<NY; j++){
+      for(int k=0; k<NZ; k++){
+        array_3d[ijk++] = i*100. + j*10. + k*1.;
       }
     }
   }
 
-}
+  test_3d_cdouble(shape, array_3d);
   
-
+  ijk = 0;
+  for(int i=0; i<NX; i++){
+    for(int j=0; j<NY; j++){
+      for(int k=0; k<NZ; k++){
+        if(array_3d[ijk++] != -i*100. - j*10. - k*1.) {
+          cFMS_error(FATAL, "ERROR CONVERTING ARRAY TO POINTER");
+          exit(EXIT_FAILURE);
+        }
+      }
+    }
+  }
+  
+  return EXIT_SUCCESS;
+  
+}

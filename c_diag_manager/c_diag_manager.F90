@@ -46,15 +46,12 @@ module c_diag_manager_mod
   public :: cFMS_diag_send_data_2d_cint
   public :: cFMS_diag_send_data_3d_cint
   public :: cFMS_diag_send_data_4d_cint
-  public :: cFMS_diag_send_data_5d_cint
   public :: cFMS_diag_send_data_2d_cfloat
   public :: cFMS_diag_send_data_3d_cfloat
   public :: cFMS_diag_send_data_4d_cfloat
-  public :: cFMS_diag_send_data_5d_cfloat
   public :: cFMS_diag_send_data_2d_cdouble
   public :: cFMS_diag_send_data_3d_cdouble
   public :: cFMS_diag_send_data_4d_cdouble
-  public :: cFMS_diag_send_data_5d_cdouble
   
   type(FmsTime_type) :: field_init_time
   type(FmsTime_type) :: cFMS_diag_end_time
