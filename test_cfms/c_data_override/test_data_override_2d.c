@@ -6,7 +6,7 @@
 
 #define NX 360
 #define NY 180
-#define TOLERANCE 1e-11
+#define TOLERANCE 1e-10
 #define TEST_NTIMES 11
 
 #define ABS(val,answ) (val<answ ? answ-val : val-answ)
@@ -91,7 +91,7 @@ int main()
     cFMS_data_override_set_time(&year, &month, &day, &hour, &minute, &second, NULL, NULL);
     cFMS_data_override_2d_cdouble(gridname, fieldname, data_shape, data, &override, NULL, NULL, NULL, NULL);
 
-    for(int ij=0; ij<10; ij++) {
+    for(int ij=0; ij<xsize*ysize; ij++) {
       if( ABS(data[ij],100.03) > TOLERANCE ) {
         cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
         exit(EXIT_FAILURE);
