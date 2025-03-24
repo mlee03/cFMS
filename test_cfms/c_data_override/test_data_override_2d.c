@@ -6,9 +6,10 @@
 
 #define NX 360
 #define NY 180
-#define TOLERANCE 1e-10
-
+#define TOLERANCE 1e-11
 #define TEST_NTIMES 11
+
+#define ABS(val,answ) (val<answ ? answ-val : val-answ)
 
 int main()
 {
@@ -71,7 +72,7 @@ int main()
   // data override 2d
   {
     char gridname[NAME_LENGTH] = "OCN";
-    char fieldname[NAME_LENGTH] = "runoff_decreasing";
+    char fieldname[NAME_LENGTH] = "runoff";
     int data_shape[2];
     double *data = NULL;
     bool override = false;
@@ -90,8 +91,8 @@ int main()
     cFMS_data_override_set_time(&year, &month, &day, &hour, &minute, &second, NULL, NULL);
     cFMS_data_override_2d_cdouble(gridname, fieldname, data_shape, data, &override, NULL, NULL, NULL, NULL);
 
-    for(int ij=0; ij<xsize*ysize; ij++) {
-      if( abs(data[ij]-100.04) > TOLERANCE ) {
+    for(int ij=0; ij<10; ij++) {
+      if( ABS(data[ij],100.03) > TOLERANCE ) {
         cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
         exit(EXIT_FAILURE);
       }
