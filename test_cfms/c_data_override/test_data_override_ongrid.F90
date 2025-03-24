@@ -331,6 +331,7 @@ subroutine create_bilinear_data_file(increasing_grid)
     call register_variable_attribute(fileobj, "time", "units", "days since 0001-01-01 00:00:00", str_len=30)
 
     call register_field(fileobj, "runoff", "double", dimnames)
+
     call write_data(fileobj, "runoff", runoff_in)
     call write_data(fileobj, "i", lon_data)
     call write_data(fileobj, "j", lat_data)

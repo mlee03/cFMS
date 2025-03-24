@@ -5,7 +5,6 @@ module c_data_override_mod
   use FMS, only: fms_string_utils_c2f_string, fms_string_utils_f2c_string
   use FMS, only: fms_time_manager_set_time, fms_time_manager_set_date, FmsTime_type
   
-
   use c_fms_mod, only: cFMS_get_domain_from_id, NAME_LENGTH, MESSAGE_LENGTH
   use c_fms_utils_mod, only: cFMS_array_to_pointer
   

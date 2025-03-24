@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <c_fms.h>
 #include <c_mpp_domains_helper.h>
 
