@@ -18,6 +18,12 @@ extern void cFMS_data_override_2d_cfloat(char *gridname, char *fieldname, int *d
 extern void cFMS_data_override_2d_cdouble(char *gridname, char *fieldname, int *data_shape, double *data,
                                           bool *override, int *is, int *ie, int *js, int *je);
 
+extern void cFMS_data_override_3d_cfloat(char *gridname, char *fieldname, int *data_shape, float *data,
+                                         bool *override, int *data_index, int *is, int *ie, int *js, int *je);
+
+extern void cFMS_data_override_3d_cdouble(char *gridname, char *fieldname, int *data_shape, double *data,
+                                          bool *override, int *data_index, int *is, int *ie, int *js, int *je);
+
 extern void cFMS_data_override_init(int *atm_domain_id, int *ocn_domain_id, int *ice_domain_id, int *land_domain_id,
                                     int *land_domainUG_id, int *mode);
 

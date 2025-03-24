@@ -50,6 +50,7 @@ integer                                    :: js               !< Starting y ind
 integer                                    :: je               !< Ending y index
 integer                                    :: nhalox=2, nhaloy=2
 integer                                    :: io_status
+integer, parameter                         :: array_3d = 1
 integer, parameter                         :: array_2d = 2
 integer, parameter                         :: scalar = 3
 integer                                    :: test_case
@@ -70,6 +71,8 @@ if (io_status > 0) call mpp_error(FATAL,'=>test_data_override_ongrid: Error read
 call mpp_sync
 
 select case (test_case)
+case (array_3d)
+   call generate_array_3d_input_file ()
 case (array_2d)
    call generate_array_2d_input_file ()
 case (scalar)
@@ -235,28 +238,30 @@ end subroutine create_array_2d_data_file
 
 !> @brief Creates an input netcdf data file to use for the ongrid data_override test case
 !! with either an increasing or decreasing lat, lon grid
-subroutine create_array_3d_data_file(increasing_grid)
-  logical, intent(in) :: increasing_grid !< .true. if increasing a file with an increasing lat/lon
+subroutine create_array_3d_data_file()
 
   type(FmsNetcdfFile_t)         :: fileobj          !< Fms2_io fileobj
-  character(len=10)             :: dimnames(3)      !< dimension names for the variable
-  real(r8_kind), allocatable    :: runoff_in(:,:,:) !< Data to write
+  character(len=10)             :: dimnames(4)      !< dimension names for the variable
+  real(r8_kind), allocatable    :: runoff_in(:,:,:,:) !< Data to write
   real(r8_kind), allocatable    :: time_data(:)     !< Time dimension data
   real(r8_kind), allocatable    :: lat_data(:)      !< Lat dimension data
   real(r8_kind), allocatable    :: lon_data(:)      !< Lon dimension data
+  integer,       allocatable    :: z_data(:)
   character(len=:), allocatable :: filename         !< Name of the file
   integer                       :: factor           !< This is used when creating the grid data
                                                       !! -1 if the grid is decreasing
                                                       !! +1 if the grid is increasing
-  integer                       :: i, j, k          !< For looping through variables
-  integer                       :: nlon_data, nlat_data
+  integer                       :: i, j, k, z       !< For looping through variables
+  integer                       :: nlon_data, nlat_data, nz_data
 
   nlon_data = nlon + 1
   nlat_data = nlat - 1
-  allocate(runoff_in(nlon_data, nlat_data, 10))
+  nz_data = 5
+  allocate(runoff_in(nlon_data, nlat_data, nz_data, 10))
   allocate(time_data(10))
   allocate(lat_data(nlat_data))
   allocate(lon_data(nlon_data))
+  allocate(z_data(nz_data))
 
   filename = 'INPUT/array_3d.nc'
   lon_data(1) = 360.0_r8_kind
@@ -264,10 +269,12 @@ subroutine create_array_3d_data_file(increasing_grid)
   factor = -1
   do i = 1, nlon_data
      do j = 1, nlat_data
-        do k = 1, 10
-           runoff_in(i, j, k) = 100._r8_kind + k*.01_r8_kind
-           != real(-i, kind=r8_kind) * 100._r8_kind + &
-           ! real(-j, kind=r8_kind) + real(-k, kind=r8_kind)/100._r8_kind
+        do z=1, nz_data
+           do k = 1, 10
+              runoff_in(i, j, z, k) = z*100._r8_kind + k*.01_r8_kind
+              != real(-i, kind=r8_kind) * 100._r8_kind + &
+              ! real(-j, kind=r8_kind) + real(-k, kind=r8_kind)/100._r8_kind
+           end do
         enddo
      enddo
   enddo
@@ -280,6 +287,10 @@ subroutine create_array_3d_data_file(increasing_grid)
     lat_data(i) =real(lat_data(i-1) + 1*factor, r8_kind)
   enddo
 
+  do i=1, nz_data
+     z_data(i) = i
+  end do
+
   time_data = (/1_r8_kind, 2_r8_kind, &
                 3_r8_kind, 5_r8_kind, &
                 6_r8_kind, 7_r8_kind, &
@@ -288,11 +299,13 @@ subroutine create_array_3d_data_file(increasing_grid)
 
   dimnames(1) = 'i'
   dimnames(2) = 'j'
-  dimnames(3) = 'time'
+  dimnames(3) = 'z'
+  dimnames(4) = 'time'
 
   if (open_file(fileobj, filename, 'overwrite')) then
     call register_axis(fileobj, "i", nlon_data)
     call register_axis(fileobj, "j", nlat_data)
+    call register_axis(fileobj, "z", nz_data)
     call register_axis(fileobj, "time", unlimited)
 
     call register_field(fileobj, "i", "float", (/"i"/))
@@ -301,6 +314,9 @@ subroutine create_array_3d_data_file(increasing_grid)
     call register_field(fileobj, "j", "float", (/"j"/))
     call register_variable_attribute(fileobj, "j", "cartesian_axis", "y", str_len=1)
 
+    call register_field(fileobj, "z", "int", (/"z"/))
+    call register_variable_attribute(fileobj, "z", "extra_axis", "z", str_len=1)
+    
     call register_field(fileobj, "time", "float", (/"time"/))
     call register_variable_attribute(fileobj, "time", "cartesian_axis", "T", str_len=1)
     call register_variable_attribute(fileobj, "time", "calendar", "noleap", str_len=6)
@@ -311,6 +327,7 @@ subroutine create_array_3d_data_file(increasing_grid)
     call write_data(fileobj, "runoff", runoff_in)
     call write_data(fileobj, "i", lon_data)
     call write_data(fileobj, "j", lat_data)
+    call write_data(fileobj, "z", z_data)
     call write_data(fileobj, "time", time_data)
     call close_file(fileobj)
   endif
@@ -327,6 +344,18 @@ subroutine generate_array_2d_input_file
   endif
   call mpp_sync()
 end subroutine generate_array_2d_input_file
+
+!> @brief Generates the input for the bilinear data_override test_case
+subroutine generate_array_3d_input_file
+  if (mpp_pe() .eq. mpp_root_pe()) then
+    call create_grid_spec_file ()
+    call create_ocean_mosaic_file()
+    call create_ocean_hgrid_file()
+    call create_array_3d_data_file()
+  endif
+  call mpp_sync()
+end subroutine generate_array_3d_input_file
+
 
 !> @brief Generates the input for the bilinear data_override test_case
 subroutine generate_scalar_input_file

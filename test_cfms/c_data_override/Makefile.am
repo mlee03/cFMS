@@ -26,13 +26,16 @@ AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_data_override \
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
 
 check_PROGRAMS = test_data_override_scalar \
-                 test_data_override_2d
+                 test_data_override_2d     \
+                 test_data_override_3d
 
 TESTS = test_data_override_scalar.sh \
-        test_data_override_2d.sh
+        test_data_override_2d.sh \
+        test_data_override_3d.sh 
 
 test_data_override_scalar_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_override_scalar.c
 test_data_override_2d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_override_2d.c
+test_data_override_3d_SOURCES = ../c_fms/c_mpp_domains_helper.c test_data_override_3d.c
 
 test_data_override_ongrid : test_data_override_ongrid.F90
 	$(FC) $(FCFLAGS) $(LDFLAGS) test_data_override_ongrid.F90 -o test_data_override_ongrid
@@ -43,7 +46,7 @@ SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(abs_top_srcdir)/test_cfms/tap-driver.sh
 
 # Include these files with the distribution.
-EXTRA_DIST = test_data_override_scalar.sh test_data_override_2d.sh
+EXTRA_DIST = test_data_override_scalar.sh test_data_override_2d.sh test_data_override_3d.sh
 
 # Clean up
 CLEANFILES = *.nml*  *.out *.dpi *.spi *.dyn *.spl *_table* input* *trs *.nc* 

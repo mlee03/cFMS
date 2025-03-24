@@ -6,6 +6,7 @@
 
 #define NX 360
 #define NY 180
+#define NZ 5
 #define TOLERANCE 1e-11
 #define TEST_NTIMES 11
 
@@ -69,12 +70,13 @@ int main()
     cFMS_data_override_init(atm_domain_id, &domain_id, ice_domain_id, land_domain_id, land_domainUG_id, NULL);
   }
 
-  // data override 2d
+  // data override 3d
   {
     char gridname[NAME_LENGTH] = "OCN";
     char fieldname[NAME_LENGTH] = "runoff";
-    int data_shape[2];
+    int data_shape[3];
     double *data = NULL;
+    int *override_index = NULL;
     bool override = false;
 
     int year = 1;
@@ -86,17 +88,26 @@ int main()
 
     data_shape[0] = xsize;
     data_shape[1] = ysize;
-    data = (double *)malloc(xsize*ysize*sizeof(double));
+    data_shape[2] = NZ;
+    data = (double *)malloc(xsize*ysize*NZ*sizeof(double));
     
     cFMS_data_override_set_time(&year, &month, &day, &hour, &minute, &second, NULL, NULL);
-    cFMS_data_override_2d_cdouble(gridname, fieldname, data_shape, data, &override, NULL, NULL, NULL, NULL);
+    cFMS_data_override_3d_cdouble(gridname, fieldname, data_shape, data, &override, 
+                                  override_index, NULL, NULL, NULL, NULL);
 
-    for(int ij=0; ij<10; ij++) {
-      if( ABS(data[ij],100.03) > TOLERANCE ) {
-        cFMS_error(FATAL, "FAILURE IN 2D DATA_OVERRIDE");
-        exit(EXIT_FAILURE);
+    int ijk = 0;
+    for(int i=0; i<xsize; i++){
+      for(int j=0; j<ysize; j++){
+        for(int k=0; k<NZ; k++){
+          double answ = (k+1)*100.+.03;
+          if( ABS(data[ijk], answ) > TOLERANCE ) {
+            cFMS_error(FATAL, "FAILURE IN 3D DATA_OVERRIDE");
+            exit(EXIT_FAILURE);
+          }
+          ijk++;
+        }
       }
-    }        
+    } 
   }
 
   cFMS_end();  
