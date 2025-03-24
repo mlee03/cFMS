@@ -20,7 +20,7 @@ int main()
   int whalo = 2;
   int shalo = 2;
   int nhalo = 2;  
-  int calendar_type = NOLEAP;
+  int calendar_type = JULIAN;
   int is, ie, js, je, xsize, ysize;
 
   cFMS_init(NULL, NULL, &ndomain, &nnest_domain, &calendar_type);

@@ -31,7 +31,7 @@ int main()
 {
   int domain_id = 0;
 
-  cFMS_init(NULL,NULL,NULL,NULL);
+  cFMS_init(NULL,NULL,NULL,NULL,NULL);
 
   define_domain(&domain_id);
   cFMS_set_current_pelist(NULL,NULL);

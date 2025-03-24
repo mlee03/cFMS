@@ -64,4 +64,4 @@ _EOF
 test_expect_success "c_data_override_2d" 'mpirun -n 6  ./test_data_override_2d'
 test_done
 
-#rm -rf INPUT test_data_override_ongrid
+rm -rf INPUT test_data_override_ongrid
