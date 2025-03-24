@@ -54,7 +54,7 @@ _EOF
 
 ./test_data_override_ongrid
 
-test_expect_success "c_data_override" 'mpirun -n 2  ./test_data_override'
+test_expect_success "c_data_override_scalar" 'mpirun -n 2  ./test_data_override_scalar'
 test_done
 
-rm -rf INPUT test_data_override_ongrid
+rm -rf INPUT test_data_override_ongrid INPUT data_table.yaml
