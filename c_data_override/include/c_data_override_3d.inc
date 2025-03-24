@@ -17,7 +17,7 @@ subroutine CFMS_DATA_OVERRIDE_3D_(gridname, fieldname, data_shape, data, overrid
   character(len=NAME_LENGTH-1) :: fieldname_f
   logical :: override_f
   
-  CFMS_DATA_OVERRIDE_2D_TYPE_, allocatable :: data_f(:,:,:)
+  CFMS_DATA_OVERRIDE_3D_TYPE_, allocatable :: data_f(:,:,:)
 
   gridname_f = fms_string_utils_c2f_string(gridname)
   fieldname_f = fms_string_utils_c2f_string(fieldname)
