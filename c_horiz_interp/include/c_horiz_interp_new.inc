@@ -1,9 +1,8 @@
 subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_shape, &
-                                               lon_out_ptr, lon_out_shape, lat_out_ptr, lat_out_shape, &
-                                               verbose, interp_method, num_nbrs, max_dist, src_modulo, &
-                                               mask_in_ptr, mask_in_shape, mask_out_ptr, mask_out_shape, &
-                                               is_latlon_in, is_latlon_out, interp_id) &
-                                               bind(C, name=CFMS_HORIZ_INTERP_NEW_2D_BINDC_)
+    lon_out_ptr, lon_out_shape, lat_out_ptr, lat_out_shape, verbose, interp_method, num_nbrs, &
+    max_dist, src_modulo, mask_in_ptr, mask_in_shape, mask_out_ptr, mask_out_shape, &
+    is_latlon_in, is_latlon_out, interp_id) bind(C, name=CFMS_HORIZ_INTERP_NEW_2D_BINDC_)
+
   implicit none
 
   type(c_ptr), intent(in), value :: lon_in_ptr
@@ -51,30 +50,16 @@ subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_i
   call cFMS_pointer_to_array(lat_in_ptr, lat_in_shape, lat_in)
   call cFMS_pointer_to_array(lon_out_ptr, lon_out_shape, lon_out)
   call cFMS_pointer_to_array(lat_out_ptr, lat_out_shape, lat_out)
-  if(c_associated(mask_in_ptr)) then
-    call cFMS_pointer_to_array(mask_in_ptr, mask_in_shape, mask_in)
-  end if
-  if(c_associated(mask_out_ptr)) then
-    call cFMS_pointer_to_array(mask_out_ptr, mask_out_shape, mask_out)
-  end if
+  if(c_associated(mask_in_ptr))  call cFMS_pointer_to_array(mask_in_ptr, mask_in_shape, mask_in)
+  if(c_associated(mask_out_ptr)) call cFMS_pointer_to_array(mask_out_ptr, mask_out_shape, mask_out)
 
   call cFMS_set_current_interp(interp_id)
 
-  if(present(interp_method)) then
-    interp_method_f = fms_string_utils_c2f_string(interp_method)
-  end if
-  if(present(max_dist)) then
-    max_dist_f = real(max_dist, CFMS_HORIZ_INTERP_NEW_2D_KIND_)
-  end if
-  if(present(src_modulo)) then
-    src_modulo_f = logical(src_modulo)
-  end if
-  if(present(is_latlon_in)) then
-    is_latlon_in_f = logical(is_latlon_in)
-  end if
-  if(present(is_latlon_out)) then
-    is_latlon_out_f = logical(is_latlon_out)
-  end if
+  if(present(interp_method)) interp_method_f = fms_string_utils_c2f_string(interp_method)
+  if(present(max_dist)) max_dist_f = real(max_dist, CFMS_HORIZ_INTERP_NEW_2D_KIND_)
+  if(present(src_modulo)) src_modulo_f = logical(src_modulo)
+  if(present(is_latlon_in)) is_latlon_in_f = logical(is_latlon_in)
+  if(present(is_latlon_out)) is_latlon_out_f = logical(is_latlon_out)
 
   call fms_horiz_interp_new(Interp=current_interp, lon_in=lon_in, lat_in=lat_in, &
                               lon_out=lon_out, lat_out=lat_out, verbose=verbose, &
