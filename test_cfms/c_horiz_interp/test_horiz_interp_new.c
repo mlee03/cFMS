@@ -144,10 +144,10 @@ int main()
 
     cFMS_horiz_interp_init();
 
-    cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
-                                    lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
-                                    interp_method, NULL, NULL, NULL, NULL,
-                                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    // cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
+    //                                 lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
+    //                                 interp_method, NULL, NULL, NULL, NULL,
+    //                                 NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
     // cFMS_set_current_interp(&domain_id);
 
