@@ -18,32 +18,43 @@
 #define NJ_DST 72
 
 /*
-Adapted from test_horiz_interp.F90
+Adapted from test_horiz_interp :: test_assign
 */
 
 int main()
 {
+    float *lat_in_1D, *lon_in_1D;
+    float *lat_in_2D, *lon_in_2D;
+    float *lat_out_1D, *lon_out_1D;
+    float *lat_out_2D, *lon_out_2D;
+    float *lon_src_1d, *lat_src_1d;
+    float *lon_dst_1d, *lat_dst_1d;
+    int nlon_in, nlat_in;
+    int nlon_out, nlat_out;
     float dlon_src, dlat_src, dlon_dst, dlat_dst;
+
     float lon_src_beg = 0.;
     float lon_src_end = 360.;
     float lat_src_beg = -90.;
     float lat_src_end = 90.;
-    float lon_dst_beg = -280.;
-    float lon_dst_end = 80.;
+    float lon_dst_beg = 0.;
+    float lon_dst_end = 360.;
     float lat_dst_beg = -90.;
     float lat_dst_end = 90.;
     float D2R = 3.14/180.;
     float SMALL = 1.0e-10;
 
+    char interp_method[MESSAGE_LENGTH] = "conservative";
+
+    dlon_src = (lon_src_end-lon_src_beg)/NI_SRC;
+    dlat_src = (lat_src_end-lat_src_beg)/NJ_SRC;
+    dlon_dst = (lon_dst_end-lon_dst_beg)/NI_DST;
+    dlat_dst = (lat_dst_end-lat_dst_beg)/NJ_DST;
+
     cDomainStruct domain;  
     int domain_id = 0;
     int ndiv = 2;
     int global_indices[] = {0,NI_DST,0,NJ_DST};
-    int whalo = 2;
-    int ehalo = 2;
-    int shalo = 2;
-    int nhalo = 2;
-    char name[NAME_LENGTH] = "test domain";
     
     cFMS_init(NULL,NULL,NULL,NULL,NULL);
     cFMS_null_cdomain(&domain);
@@ -52,11 +63,6 @@ int main()
    { 
     domain.global_indices = global_indices;
     domain.domain_id = &domain_id;
-    domain.whalo = &whalo;
-    domain.ehalo = &ehalo;
-    domain.shalo = &shalo;
-    domain.nhalo = &nhalo;
-    domain.name = name;
     
     domain.layout = (int *)malloc(2*sizeof(int));
     cFMS_define_layout(global_indices, &ndiv, domain.layout);
@@ -65,100 +71,83 @@ int main()
     if( !cFMS_domain_is_initialized(&domain_id) ) cFMS_error(FATAL, "error in setting domain");
    }
 
-    int isc = 0;
-    int iec = 0;
-    int jsc = 0;
-    int jec = 0;
-    int xsize_check = 0;
-    int xmax_size_check = 0;
-    int ysize_check = 0;
-    int ymax_size_check = 0;
-    bool x_is_global_check;
-    bool y_is_global_check;
-    int *position=NULL;
+     int isc = 0;
+     int iec = 0;
+     int jsc = 0;
+     int jec = 0;
     
     cFMS_get_compute_domain(&domain_id, &isc, &iec, &jsc, &jec,
                             NULL, NULL, NULL, NULL,
                             NULL, NULL, NULL, NULL,
                             NULL, NULL);
 
-    float *lon2d_src = (float *)malloc((NI_SRC+1)*(NJ_SRC+1)*sizeof(float));
-    float *lat2d_src = (float *)malloc((NI_SRC+1)*(NJ_SRC+1)*sizeof(float));
-    float *lon1d_src = (float *)malloc((NI_SRC+1)*sizeof(float));
-    float *lat1d_src = (float *)malloc((NJ_SRC+1)*sizeof(float));
-    float *data_src = (float *)malloc(NI_SRC*NJ_SRC*sizeof(float));
+    int lon_in_1d_size = NI_SRC+1;
+    int lat_in_1d_size = NJ_SRC+1;
+    int lon_out_1d_size = iec+1-isc;
+    int lat_out_1d_size = jec+1-jsc;
 
-    float *lon2d_dst = (float *)malloc((iec+1-isc)*(jec+1-jec)*sizeof(float));
-    float *lat2d_dst = (float *)malloc((iec+1-isc)*(jec+1-jec)*sizeof(float));
-    float *lon1d_dst = (float *)malloc((iec+1-isc)*sizeof(float));
-    float *lat1d_dst = (float *)malloc((jec+1-jsc)*sizeof(float));
-    float *data1_dst = (float *)malloc((iec-isc)*(jec-jsc)*sizeof(float));
-    float *data2_dst = (float *)malloc((iec-isc)*(jec-jsc)*sizeof(float));
-    float *data3_dst = (float *)malloc((iec-isc)*(jec-jsc)*sizeof(float));
-    float *data4_dst = (float *)malloc((iec-isc)*(jec-jsc)*sizeof(float));
+    lon_in_1D = (float *)malloc(lon_in_1d_size*sizeof(float));
+    for(int i=0; i<lon_in_1d_size; i++) lon_in_1D[i] = (lon_src_beg + (i-1)*dlon_src)*D2R;
+
+    lat_in_1D = (float *)malloc(lat_in_1d_size*sizeof(float));
+    for(int j=0; j<lat_in_1d_size; j++) lat_in_1D[j] = (lat_src_beg + (j-1)*dlat_src)*D2R;
+
+    lon_out_1D = (float *)malloc(lon_out_1d_size*sizeof(float));
+    for(int i=0; i<lon_out_1d_size; i++) lon_out_1D[i] = (lon_dst_beg + (i-1)*dlon_dst)*D2R;
+
+    lat_out_1D = (float *)malloc(lat_out_1d_size*sizeof(float));
+    for(int j=0; j<lat_out_1d_size; j++) lat_out_1D[j] = (lat_dst_beg + (j-1)*dlat_dst)*D2R;
+
+
+    int in_2d_size = (NI_SRC+1)*(NJ_SRC+1);
+    int out_2d_size = (iec+1-isc)*(jec+1-jsc);
+
+    lon_in_2D = (float *)malloc(in_2d_size*sizeof(float));
+    for(int i=0; i<lon_in_1d_size; i++)
+    {
+        for(int j=0; j<lat_in_1d_size; j++)
+        {
+            lon_in_2D[lat_in_1d_size*i + j] = lon_in_1D[i];
+        }
+    }
+    int lon_in_shape[2] = {lon_in_1d_size, lat_in_1d_size};
+
+    lat_in_2D = (float *)malloc(in_2d_size*sizeof(float));
+    for(int i=0; i<lon_in_1d_size; i++)
+    {
+        for(int j=0; j<lat_in_1d_size; j++)
+        {
+            lat_in_2D[lat_in_1d_size*i + j] = lat_in_1D[j];
+        }
+    }
+    int lat_in_shape[2] = {lon_in_1d_size, lat_in_1d_size};
+
+    lon_out_2D = (float *)malloc(out_2d_size*sizeof(float));
+    for(int i=0; i<lon_out_1d_size; i++)
+    {
+        for(int j=0; j<lat_out_1d_size; j++)
+        {
+            lon_out_2D[lat_out_1d_size*i + j] = lon_out_1D[i];
+        }
+    }
+    int lon_out_shape[2] = {lon_out_1d_size, lat_out_1d_size};
+
+    lat_out_2D = (float *)malloc(out_2d_size*sizeof(float));
+    for(int i=0; i<lon_out_1d_size; i++)
+    {
+        for(int j=0; j<lat_out_1d_size; j++)
+        {
+            lat_out_2D[lat_out_1d_size*i + j] = lat_out_1D[j];
+        }
+    }
+    int lat_out_shape[2] = {lon_out_1d_size, lat_out_1d_size};
 
     cFMS_horiz_interp_init();
 
-    for(int i=0; i<NI_SRC+1; i++) lon1d_src[i] = (lon_src_beg + (float)(i-1)*dlon_src)*D2R;
-
-    for(int j=0; j<NJ_SRC+1; j++) lat1d_src[j] = (lat_src_beg + (float)(j-1)*dlat_src)*D2R;
-
-    for(int i=0; i<(iec+1-isc); i++) lon1d_dst[i] = (lon_dst_beg + (float)(i-1)*dlon_dst)*D2R;
-
-    for(int j=0; j<(jec+1-jsc); j++) lat1d_dst[j] = (lat_dst_beg + (float)(j-1)*dlat_dst)*D2R;
-
-    int ij = 0;
-    while(ij < (NI_SRC+1)*(NJ_SRC+1))
-    {
-        for(int i=0; i<NI_SRC+1; i++)
-        {
-            for(int iter=ij; iter<ij+NI_SRC+1; iter++) lon2d_src[iter] = lon1d_src[i];
-            ij += NJ_SRC+1;
-        }
-    }
-
-    ij = 0;
-    while(ij < (NI_SRC+1)*(NJ_SRC+1))
-    {
-        for(int j=0; j<NJ_SRC+1; j++)
-        {
-            for(int iter=ij; iter<ij+NJ_SRC+1; iter++) lat2d_src[iter] = lat1d_src[j];
-            ij += NI_SRC+1;
-        }
-    }
-
-    ij = 0;
-    while(ij < (iec+1-isc)*(jec+1-jsc))
-    {
-        for(int i=0; i<(iec+1-isc); i++)
-        {
-            for(int iter=ij; iter<ij+(iec+1-isc); iter++) lon2d_dst[iter] = lon1d_dst[i];
-            ij += (jec+1-jsc);
-        }
-    }
-
-    ij = 0;
-    while(ij < (iec+1-isc)*(jec+1-jsc))
-    {
-        for(int j=0; j<(jec+1-jsc); j++)
-        {
-            for(int iter=ij; iter<ij+(jec+1-jsc); iter++) lat2d_dst[iter] = lat1d_dst[j];
-            ij += (iec+1-isc);
-        }
-    }
-
-    // set up source data
-    ij = 0;
-    for(int j=0; j<NJ_SRC; j++)
-    {
-        for(int i=0; i<NJ_SRC; i++)
-        {
-            
-        }
-    }
-
-
-
+    cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
+                                    lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
+                                    interp_method, NULL, NULL, NULL, NULL,
+                                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
     // cFMS_set_current_interp(&domain_id);
 
