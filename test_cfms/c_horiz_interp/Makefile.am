@@ -20,7 +20,8 @@
 
 # Find the needed mod and .inc files.
 AM_CPPFLAGS = -I. -I$(MODDIR) -I${top_builddir}/c_constants -I${top_builddir}/c_grid_utils \
-              -I${top_builddir}/c_horiz_interp -I${top_builddir}/c_fms -g
+              -I${top_builddir}/c_horiz_interp -I${top_builddir}/c_fms \
+              -I${top_builddir}/test_cfms/c_fms
 
 # Link to the FMS library.
 LDADD = ${top_builddir}/libcFMS/libcFMS.la
@@ -32,7 +33,7 @@ TESTS = test_create_xgrid.sh \
   test_horiz_interp_new.sh
 
 test_create_xgrid_SOURCES = test_create_xgrid.c
-test_horiz_interp_new_SOURCES = c_mpp_domains_helper.c test_horiz_interp_new.c
+test_horiz_interp_new_SOURCES = ../c_fms/c_mpp_domains_helper.c test_horiz_interp_new.c
 
 TEST_EXTENSIONS = .sh
 SH_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \

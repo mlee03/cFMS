@@ -53,7 +53,7 @@ int main()
 
     cDomainStruct domain;  
     int domain_id = 0;
-    int ndiv = 2;
+    int ndiv = 1;
     int global_indices[] = {0,NI_DST,0,NJ_DST};
     
     cFMS_init(NULL,NULL,NULL,NULL,NULL);
@@ -142,12 +142,12 @@ int main()
     }
     int lat_out_shape[2] = {lon_out_1d_size, lat_out_1d_size};
 
-    cFMS_horiz_interp_init();
+    cFMS_horiz_interp_init(NULL);
 
-    // cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
-    //                                 lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
-    //                                 interp_method, NULL, NULL, NULL, NULL,
-    //                                 NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
+                                    lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
+                                    interp_method, NULL, NULL, NULL, NULL,
+                                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
     // cFMS_set_current_interp(&domain_id);
 
@@ -212,6 +212,17 @@ int main()
     // );
     
     cFMS_end();
+
+    free(domain.layout);
+    free(lon_in_1D);
+    free(lat_in_1D);
+    free(lon_out_1D);
+    free(lat_out_1D);
+    free(lon_in_2D);
+    free(lat_in_2D);
+    free(lon_out_2D);
+    free(lat_out_2D);
+
 
     return EXIT_SUCCESS;
 }

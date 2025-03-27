@@ -68,9 +68,17 @@ contains
   end function cFMS_get_maxxgrid
 
   !cFMS_horiz_interp_init
-  subroutine cFMS_horiz_interp_init() bind(C, name="cFMS_horiz_interp_init")
+  subroutine cFMS_horiz_interp_init(ninterp) bind(C, name="cFMS_horiz_interp_init")
+    implicit none
+    integer, intent(in), optional :: ninterp
 
     call fms_horiz_interp_init
+
+    if(present(ninterp)) then
+      allocate(interp(0:ninterp-1))
+    else
+      allocate(interp(0:0))
+    end if
 
   end subroutine cFMS_horiz_interp_init
 

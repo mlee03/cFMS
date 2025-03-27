@@ -10,7 +10,7 @@ extern int cFMS_create_xgrid_2dx2d_order1(int *nlon_in, int *nlat_in, int *nlon_
 
 extern int cFMS_get_maxxgrid();
 
-extern void cFMS_horiz_interp_init();
+extern void cFMS_horiz_interp_init(int *ninterp);
 
 extern void cFMS_set_current_interp(int *interp_id);
 
