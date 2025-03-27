@@ -34,7 +34,6 @@ mkdir INPUT
 cat <<EOF > input.nml
 &test_data_override_ongrid_nml
   test_case=3
-  write_only=.True.
 /
 &data_override_nml
   use_data_table_yaml = .True.
@@ -54,7 +53,7 @@ _EOF
 
 ./test_data_override_ongrid
 
-test_expect_success "c_data_override" 'mpirun -n 2  ./test_data_override'
+test_expect_success "c_data_override_scalar" 'mpirun -n 2  ./test_data_override_scalar'
 test_done
 
-rm -rf INPUT test_data_override_ongrid
+rm -rf INPUT test_data_override_ongrid INPUT data_table.yaml

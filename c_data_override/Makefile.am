@@ -31,8 +31,12 @@ noinst_LTLIBRARIES = lib_c_data_override.la
 
 # Each convenience library depends on its source.
 lib_c_data_override_la_SOURCES = c_data_override.F90 \
-                                 include/c_data_override_0d.fh \
-                                 include/c_data_override_0d.inc
+                                 include/c_data_override_0d.fh  \
+                                 include/c_data_override_0d.inc \
+                                 include/c_data_override_2d.fh  \
+                                 include/c_data_override_2d.inc \
+                                 include/c_data_override_3d.fh  \
+                                 include/c_data_override_3d.inc
 
 c_data_override_mod.mod : c_data_override.F90
 

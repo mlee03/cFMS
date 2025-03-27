@@ -36,7 +36,6 @@ use time_manager_mod,  only: set_calendar_type, time_type, set_date, NOLEAP
 use netcdf,            only: nf90_create, nf90_def_dim, nf90_def_var, nf90_enddef, nf90_put_var, &
                              nf90_close, nf90_put_att, nf90_clobber, nf90_64bit_offset, nf90_char, &
                              nf90_double, nf90_unlimited
-use ensemble_manager_mod, only: get_ensemble_size, ensemble_manager_init
 use fms_mod, only: string, fms_init, fms_end
 
 implicit none
@@ -51,22 +50,16 @@ integer                                    :: js               !< Starting y ind
 integer                                    :: je               !< Ending y index
 integer                                    :: nhalox=2, nhaloy=2
 integer                                    :: io_status
-integer, parameter                         :: ongrid = 1
-integer, parameter                         :: bilinear = 2
+integer, parameter                         :: array_3d = 1
+integer, parameter                         :: array_2d = 2
 integer, parameter                         :: scalar = 3
-integer, parameter                         :: weight_file = 4
-integer, parameter                         :: ensemble_case = 5
-integer, parameter                         :: ensemble_same_yaml = 6
-integer                                    :: test_case = ongrid
+integer                                    :: test_case
 logical                                    :: init_with_mode = .false.
 integer                                    :: npes
 integer, allocatable                       :: pelist(:)
-integer, allocatable                       :: pelist_ens(:)
-integer                                    :: ensemble_id
 logical                                    :: write_only=.false. !< True if creating the input files only
 
-namelist /test_data_override_ongrid_nml/ nhalox, nhaloy, test_case, init_with_mode, nlon, nlat, layout, &
-                                         write_only
+namelist /test_data_override_ongrid_nml/ test_case
 
 call fms_init
 call fms2_io_init
@@ -77,23 +70,17 @@ if (io_status > 0) call mpp_error(FATAL,'=>test_data_override_ongrid: Error read
 !< Wait for the root PE to catch up
 call mpp_sync
 
-if (write_only) then
-  select case (test_case)
-  case (ongrid)
-    call generate_ongrid_input_file ()
-  case (bilinear)
-    call generate_bilinear_input_file ()
- case (scalar)
-    call generate_scalar_input_file ()
-  case (weight_file)
-    call generate_weight_input_file ()
-  case (ensemble_case, ensemble_same_yaml)
-    call generate_ensemble_input_file()
-  end select
+select case (test_case)
+case (array_3d)
+   call generate_array_3d_input_file ()
+case (array_2d)
+   call generate_array_2d_input_file ()
+case (scalar)
+   call generate_scalar_input_file ()
+end select
 
-  call mpp_sync()
-  call mpp_error(NOTE, "Finished creating INPUT Files")  
-endif
+call mpp_sync()
+call mpp_error(NOTE, "Finished creating INPUT Files")  
 
 call fms_end
 
@@ -131,7 +118,7 @@ end subroutine create_ocean_mosaic_file
 
 subroutine create_ocean_hgrid_file
   type(FmsNetcdfFile_t) :: fileobj
-  real(r4_kind), allocatable, dimension(:,:) :: xdata, ydata
+  real(r8_kind), allocatable, dimension(:,:) :: xdata, ydata
   integer :: nx, nxp, ny, nyp, i, j
 
   nx = nlon*2
@@ -140,15 +127,15 @@ subroutine create_ocean_hgrid_file
   nyp = ny+1
 
   allocate(xdata(nxp, nyp))
-  xdata(1,:) = 0_r4_kind
+  xdata(1,:) = 0_r8_kind
   do i = 2, nxp
-    xdata(i,:) = xdata(i-1,:) + 0.5_r4_kind
+    xdata(i,:) = xdata(i-1,:) + 0.5_r8_kind
   enddo
 
   allocate(ydata(nxp, nyp))
-  ydata(:,1) = -90.0_r4_kind
+  ydata(:,1) = -90.0_r8_kind
   do i = 2, nyp
-    ydata(:,i) = ydata(:, i-1) + 0.5_r4_kind
+    ydata(:,i) = ydata(:, i-1) + 0.5_r8_kind
   enddo
 
   if (open_file(fileobj, 'INPUT/ocean_hgrid.nc', 'overwrite')) then
@@ -167,91 +154,17 @@ subroutine create_ocean_hgrid_file
   endif
 end subroutine create_ocean_hgrid_file
 
-subroutine create_ongrid_data_file(is_ensemble)
-  logical, intent(in), optional :: is_ensemble
-  type(FmsNetcdfFile_t) :: fileobj
-  character(len=10) :: dimnames(3)
-  real(r4_kind), allocatable, dimension(:,:,:) :: runoff_in
-  real(r4_kind), allocatable, dimension(:)     :: time_data
-  integer :: offset
-  character(len=256), allocatable :: appendix
-
-  integer :: i
-
-  offset = 0
-  appendix = ""
-
-  if (present(is_ensemble)) then
-    offset = ensemble_id
-    call get_filename_appendix(appendix)
-    appendix = "_"//trim(appendix)
-  endif
-
-  allocate(runoff_in(nlon, nlat, 10))
-  allocate(time_data(10))
-
-  do i = 1, 10
-    runoff_in(:,:,i) = real(i+offset, r4_kind)
-  enddo
-
-  time_data = (/1_r4_kind, 2_r4_kind, &
-                3_r4_kind, 5_r4_kind, &
-                6_r4_kind, 7_r4_kind, &
-                8_r4_kind, 9_r4_kind, &
-                10_r4_kind, 11_r4_kind/)
-
-  dimnames(1) = 'i'
-  dimnames(2) = 'j'
-  dimnames(3) = 'time'
-
-  if (open_file(fileobj, 'INPUT/runoff.daitren.clim.1440x1080.v20180328'//trim(appendix)//'.nc', 'overwrite')) then
-    call register_axis(fileobj, "i", nlon)
-    call register_axis(fileobj, "j", nlat)
-    call register_axis(fileobj, "time", unlimited)
-
-    call register_field(fileobj, "i", "float", (/"i"/))
-    call register_variable_attribute(fileobj, "i", "cartesian_axis", "x", str_len=1)
-
-    call register_field(fileobj, "j", "float", (/"j"/))
-    call register_variable_attribute(fileobj, "j", "cartesian_axis", "y", str_len=1)
-
-    call register_field(fileobj, "time", "float", (/"time"/))
-    call register_variable_attribute(fileobj, "time", "cartesian_axis", "T", str_len=1)
-    call register_variable_attribute(fileobj, "time", "calendar", "noleap", str_len=6)
-    call register_variable_attribute(fileobj, "time", "units", "days since 0001-01-01 00:00:00", str_len=30)
-
-    call register_field(fileobj, "runoff", "float", dimnames)
-    call write_data(fileobj, "runoff", runoff_in)
-    call write_data(fileobj, "time", time_data)
-    call close_file(fileobj)
-  else
-    call mpp_error(FATAL, "Error opening the file: 'INPUT/runoff.daitren.clim.1440x1080.v20180328.nc' to write")
-  endif
-  deallocate(runoff_in)
-end subroutine create_ongrid_data_file
-
-subroutine generate_ongrid_input_file
-  !< Create some files needed by data_override!
-  if (mpp_pe() .eq. mpp_root_pe()) then
-    call create_grid_spec_file()
-    call create_ocean_mosaic_file()
-    call create_ocean_hgrid_file()
-    call create_ongrid_data_file()
-  endif
-  call mpp_sync()
-end subroutine generate_ongrid_input_file
 
 !> @brief Creates an input netcdf data file to use for the ongrid data_override test case
 !! with either an increasing or decreasing lat, lon grid
-subroutine create_bilinear_data_file(increasing_grid)
-  logical, intent(in) :: increasing_grid !< .true. if increasing a file with an increasing lat/lon
+subroutine create_array_2d_data_file()
 
   type(FmsNetcdfFile_t)         :: fileobj          !< Fms2_io fileobj
   character(len=10)             :: dimnames(3)      !< dimension names for the variable
-  real(r4_kind), allocatable    :: runoff_in(:,:,:) !< Data to write
-  real(r4_kind), allocatable    :: time_data(:)     !< Time dimension data
-  real(r4_kind), allocatable    :: lat_data(:)      !< Lat dimension data
-  real(r4_kind), allocatable    :: lon_data(:)      !< Lon dimension data
+  real(r8_kind), allocatable    :: runoff_in(:,:,:) !< Data to write
+  real(r8_kind), allocatable    :: time_data(:)     !< Time dimension data
+  real(r8_kind), allocatable    :: lat_data(:)      !< Lat dimension data
+  real(r8_kind), allocatable    :: lon_data(:)      !< Lon dimension data
   character(len=:), allocatable :: filename         !< Name of the file
   integer                       :: factor           !< This is used when creating the grid data
                                                       !! -1 if the grid is decreasing
@@ -266,48 +179,31 @@ subroutine create_bilinear_data_file(increasing_grid)
   allocate(lat_data(nlat_data))
   allocate(lon_data(nlon_data))
 
-  if (.not. increasing_grid) then
-    filename = 'INPUT/bilinear_decreasing.nc'
-    lon_data(1) = 360.0_r4_kind
-    lat_data(1) = 89.0_r4_kind
-    factor = -1
-    do i = 1, nlon_data
-      do j = 1, nlat_data
+  filename = 'INPUT/array_2d.nc'
+  lon_data(1) = 360.0_r8_kind
+  lat_data(1) = 89.0_r8_kind
+  factor = -1
+  do i = 1, nlon_data
+     do j = 1, nlat_data
         do k = 1, 10
-          runoff_in(i, j, k) = real(362-i, kind=r4_kind) * 1000._r4_kind + &
-            real(180-j, kind=r4_kind) + real(k, kind=r4_kind)/100._r4_kind
+           runoff_in(i, j, k) = 100._r8_kind + k*.01_r8_kind
         enddo
-      enddo
-    enddo
-  else
-    filename = 'INPUT/bilinear_increasing.nc'
-    lon_data(1) = 0.0_r4_kind
-    lat_data(1) = -89.0_r4_kind
-    factor = 1
-
-    do i = 1, nlon_data
-      do j = 1, nlat_data
-        do k = 1, 10
-          runoff_in(i, j, k) = real(i, kind=r4_kind) * 1000._r4_kind + real(j, kind=r4_kind) + &
-            real(k, kind=r4_kind)/100._r4_kind
-        enddo
-      enddo
-    enddo
-  endif
+     enddo
+  enddo
 
   do i = 2, nlon_data
-    lon_data(i) = real(lon_data(i-1) + 1*factor, r4_kind)
+    lon_data(i) = real(lon_data(i-1) + 1*factor, r8_kind)
   enddo
 
   do i = 2, nlat_data
-    lat_data(i) =real(lat_data(i-1) + 1*factor, r4_kind)
+    lat_data(i) =real(lat_data(i-1) + 1*factor, r8_kind)
   enddo
 
-  time_data = (/1_r4_kind, 2_r4_kind, &
-                3_r4_kind, 5_r4_kind, &
-                6_r4_kind, 7_r4_kind, &
-                8_r4_kind, 9_r4_kind, &
-                10_r4_kind, 11_r4_kind/)
+  time_data = (/1_r8_kind, 2_r8_kind, &
+                3_r8_kind, 5_r8_kind, &
+                6_r8_kind, 7_r8_kind, &
+                8_r8_kind, 9_r8_kind, &
+                10_r8_kind, 11_r8_kind/)
 
   dimnames(1) = 'i'
   dimnames(2) = 'j'
@@ -329,85 +225,137 @@ subroutine create_bilinear_data_file(increasing_grid)
     call register_variable_attribute(fileobj, "time", "calendar", "noleap", str_len=6)
     call register_variable_attribute(fileobj, "time", "units", "days since 0001-01-01 00:00:00", str_len=30)
 
-    call register_field(fileobj, "runoff", "float", dimnames)
+    call register_field(fileobj, "runoff", "double", dimnames)
+
     call write_data(fileobj, "runoff", runoff_in)
     call write_data(fileobj, "i", lon_data)
     call write_data(fileobj, "j", lat_data)
     call write_data(fileobj, "time", time_data)
     call close_file(fileobj)
-  else
-    call mpp_error(FATAL, "Error opening the file: 'INPUT/bilinear_increasing.nc' to write")
   endif
   deallocate(runoff_in)
-end subroutine create_bilinear_data_file
+end subroutine create_array_2d_data_file
+
+!> @brief Creates an input netcdf data file to use for the ongrid data_override test case
+!! with either an increasing or decreasing lat, lon grid
+subroutine create_array_3d_data_file()
+
+  type(FmsNetcdfFile_t)         :: fileobj          !< Fms2_io fileobj
+  character(len=10)             :: dimnames(4)      !< dimension names for the variable
+  real(r8_kind), allocatable    :: runoff_in(:,:,:,:) !< Data to write
+  real(r8_kind), allocatable    :: time_data(:)     !< Time dimension data
+  real(r8_kind), allocatable    :: lat_data(:)      !< Lat dimension data
+  real(r8_kind), allocatable    :: lon_data(:)      !< Lon dimension data
+  integer,       allocatable    :: z_data(:)
+  character(len=:), allocatable :: filename         !< Name of the file
+  integer                       :: factor           !< This is used when creating the grid data
+                                                      !! -1 if the grid is decreasing
+                                                      !! +1 if the grid is increasing
+  integer                       :: i, j, k, z       !< For looping through variables
+  integer                       :: nlon_data, nlat_data, nz_data
+
+  nlon_data = nlon + 1
+  nlat_data = nlat - 1
+  nz_data = 5
+  allocate(runoff_in(nlon_data, nlat_data, nz_data, 10))
+  allocate(time_data(10))
+  allocate(lat_data(nlat_data))
+  allocate(lon_data(nlon_data))
+  allocate(z_data(nz_data))
+
+  filename = 'INPUT/array_3d.nc'
+  lon_data(1) = 360.0_r8_kind
+  lat_data(1) = 89.0_r8_kind
+  factor = -1
+  do i = 1, nlon_data
+     do j = 1, nlat_data
+        do z=1, nz_data
+           do k = 1, 10
+              runoff_in(i, j, z, k) = z*100._r8_kind + k*.01_r8_kind
+              != real(-i, kind=r8_kind) * 100._r8_kind + &
+              ! real(-j, kind=r8_kind) + real(-k, kind=r8_kind)/100._r8_kind
+           end do
+        enddo
+     enddo
+  enddo
+  
+  do i = 2, nlon_data
+    lon_data(i) = real(lon_data(i-1) + 1*factor, r8_kind)
+  enddo
+
+  do i = 2, nlat_data
+    lat_data(i) =real(lat_data(i-1) + 1*factor, r8_kind)
+  enddo
+
+  do i=1, nz_data
+     z_data(i) = i
+  end do
+
+  time_data = (/1_r8_kind, 2_r8_kind, &
+                3_r8_kind, 5_r8_kind, &
+                6_r8_kind, 7_r8_kind, &
+                8_r8_kind, 9_r8_kind, &
+                10_r8_kind, 11_r8_kind/)
+
+  dimnames(1) = 'i'
+  dimnames(2) = 'j'
+  dimnames(3) = 'z'
+  dimnames(4) = 'time'
+
+  if (open_file(fileobj, filename, 'overwrite')) then
+    call register_axis(fileobj, "i", nlon_data)
+    call register_axis(fileobj, "j", nlat_data)
+    call register_axis(fileobj, "z", nz_data)
+    call register_axis(fileobj, "time", unlimited)
+
+    call register_field(fileobj, "i", "float", (/"i"/))
+    call register_variable_attribute(fileobj, "i", "cartesian_axis", "x", str_len=1)
+
+    call register_field(fileobj, "j", "float", (/"j"/))
+    call register_variable_attribute(fileobj, "j", "cartesian_axis", "y", str_len=1)
+
+    call register_field(fileobj, "z", "int", (/"z"/))
+    call register_variable_attribute(fileobj, "z", "extra_axis", "z", str_len=1)
+    
+    call register_field(fileobj, "time", "float", (/"time"/))
+    call register_variable_attribute(fileobj, "time", "cartesian_axis", "T", str_len=1)
+    call register_variable_attribute(fileobj, "time", "calendar", "noleap", str_len=6)
+    call register_variable_attribute(fileobj, "time", "units", "days since 0001-01-01 00:00:00", str_len=30)
+
+    call register_field(fileobj, "runoff", "double", dimnames)
+
+    call write_data(fileobj, "runoff", runoff_in)
+    call write_data(fileobj, "i", lon_data)
+    call write_data(fileobj, "j", lat_data)
+    call write_data(fileobj, "z", z_data)
+    call write_data(fileobj, "time", time_data)
+    call close_file(fileobj)
+  endif
+  deallocate(runoff_in)
+end subroutine create_array_3d_data_file
 
 !> @brief Generates the input for the bilinear data_override test_case
-subroutine generate_bilinear_input_file
+subroutine generate_array_2d_input_file
   if (mpp_pe() .eq. mpp_root_pe()) then
     call create_grid_spec_file ()
     call create_ocean_mosaic_file()
     call create_ocean_hgrid_file()
-    call create_bilinear_data_file(.true.)
-    call create_bilinear_data_file(.false.)
+    call create_array_2d_data_file()
   endif
   call mpp_sync()
-end subroutine generate_bilinear_input_file
+end subroutine generate_array_2d_input_file
 
-subroutine generate_weight_input_file
-  call create_grid_spec_file ()
-  call create_ocean_mosaic_file()
-  call create_ocean_hgrid_file()
-  call create_bilinear_data_file(.true.)
-  call create_weight_file()
-end subroutine generate_weight_input_file
-
-subroutine create_weight_file
-  type(FmsNetcdfFile_t) :: fileobj
-  real(kind=r8_kind), allocatable :: vdata(:,:,:)
-  character(len=5) :: dim_names(3)
-
-  dim_names(1) = "nlon"
-  dim_names(2) = "nlat"
-  if (open_file(fileobj, "INPUT/remap_file.nc", "overwrite")) then
-    call register_axis(fileobj, "nlon", nlon)
-    call register_axis(fileobj, "nlat", nlat)
-    call register_axis(fileobj, "three", 3)
-    call register_axis(fileobj, "four", 4)
-
-    dim_names(3) = "three"
-    call register_field(fileobj, "index", "int", dim_names)
-
-    dim_names(3) = "four"
-    call register_field(fileobj, "weight", "double", dim_names)
-
-    allocate(vdata(nlon,nlat,3))
-    vdata(1,:,1) = 1
-    vdata(2,:,1) = 2
-    vdata(3,:,1) = 3
-    vdata(4,:,1) = 4
-    vdata(5,:,1) = 5
-    vdata(:,1:2,2) = 1
-    vdata(:,3,2) = 2
-    vdata(:,4,2) = 3
-    vdata(:,5,2) = 4
-    vdata(:,6,2) = 5
-    vdata(:,:,3) = 1
-    call write_data(fileobj, "index", vdata)
-    deallocate(vdata)
-
-    allocate(vdata(nlon,nlat,4))
-    vdata = 0.5_r8_kind
-    vdata(:,1,3) = 1_r8_kind
-    vdata(:,6,3) = 1_r8_kind
-    vdata(:,1,4) = 0_r8_kind
-    vdata(:,6,4) = 0_r8_kind
-
-    call write_data(fileobj, "weight", vdata)
-    deallocate(vdata)
-
-    call close_file(fileobj)
+!> @brief Generates the input for the bilinear data_override test_case
+subroutine generate_array_3d_input_file
+  if (mpp_pe() .eq. mpp_root_pe()) then
+    call create_grid_spec_file ()
+    call create_ocean_mosaic_file()
+    call create_ocean_hgrid_file()
+    call create_array_3d_data_file()
   endif
-end subroutine create_weight_file
+  call mpp_sync()
+end subroutine generate_array_3d_input_file
+
 
 !> @brief Generates the input for the bilinear data_override test_case
 subroutine generate_scalar_input_file
@@ -423,22 +371,22 @@ end subroutine generate_scalar_input_file
 subroutine create_scalar_data_file
   type(FmsNetcdfFile_t) :: fileobj
   character(len=10) :: dimnames(1)
-  real(r4_kind), allocatable, dimension(:)     :: co2_in
-  real(r4_kind), allocatable, dimension(:)     :: time_data
+  real(r8_kind), allocatable, dimension(:)     :: co2_in
+  real(r8_kind), allocatable, dimension(:)     :: time_data
   integer :: i
 
   allocate(co2_in(10))
   allocate(time_data(10))
 
   do i = 1, 10
-    co2_in(i) = real(i, r4_kind)
+    co2_in(i) = real(i, r8_kind)
   enddo
 
-  time_data = (/1_r4_kind, 2_r4_kind, &
-                3_r4_kind, 5_r4_kind, &
-                6_r4_kind, 7_r4_kind, &
-                8_r4_kind, 9_r4_kind, &
-                10_r4_kind, 11_r4_kind/)
+  time_data = (/1_r8_kind, 2_r8_kind, &
+                3_r8_kind, 5_r8_kind, &
+                6_r8_kind, 7_r8_kind, &
+                8_r8_kind, 9_r8_kind, &
+                10_r8_kind, 11_r8_kind/)
 
   dimnames(1) = 'time'
 
@@ -458,59 +406,5 @@ subroutine create_scalar_data_file
   endif
   deallocate(co2_in)
 end subroutine create_scalar_data_file
-
-subroutine set_up_ensemble_case
-  integer :: ens_siz(6)
-  character(len=10) :: text
-
-  if (npes .ne. 12) &
-    call mpp_error(FATAL, "This test requires 12 pes to run")
-
-  if (layout(1)*layout(2) .ne. 6) &
-    call mpp_error(FATAL, "The two members of the layout do not equal 6")
-
-  call ensemble_manager_init
-  ens_siz = get_ensemble_size()
-  if (ens_siz(1) .ne. 2) &
-    call mpp_error(FATAL, "This test requires 2 ensembles")
-
-  if (mpp_pe() < 6) then
-    !PEs 0-5 are the first ensemble
-    ensemble_id = 1
-    allocate(pelist_ens(npes/ens_siz(1)))
-    pelist_ens = pelist(1:6)
-    call mpp_set_current_pelist(pelist_ens)
-  else
-    !PEs 6-11 are the second ensemble
-    ensemble_id = 2
-    allocate(pelist_ens(npes/ens_siz(1)))
-    pelist_ens = pelist(7:)
-    call mpp_set_current_pelist(pelist_ens)
-  endif
-
-  write( text,'(a,i2.2)' ) 'ens_', ensemble_id
-  call set_filename_appendix(trim(text))
-
-  if (mpp_pe() .eq. mpp_root_pe()) &
-  print *, "ensemble_id:", ensemble_id, ":: ", pelist_ens
-end subroutine set_up_ensemble_case
-
-subroutine generate_ensemble_input_file
-  if (mpp_pe() .eq. mpp_root_pe()) then
-    call create_grid_spec_file ()
-    call create_ocean_mosaic_file()
-    call create_ocean_hgrid_file()
-  endif
-
-  !< Go back to the ensemble pelist so that each root pe can write its own input file
-  call mpp_set_current_pelist(pelist_ens)
-  if (mpp_pe() .eq. mpp_root_pe()) then
-    call create_ongrid_data_file(is_ensemble=.true.)
-  endif
-  call mpp_set_current_pelist(pelist)
-end subroutine generate_ensemble_input_file
-
-#include "test_data_override_ongrid_r4.fh"
-#include "test_data_override_ongrid_r8.fh"
 
 end program test_data_override_ongrid
