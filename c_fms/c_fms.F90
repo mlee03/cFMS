@@ -254,7 +254,7 @@ contains
     integer, intent(in), optional :: xflags, yflags
     integer, intent(in), optional :: xhalo, yhalo
     integer, intent(in), optional :: xextent(layout(1)), yextent(layout(2))
-    type(c_ptr), intent(in), optional :: maskmap
+    type(c_ptr), intent(in), value :: maskmap
     character(c_char), intent(in), optional :: name(NAME_LENGTH)
     logical(c_bool), intent(in), optional :: symmetry
     integer, intent(in), optional :: memory_size(2)
@@ -268,7 +268,8 @@ contains
     
     character(len=NAME_LENGTH) :: name_f = "cdomain"
     integer :: global_indices_f(4)
-    logical(c_bool), pointer :: maskmap_f(:,:) => NULL()
+    logical(c_bool), allocatable :: maskmap_f(:,:)
+    logical(c_bool), pointer :: maskmap_fp(:,:)
     logical :: symmetry_f  = .False.
     logical :: is_mosaic_f = .False.
     logical :: complete_f  = .True.
@@ -283,15 +284,15 @@ contains
     if(present(is_mosaic))  is_mosaic_f = logical(is_mosaic)
     if(present(complete))   complete_f = logical(complete)
 
-    nullify(maskmap_f)
+    nullify(maskmap_fp)
 
-    if(present(maskmap)) then
-       call c_f_pointer(maskmap, maskmap_f, (/layout(2), layout(1)/))
-       maskmap_f = reshape(maskmap_f, shape=(/layout(1), layout(2)/))
+    if(c_associated(maskmap)) then
+      allocate(maskmap_f(layout(1), layout(2)))
+      call c_f_pointer(maskmap, maskmap_fp, (/layout(2), layout(1)/))
+      maskmap_f = reshape(maskmap_fp, shape=(/layout(1), layout(2)/))
     else
        allocate(maskmap_f(layout(1), layout(2)))
        maskmap_f = .True.
-       dealloc_maskmap = .True.
     end if
 
     call cFMS_set_current_domain(domain_id)
@@ -304,8 +305,8 @@ contains
     if(present(tile_id))    tile_id = tile_id - 1;
     if(present(tile_count)) tile_count = tile_count - 1;
 
-    if(dealloc_maskmap) deallocate(maskmap_f)
-    nullify(maskmap_f)
+    nullify(maskmap_fp)
+    deallocate(maskmap_f)
     
   end subroutine cFMS_define_domains
 

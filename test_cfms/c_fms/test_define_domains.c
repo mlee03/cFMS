@@ -94,10 +94,12 @@ int main() {
       
       char name[NAME_LENGTH] = "test coarse domain"; 
 
-      bool *maskmap_blob = (bool *)calloc(4,sizeof(bool));
-      cdomain.maskmap = (bool **)calloc(2,sizeof(bool *));
-      for(int i=0; i<2; i++) cdomain.maskmap[i] = maskmap_blob+2*i;
-      for(int i=0; i<2 ; i++) for (int j=0; j<2; j++) cdomain.maskmap[i][j] = true;
+      // bool *maskmap_blob = (bool *)calloc(4,sizeof(bool));
+      // cdomain.maskmap = (bool **)calloc(2,sizeof(bool *));
+      // for(int i=0; i<2; i++) cdomain.maskmap[i] = maskmap_blob+2*i;
+      // for(int i=0; i<2 ; i++) for (int j=0; j<2; j++) cdomain.maskmap[i][j] = true;
+      cdomain.maskmap = (bool *)calloc(8,sizeof(bool));
+      for(int i=0; i<8; i++) cdomain.maskmap[i] = true;
       
       int xextent[2] = {0,0};
       int yextent[2] = {0,0};
@@ -124,7 +126,7 @@ int main() {
 
       cFMS_define_domains_easy(cdomain);
 
-      free(maskmap_blob);
+      free(cdomain.maskmap);
       free(cdomain.layout);
       cFMS_null_cdomain(&cdomain);
     }

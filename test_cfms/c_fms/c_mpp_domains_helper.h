@@ -20,7 +20,7 @@ typedef struct {
   int* yhalo;
   int* xextent;
   int* yextent;
-  bool** maskmap;
+  bool* maskmap;
   char* name;
   bool* symmetry;
   int *memory_size; //memory_size[2]
