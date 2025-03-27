@@ -61,7 +61,7 @@ extern void cFMS_set_current_pelist(int *pelist, bool *no_sync);
 
 extern void cFMS_define_domains(int global_indices[4], int layout[2], int *domain_id, int pelist[], 
                                 int *xflags, int *yflags, int *xhalo, int *yhalo, int xextent[], int yextent[],
-                                bool **maskmap, char *name, bool *symmetry, int memory_size[2],
+                                bool *maskmap, char *name, bool *symmetry, int memory_size[2],
                                 int *whalo, int *ehalo, int *shalo, int *nhalo, bool *is_mosaic,
                                 int *tile_count, int *tile_id, bool *complete, int *x_cyclic_offset, int *y_cyclic_offset);
 
@@ -105,7 +105,7 @@ extern void cFMS_set_data_domain(int *domain_id, int *xbegin, int *xend, int *yb
 extern void cFMS_set_global_domain(int *domain_id, int *xbegin, int *xend, int *ybegin, int *yend,
                                    int *xsize, int *ysize, int *tile_count);
 
-extern void cFMS_update_domains_float_2d(int *field_shape, float **field, int *domain_id, int *flags, int *complete,
+extern void cFMS_update_domains_float_2d(int *field_shape, float *field, int *domain_id, int *flags, int *complete,
                                          int *position, int *whalo, int *ehalo, int *shalo, int *nhalo,
                                          char *name, int *tile_count);
 
