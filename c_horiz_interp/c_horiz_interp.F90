@@ -11,6 +11,8 @@ module c_horiz_interp_mod
   use iso_c_binding
 
   implicit none
+  
+  private
 
   public :: cFMS_create_xgrid_2dx2d_order1
   public :: cFMS_get_maxxgrid

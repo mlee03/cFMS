@@ -1,4 +1,4 @@
-subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_shape, &
+function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_shape, &
     lon_out_ptr, lon_out_shape, lat_out_ptr, lat_out_shape, interp_method, verbose, num_nbrs, &
     max_dist, src_modulo, mask_in_ptr, mask_in_shape, mask_out_ptr, mask_out_shape, &
     is_latlon_in, is_latlon_out, interp_id) bind(C, name=CFMS_HORIZ_INTERP_NEW_2D_BINDC_)
@@ -26,6 +26,7 @@ subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_i
   logical(c_bool), intent(in), optional :: is_latlon_out
   integer, intent(in), optional :: interp_id
 
+  integer :: CFMS_HORIZ_INTERP_NEW_2D_
   character(MESSAGE_LENGTH-1) :: interp_method_f
   real(CFMS_HORIZ_INTERP_NEW_2D_KIND_) :: max_dist_f
   logical :: src_modulo_f
@@ -73,6 +74,7 @@ subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_i
                               mask_in=mask_in, mask_out=mask_out, &
                               is_latlon_in=is_latlon_in_f, is_latlon_out=is_latlon_out_f)
 
+  
   deallocate(lon_in)
   deallocate(lat_in)
   deallocate(lon_out)
@@ -80,7 +82,13 @@ subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_i
   if(allocated(mask_in))  deallocate(mask_in)
   if(allocated(mask_out)) deallocate(mask_out)
 
-end subroutine CFMS_HORIZ_INTERP_NEW_2D_
+  if(present(interp_id)) then
+    CFMS_HORIZ_INTERP_NEW_2D_ = interp_id
+  else
+    CFMS_HORIZ_INTERP_NEW_2D_ = 0
+  end if
+
+end function CFMS_HORIZ_INTERP_NEW_2D_
 
 
   
