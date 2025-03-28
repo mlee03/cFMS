@@ -53,7 +53,7 @@ int main()
 
     cDomainStruct domain;  
     int domain_id = 0;
-    int ndiv = 1;
+    int ndiv = 2;
     int global_indices[] = {0,NI_DST,0,NJ_DST};
     
     cFMS_init(NULL,NULL,NULL,NULL,NULL);
@@ -148,68 +148,6 @@ int main()
                                     lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
                                     interp_method, NULL, NULL, NULL, NULL,
                                     NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
-    // cFMS_set_current_interp(&domain_id);
-
-    // cFMS_get_interp_cdouble(
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL,
-    //     NULL
-    // );
     
     cFMS_end();
 

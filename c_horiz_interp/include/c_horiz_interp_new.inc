@@ -66,8 +66,6 @@ subroutine CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_i
   if(present(is_latlon_in)) is_latlon_in_f = logical(is_latlon_in)
   if(present(is_latlon_out)) is_latlon_out_f = logical(is_latlon_out)
 
-  ! Worked up to here
-
   call fms_horiz_interp_new(Interp=current_interp, lon_in=lon_in, lat_in=lat_in, &
                               lon_out=lon_out, lat_out=lat_out, verbose=verbose, &
                               interp_method=interp_method_f, num_nbrs=num_nbrs, &
