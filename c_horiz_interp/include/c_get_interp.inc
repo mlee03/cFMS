@@ -8,6 +8,8 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(interp_id, nxgrid, ilon_ptr, ilon_shape, jl
     area_frac_dst_ptr, area_frac_dst_shape, mask_in_ptr, mask_in_shape, max_src_dist, is_allocated) &
     bind(C, name=CFMS_GET_INTERP_BINDC_)
 
+    integer, intent(in), optional :: interp_id
+    integer, intent(out), optional :: nxgrid
     type(c_ptr), intent(in), value :: ilon_ptr
     integer, intent(in), optional :: ilon_shape(2)  
     type(c_ptr), intent(in), value :: jlat_ptr
@@ -26,8 +28,7 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(interp_id, nxgrid, ilon_ptr, ilon_shape, jl
     integer, intent(out), optional :: nlat_dst
     integer, intent(out), optional :: interp_method
     logical, intent(out), optional :: I_am_initialized
-    integer, intent(out), optional :: version           
-    integer, intent(out), optional :: nxgrid                  
+    integer, intent(out), optional :: version                  
     type(c_ptr), intent(in), value :: i_src_ptr
     integer, intent(in), optional :: i_src_shape            
     type(c_ptr), intent(in), value :: j_src_ptr
@@ -64,7 +65,6 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(interp_id, nxgrid, ilon_ptr, ilon_shape, jl
     integer, intent(in), optional :: mask_in_shape(2)
     CFMS_GET_INTERP_DATA_TYPE_, intent(out), optional :: max_src_dist
     logical(c_bool), intent(out), optional :: is_allocated
-    integer, intent(in), optional :: interp_id
 
     integer, pointer :: i_src_cf(:)
     integer, pointer :: j_src_cf(:)

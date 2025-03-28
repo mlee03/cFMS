@@ -50,36 +50,13 @@ int main()
     dlat_src = (lat_src_end-lat_src_beg)/NJ_SRC;
     dlon_dst = (lon_dst_end-lon_dst_beg)/NI_DST;
     dlat_dst = (lat_dst_end-lat_dst_beg)/NJ_DST;
-
-    cDomainStruct domain;  
-    int domain_id = 0;
-    int ndiv = 2;
-    int global_indices[] = {0,NI_DST,0,NJ_DST};
     
     cFMS_init(NULL,NULL,NULL,NULL,NULL);
-    cFMS_null_cdomain(&domain);
-
-    //set domain 
-   { 
-    domain.global_indices = global_indices;
-    domain.domain_id = &domain_id;
-    
-    domain.layout = (int *)malloc(2*sizeof(int));
-    cFMS_define_layout(global_indices, &ndiv, domain.layout);
-    
-    cFMS_define_domains_easy(domain);
-    if( !cFMS_domain_is_initialized(&domain_id) ) cFMS_error(FATAL, "error in setting domain");
-   }
 
      int isc = 0;
-     int iec = 0;
+     int iec = 72;
      int jsc = 0;
-     int jec = 0;
-    
-    cFMS_get_compute_domain(&domain_id, &isc, &iec, &jsc, &jec,
-                            NULL, NULL, NULL, NULL,
-                            NULL, NULL, NULL, NULL,
-                            NULL, NULL);
+     int jec = 72;
 
     int lon_in_1d_size = NI_SRC+1;
     int lat_in_1d_size = NJ_SRC+1;
@@ -148,10 +125,77 @@ int main()
                                     lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
                                     interp_method, NULL, NULL, NULL, NULL,
                                     NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+    int nxgrid = 0;
+    int shape = 46224;
+    int *i_src = (int *)malloc(shape*sizeof(int));
+    int *j_src = (int *)malloc(shape*sizeof(int));
+    int *i_dst = (int *)malloc(shape*sizeof(int));
+    int *j_dst = (int *)malloc(shape*sizeof(int));
+    float *area_frac_dst = (float *)malloc(shape*sizeof(float));
+
+    cFMS_get_interp_cfloat(
+        NULL,
+        &nxgrid,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        i_src,
+        &shape,
+        j_src,
+        &shape,
+        i_dst,
+        &shape,
+        j_dst,
+        &shape,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        area_frac_dst,
+        &shape,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    );
     
     cFMS_end();
 
-    free(domain.layout);
     free(lon_in_1D);
     free(lat_in_1D);
     free(lon_out_1D);
