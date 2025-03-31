@@ -21,8 +21,54 @@
 Adapted from test_horiz_interp :: test_assign
 */
 
+void define_domain(int *domain_id)
+{
+  int global_indices[4] = {0, NI_SRC-1, 0, NJ_SRC-1};
+  int npes = NPES;
+  int cyclic_global_domain = CYCLIC_GLOBAL_DOMAIN;
+  int whalo=WHALO;
+  int ehalo=EHALO;
+  int nhalo=NHALO;
+  int shalo=SHALO;
+
+  cDomainStruct cdomain;
+
+  cFMS_null_cdomain(&cdomain);
+
+  cdomain.layout = (int *)calloc(2, sizeof(int));
+  cFMS_define_layout(global_indices, &npes, cdomain.layout);
+
+  cdomain.global_indices = global_indices;
+  cdomain.domain_id = domain_id;
+  cdomain.whalo = &whalo;
+  cdomain.ehalo = &ehalo;
+  cdomain.shalo = &shalo;
+  cdomain.nhalo = &nhalo;
+  cdomain.xflags = &cyclic_global_domain;
+  cdomain.yflags = &cyclic_global_domain;
+
+  cFMS_define_domains_easy(cdomain);
+}
+
 int main()
 {
+    // domain info
+    int domain_id = 0;
+    int isc, iec, jsc, jec;
+    int xsize_c = 0;
+    int ysize_c = 0;
+    int whalo = WHALO;
+    int ehalo = EHALO;
+    int shalo = SHALO;
+    int nhalo = NHALO;
+    int *xmax_size  = NULL;
+    int *ymax_size  = NULL;
+    int *tile_count = NULL;
+    int *position   = NULL;
+    bool *x_is_global = NULL;
+    bool *y_is_global = NULL;
+    
+    // grid data
     float *lat_in_1D, *lon_in_1D;
     float *lat_in_2D, *lon_in_2D;
     float *lat_out_1D, *lon_out_1D;
@@ -53,10 +99,11 @@ int main()
     
     cFMS_init(NULL,NULL,NULL,NULL,NULL);
 
-     int isc = 0;
-     int iec = 72;
-     int jsc = 0;
-     int jec = 72;
+    define_domain(&domain_id);
+
+    cFMS_get_compute_domain(&domain_id, &isc, &iec, &jsc, &jec, &xsize_c, xmax_size, &ysize_c, ymax_size,
+        x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
+
 
     int lon_in_1d_size = NI_SRC+1;
     int lat_in_1d_size = NJ_SRC+1;
@@ -134,7 +181,7 @@ int main()
     printf("interp_id = %d\n", test_interp_id);
 
     int nxgrid = 0;
-    int shape = 46224;
+    int shape = 119664;
     int *i_src = (int *)malloc(shape*sizeof(int));
     int *j_src = (int *)malloc(shape*sizeof(int));
     int *i_dst = (int *)malloc(shape*sizeof(int));
