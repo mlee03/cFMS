@@ -29,5 +29,6 @@ subroutine CFMS_UPDATE_DOMAINS_SUB_NAME_(field_shape, field, domain_id, flags, c
   
   deallocate(field_f)
 
-   
+  if(present(tile_count)) tile_count = tile_count - 1
+
 end subroutine CFMS_UPDATE_DOMAINS_SUB_NAME_
