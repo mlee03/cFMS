@@ -121,12 +121,17 @@ int main()
 
     cFMS_horiz_interp_init(NULL);
 
-    int interp_id;
+    int interp_id = 0;
+    int test_interp_id;
 
-    interp_id = cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
+    cFMS_set_current_interp(&interp_id);
+
+    test_interp_id = cFMS_horiz_interp_new_2d_cfloat(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
                                     lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
                                     interp_method, NULL, NULL, NULL, NULL,
-                                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                                    NULL, NULL, NULL, NULL, NULL, NULL);
+
+    printf("interp_id = %d\n", test_interp_id);
 
     int nxgrid = 0;
     int shape = 46224;

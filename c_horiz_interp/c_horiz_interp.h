@@ -19,16 +19,14 @@ extern int cFMS_horiz_interp_new_2d_cfloat(float *lon_in_ptr, int *lon_in_shape,
                                             float *lat_out_ptr, int *lat_out_shape, char *interp_method,
                                             int *verbose, int *num_nbrs, float *max_dist, bool *src_modulo, 
                                             float *mask_in_ptr, int *mask_in_shape, float *mask_out_ptr,
-                                            int* mask_out_shape, bool *is_latlon_in, bool *is_latlon_out, 
-                                            int *interp_id);
+                                            int* mask_out_shape, bool *is_latlon_in, bool *is_latlon_out);
 
 extern int cFMS_horiz_interp_new_2d_cdouble(double *lon_in_ptr, int *lon_in_shape, double *lat_in_ptr,
                                             int *lat_in_shape, double *lon_out_ptr, int *lon_out_shape,
                                             double *lat_out_ptr, int *lat_out_shape, char *interp_method,
                                             int *verbose, int *num_nbrs, double *max_dist, bool *src_modulo, 
                                             double *mask_in_ptr, int *mask_in_shape, double *mask_out_ptr,
-                                            int* mask_out_shape, bool *is_latlon_in, bool *is_latlon_out, 
-                                            int *interp_id);
+                                            int* mask_out_shape, bool *is_latlon_in, bool *is_latlon_out);
 
 extern void cFMS_get_interp_cfloat(int *interp_id, int *nxgrid, int *ilon_ptr, int *ilon_shape, 
                                     int *jlat_ptr, int *jlat_shape, int *i_lon_ptr, int *i_lon_shape,

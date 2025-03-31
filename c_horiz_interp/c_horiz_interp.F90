@@ -27,6 +27,7 @@ module c_horiz_interp_mod
 
   type(FmsHorizInterp_type), allocatable, target, public :: interp(:)
   type(fmshorizinterp_type), pointer :: current_interp
+  integer :: current_interp_id
   
 contains
 
@@ -84,6 +85,13 @@ contains
 
   end subroutine cFMS_horiz_interp_init
 
+  ! cFMS_get_current_interp
+  function cFMS_get_current_interp()
+    implicit none
+    type(FmsHorizInterp_type), pointer :: cFMS_get_current_interp
+    cFMS_get_current_interp => current_interp
+  end function cFMS_get_current_interp
+
   !cFMS_set_current_interp
   subroutine cFMS_set_current_interp(interp_id) bind(C, name="cFMS_set_current_interp")
 
@@ -92,8 +100,10 @@ contains
     
     if(present(interp_id)) then
        current_interp => interp(interp_id)
+       current_interp_id = interp_id
     else
        current_interp => interp(0)
+       current_interp_id = 0
     end if
     
   end subroutine cFMS_set_current_interp
