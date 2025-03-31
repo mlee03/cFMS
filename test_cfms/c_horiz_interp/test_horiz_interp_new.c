@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include <c_fms.h>
 #include <c_horiz_interp.h>
 #include <c_mpp_domains_helper.h>
@@ -75,8 +76,6 @@ int main()
     float *lat_out_2D, *lon_out_2D;
     float *lon_src_1d, *lat_src_1d;
     float *lon_dst_1d, *lat_dst_1d;
-    int nlon_in, nlat_in;
-    int nlon_out, nlat_out;
     float dlon_src, dlat_src, dlon_dst, dlat_dst;
 
     float lon_src_beg = 0.;
@@ -123,8 +122,8 @@ int main()
     for(int j=0; j<lat_out_1d_size; j++) lat_out_1D[j] = (lat_dst_beg + (j-1)*dlat_dst)*D2R;
 
 
-    int in_2d_size = (NI_SRC+1)*(NJ_SRC+1);
-    int out_2d_size = (iec+1-isc)*(jec+1-jsc);
+    int in_2d_size = lon_in_1d_size*lat_in_1d_size;
+    int out_2d_size = lon_out_1d_size*lat_out_1d_size;
 
     lon_in_2D = (float *)malloc(in_2d_size*sizeof(float));
     for(int i=0; i<lon_in_1d_size; i++)
@@ -178,9 +177,11 @@ int main()
                                     interp_method, NULL, NULL, NULL, NULL,
                                     NULL, NULL, NULL, NULL, NULL, NULL);
 
-    printf("interp_id = %d\n", test_interp_id);
-
-    int nxgrid = 0;
+    int nxgrid;
+    int nlon_src;
+    int nlat_src;
+    int nlon_dst;
+    int nlat_dst;
     int shape = 119664;
     int *i_src = (int *)malloc(shape*sizeof(int));
     int *j_src = (int *)malloc(shape*sizeof(int));
@@ -203,10 +204,10 @@ int main()
         NULL,
         NULL,
         NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        &nlon_src,
+        &nlat_src,
+        &nlon_dst,
+        &nlat_dst,
         NULL,
         NULL,
         NULL,
@@ -247,6 +248,12 @@ int main()
         NULL,
         NULL
     );
+
+    assert(nlon_src == NI_SRC);
+    assert(nlat_src == NJ_SRC);
+    assert(nlon_dst == iec-isc);
+    assert(nlat_dst == jec-jsc);
+    assert(interp_id == 0);
     
     cFMS_end();
 
