@@ -27,7 +27,6 @@ function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_
 
   integer :: CFMS_HORIZ_INTERP_NEW_2D_
   character(MESSAGE_LENGTH-1) :: interp_method_f
-  real(CFMS_HORIZ_INTERP_NEW_2D_KIND_) :: max_dist_f
   logical :: src_modulo_f
   logical :: is_latlon_in_f
   logical :: is_latlon_out_f
@@ -58,16 +57,28 @@ function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_
     call cFMS_pointer_to_array(mask_out_ptr, mask_out_shape, mask_out)
   end if
 
-  if(present(interp_method)) interp_method_f = fms_string_utils_c2f_string(interp_method)
-  if(present(max_dist)) max_dist_f = real(max_dist, CFMS_HORIZ_INTERP_NEW_2D_KIND_)
-  if(present(src_modulo)) src_modulo_f = logical(src_modulo)
-  if(present(is_latlon_in)) is_latlon_in_f = logical(is_latlon_in)
-  if(present(is_latlon_out)) is_latlon_out_f = logical(is_latlon_out)
+  if(present(interp_method) .and. interp_method_f /= '' ) interp_method_f = fms_string_utils_c2f_string(interp_method)
+
+  if(present(src_modulo)) then 
+    src_modulo_f = logical(src_modulo)
+  else
+    src_modulo_f = .FALSE.
+  end if
+  if(present(is_latlon_in)) then 
+    is_latlon_in_f = logical(is_latlon_in)
+  else
+    is_latlon_in_f = .FALSE.
+  end if
+  if(present(is_latlon_out)) then
+    is_latlon_out_f = logical(is_latlon_out)
+  else
+    is_latlon_out_f = .FALSE.
+  end if
 
   call fms_horiz_interp_new(Interp=current_interp, lon_in=lon_in, lat_in=lat_in, &
                               lon_out=lon_out, lat_out=lat_out, verbose=verbose, &
                               interp_method=interp_method_f, num_nbrs=num_nbrs, &
-                              max_dist=max_dist_f, src_modulo=src_modulo_f, &
+                              max_dist=max_dist, src_modulo=src_modulo_f, &
                               mask_in=mask_in, mask_out=mask_out, &
                               is_latlon_in=is_latlon_in_f, is_latlon_out=is_latlon_out_f)
 
