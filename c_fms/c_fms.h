@@ -193,24 +193,5 @@ extern void cFMS_v_update_domains_float_5d(int fieldx_shape, float *fieldx, int 
                                               int *whalo, int *ehalo, int *shalo, int *nhalo,
                                               char *name, int *tile_count);
 
-extern void cFMS_v_update_domains_int_2d(int fieldx_shape, int *fieldx, int fieldy_shape, int *fieldy,
-                                              int *domain_id, int *flags, int *gridtype, int *complete,
-                                              int *whalo, int *ehalo, int *shalo, int *nhalo,
-                                              char *name, int *tile_count);
-
-extern void cFMS_v_update_domains_int_3d(int fieldx_shape, int *fieldx, int fieldy_shape, int *fieldy,
-                                              int *domain_id, int *flags, int *gridtype, int *complete,
-                                              int *whalo, int *ehalo, int *shalo, int *nhalo,
-                                              char *name, int *tile_count);
-
-extern void cFMS_v_update_domains_int_4d(int fieldx_shape, int *fieldx, int fieldy_shape, int *fieldy,
-                                              int *domain_id, int *flags, int *gridtype, int *complete,
-                                              int *whalo, int *ehalo, int *shalo, int *nhalo,
-                                              char *name, int *tile_count);
-
-extern void cFMS_v_update_domains_int_5d(int fieldx_shape, int *fieldx, int fieldy_shape, int *fieldy,
-                                              int *domain_id, int *flags, int *gridtype, int *complete,
-                                              int *whalo, int *ehalo, int *shalo, int *nhalo,
-                                              char *name, int *tile_count);
 
 #endif
