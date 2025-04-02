@@ -44,6 +44,8 @@ module c_fms_mod
   use FMS, only : NORTH, NORTH_EAST, EAST, SOUTH_EAST, CORNER, CENTER
   use FMS, only : SOUTH, SOUTH_WEST, WEST, NORTH_WEST
   use FMS, only : CYCLIC_GLOBAL_DOMAIN
+
+  use c_fms_utils_mod, only : cFMS_pointer_to_array, cFMS_array_to_pointer
   
   use iso_c_binding
 
