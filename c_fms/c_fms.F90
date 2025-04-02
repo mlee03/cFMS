@@ -693,6 +693,6 @@ contains
   
   !> cFMS_update_domains
 #include "c_update_domains.fh"
-#include "c_update_vector_domains.fh"
+#include "c_vector_update_domains.fh"
   
 end module c_fms_mod
