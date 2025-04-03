@@ -31,8 +31,7 @@ check_PROGRAMS = test_define_domains \
 
 TESTS = test_define_domains.sh \
 	test_getset_domains.sh \
-  test_update_domains.sh \
-  test_vector_update_domains.sh
+  test_update_domains.sh test_vector_update_domains.sh
 
 test_define_domains_SOURCES = c_mpp_domains_helper.c test_define_domains.c 
 test_getset_domains_SOURCES = c_mpp_domains_helper.c test_getset_domains.c

@@ -1,12 +1,16 @@
 #include <stdlib.h>
+
+#include <stdio.h>
+#include <string.h>
+
 #include <c_fms.h>
 #include <c_mpp_domains_helper.h>
 
 //Adapted from test_mpp_update_domains_real.F90 - Folded xy_halo
 
-#define NX 64
-#define NY 64
-#define NZ 10
+#define NX 8
+#define NY 8
+#define NZ 2
 #define NPES 1
 #define WHALO 2
 #define EHALO 2
@@ -14,7 +18,7 @@
 #define SHALO 2
 
 void define_domain(int *domain_id);
-void test_vector_float3d(int *domain_id);
+void test_vector_double3d(int *domain_id);
 
 int main()
 {
@@ -25,7 +29,7 @@ int main()
   define_domain(&domain_id);
   cFMS_set_current_pelist(NULL,NULL);
 
-  test_float2d(&domain_id);
+  test_vector_double3d(&domain_id);
 
   cFMS_end();
   return EXIT_SUCCESS;
@@ -90,64 +94,97 @@ void test_vector_double3d(int *domain_id)
     cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
                          x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
 
-    printf("isc = %d, iec = %d, jsc = %d, jec = %d\n", isc, iec, jsc, jed);
-    printf("isd = %d, ied = %d, jsd = %d, jed = %d\n", isd, ied, jsd, jed);
-    printf("1-EHALO = %d, NX+EHALO = %d, 1-SHALO = %d, NY+NHALO = %d, NZ = %d\n", 1-EHALO, NX+EHALO, 1-SHALO, NY+NHALO, NZ);
+    double *global_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
+    double *x_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
+    int x_shape[3] = {NZ, ysize_d, xsize_d};
+    double *y_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
+    int y_shape[3] = {NZ, ysize_d, xsize_d};
 
+    for(int k = 0; k<NZ; k++)
+    {
+        for(int j = NHALO; j<NY+SHALO; j++)
+        {
+            for(int i = EHALO; i<NX+WHALO; i++)
+            {
+                global_data[k*xsize_d*ysize_d + j*xsize_d + i] = k + i*1e-3 + j*1e-6;
+            }
+        }
+    }
 
-    // double *global_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
-    // double *x_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
-    // double *y_data = (double *)calloc((xsize_d-1)*(ysize_d-1)*NZ,sizeof(double));
+    // fill in north edge, cyclic east, and west edge
 
-    // for(int k = 0; k<NZ; k++)
+    for(int k = 0; k<NZ; k++)
+    {
+        for(int j = NHALO; j<NY+SHALO; j++)
+        {
+            for(int i = 0; i<WHALO; i++)
+            {
+                global_data[k*xsize_d*ysize_d + j*xsize_d + i] = global_data[k*xsize_d*ysize_d + j*xsize_d + NX + i];
+                global_data[k*xsize_d*ysize_d + j*xsize_d + NX + EHALO + i] = global_data[k*xsize_d*ysize_d + j*xsize_d + EHALO + i];
+            }
+        }
+    }
+
+    for(int k = 0; k<NZ; k++)
+    {
+        for(int j = 0; j<2; j++)
+        {
+            for(int i = 0; i<EHALO+NX+WHALO; i++)
+            {
+                global_data[k*xsize_d*ysize_d + (j + NHALO + NY)*xsize_d + i] = -global_data[k*xsize_d*ysize_d + (NY-j)*xsize_d + EHALO+NX - i];
+                global_data[k*xsize_d*ysize_d + (NY+NHALO+j)*xsize_d + EHALO + NX + WHALO] = -global_data[k*xsize_d*ysize_d + (NY+NHALO-j)*xsize_d + NX + 1];
+            }
+        }
+    }
+
+    for(int k = 0; k<NZ; k++)
+    {
+        for(int j = 0; j<ysize_c; j++)
+        {
+            for(int i = 0; i<xsize_c; i++)
+            {
+                x_data[k*xsize_d*ysize_d + (j + NHALO)*xsize_d + (i + EHALO)] = global_data[k*xsize_d*ysize_d + (j+NHALO)*xsize_d + (i+EHALO)];
+                y_data[k*xsize_d*ysize_d + (j + NHALO)*xsize_d + (i + EHALO)] = global_data[k*xsize_d*ysize_d + (j+NHALO)*xsize_d + (i+EHALO)];
+            }
+        }
+    }
+
+    // for(int k = 0; k < NZ; k++)
     // {
-    //     for(int j = NHALO; j<NY+SHALO; j++)
+    //     for(int j = 0; j < 5; j++)
     //     {
-    //         for(int i = EHALO; i<NX+WHALO; i++)
+    //         for(int i = 0; i < 5; i++)
     //         {
-    //             global_data[k*xsize_d*ysize_d + j*xsize_d + i] = k + i*1e-3 + j*1e-6;
+    //             printf("before: x_data = %f, y_data = %f\n", x_data[k*xsize_d*ysize_d + j*xsize_d + i], y_data[k*xsize_d*ysize_d + j*xsize_d + i]);
     //         }
     //     }
     // }
 
-    // // fill in north edge, cyclic east, and west edge
+    int *flags = NULL;
+    int gridtype = BGRID_NE;
+    int *complete = NULL;
+    char *name = NULL;
 
-    // for(int k = 0; k<NZ; k++)
+    cFMS_v_update_domains_double_3d(x_shape, x_data, y_shape, y_data, domain_id, flags,
+                                     &gridtype, complete, &whalo, &ehalo, &shalo, &nhalo,
+                                     name, tile_count);
+
+    // printf("\n");
+                                     
+    // for(int k = 0; k < NZ; k++)
     // {
-    //     for(int j = NHALO; j<NY+SHALO; j++)
+    //     for(int j = 0; j < 5; j++)
     //     {
-    //         for(int i = 0; i<WHALO; i++)
+    //         for(int i = 0; i < 5; i++)
     //         {
-    //             global_data[k*xsize_d*ysize_d + j*xsize_d + i] = global_data[k*xsize_d*ysize_d + j*xsize_d + NX + i];
-    //             global_data[k*xsize_d*ysize_d + j*xsize_d + NX + EHALO + i] = global_data[k*xsize_d*ysize_d + j*xsize_d + EHALO + i];
+    //             printf("after: x_data = %f, y_data = %f\n", x_data[k*xsize_d*ysize_d + j*xsize_d + i], y_data[k*xsize_d*ysize_d + j*xsize_d + i]);
     //         }
     //     }
     // }
 
-    // for(int k = 0; k<NZ; k++)
-    // {
-    //     for(int j = 0; j<2; j++)
-    //     {
-    //         for(int i = 0; i<EHALO+NX+WHALO; i++)
-    //         {
-    //             global_data[k*xsize_d*ysize_d + (j + NHALO + NY)*xsize_d + i] = -global_data[k*xsize_d*ysize_d + (NY-j)*xsize_d + EHALO+NX - i];
-    //             global_data[k*xsize_d*ysize_d + (NY+NHALO+j)*xsize_d + EHALO + NX + WHALO] = -global_data[k*xsize_d*ysize_d + (NY+NHALO-j)*xsize_d + NX + 1];
-    //         }
-    //     }
-    // }
-
-    // for(int k = 0; k<NZ; k++)
-    // {
-    //     for(int j = 0; j<ysize_c; j++)
-    //     {
-    //         for(int i = 0; i<xsize_d; i++)
-    //         {
-    //             x_data[k*xsize_d*ysize_d + (j + NHALO)*xsize_d + (i + EHALO)] = global_data[k*xsize_d*ysize_d + (j+NHALO)*xsize_d + (i+EHALO)];
-    //             y_data[k*xsize_d*ysize_d + (j + NHALO)*xsize_d + (i + EHALO)] = global_data[k*xsize_d*ysize_d + (j+NHALO)*xsize_d + (i+EHALO)];
-
-    //         }
-    //     }
-    // }
+    free(global_data);
+    free(x_data);
+    free(y_data);
 
 
 
