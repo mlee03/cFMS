@@ -14,7 +14,6 @@ C  0 1 | 2 3 4 5 6 7 8 9 | 10 11
 
 #define NX 8
 #define NY 8
-#define NZ 2
 #define NPES 1
 #define WHALO 2
 #define EHALO 2
@@ -22,7 +21,7 @@ C  0 1 | 2 3 4 5 6 7 8 9 | 10 11
 #define SHALO 2
 
 void define_domain(int *domain_id);
-void test_vector_double3d(int *domain_id);
+void test_vector_double2d(int *domain_id);
 
 int main()
 {
@@ -33,7 +32,7 @@ int main()
   define_domain(&domain_id);
   cFMS_set_current_pelist(NULL,NULL);
 
-  test_vector_double3d(&domain_id);
+  test_vector_double2d(&domain_id);
 
   cFMS_end();
   return EXIT_SUCCESS;
@@ -70,7 +69,7 @@ void define_domain(int *domain_id)
   cFMS_define_domains_easy(cdomain);
 }
 
-void test_vector_double3d(int *domain_id)
+void test_vector_double2d(int *domain_id)
 {
     int isc, iec, jsc, jec;
     int isd, ied, jsd, jed;
@@ -105,49 +104,33 @@ void test_vector_double3d(int *domain_id)
       global1r8(:,:,:) = 0.0
       global2r8(:,:,:) = 0.0
     */
-    double *global_data1 = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
-    double *global_data2 = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
+    double *global_data1 = (double *)calloc(xsize_d*ysize_d,sizeof(double));
+    double *global_data2 = (double *)calloc(xsize_d*ysize_d,sizeof(double));
 
     /*
       allocate(xr8 (isd:ied+shift,jsd:jed,nz), yr8 (isd:ied,jsd:jed+shift,nz) )
       xr8(:,:,:) = 0.; yr8(:,:,:) = 0.
     */
-    double *x_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
-    int x_shape[3] = {NZ, ysize_d, xsize_d};
-    double *y_data = (double *)calloc(xsize_d*ysize_d*NZ,sizeof(double));
-    int y_shape[3] = {NZ, ysize_d, xsize_d};
+    double *x_data = (double *)calloc(xsize_d*ysize_d,sizeof(double));
+    int x_shape[2] = {xsize_d, ysize_d};
+    double *y_data = (double *)calloc(xsize_d*ysize_d,sizeof(double));
+    int y_shape[2] = {xsize_d, ysize_d};
 
     /*
     do k = 1,nz
       do j = 1,ny
         do i = 1,nx
-          global1r8(i,j,k) = k + i*1e-3 + j*1e-6
-          global2r8(i,j,k) = k + i*1e-3 + j*1e-6
+          global1r8(i,j,k) = 1 + i*1e-3 + j*1e-6
+          global2r8(i,j,k) = 1 + i*1e-3 + j*1e-6
         end do
     end do
     */
-    for(int k = 0; k<NZ; k++)
+    for(int i = WHALO; i<NX+WHALO; i++)
     {
-        for(int j = 2; j<NY+SHALO; j++)
+        for(int j = SHALO; j<NY+SHALO; j++)
         {
-            for(int i = 2; i<NX+WHALO; i++)
-            {
-                global_data1[k*ysize_d*xsize_d + j*xsize_d + i] = k + i*1e-3 + j*1e-6;
-                global_data2[k*ysize_d*xsize_d + j*xsize_d + i] = k + i*1e-3 + j*1e-6;
-            }
-        }
-    }
-
-    int element;
-    for(int k = 0; k<1; k++)
-    {
-        for(int j = 0; j<12; j++)
-        {
-            for(int i = 0; i<12; i++)
-            {
-                element = k*ysize_d*xsize_d + j*xsize_d + i;
-                printf("gd_1[%d][%d] = %f\n", i,j,global_data1[element]);
-            }
+                global_data1[i*ysize_d + j] = 1 + i*1e-3 + j*1e-6;
+                global_data2[i*ysize_d + j] = 1 + i*1e-3 + j*1e-6;
         }
     }
 
@@ -160,54 +143,42 @@ void test_vector_double3d(int *domain_id)
     global1r8(nx+xhalo,           ny+1:ny+yhalo,:) = -global1r8(nx-xhalo,              ny:ny-yhalo+1:-1,:)
     global2r8(1-xhalo:nx+xhalo,   ny+1:ny+yhalo,:) = -global2r8(nx+xhalo:1-xhalo:-1,   ny-1:ny-yhalo:-1,:)
     */
-    for(int k=0; k<NZ; k++)
+    for(int i=0; i<WHALO; i++)
     {
-        for(int j=2; j<NY+SHALO; j++)
+        for(int j=SHALO; j<NY+SHALO; j++)
         {
-            for(int i=0; i<WHALO; i++)
-            {
-                global_data1[k*ysize_d*xsize_d + j*xsize_d + i] = global_data1[k*ysize_d*xsize_d + j*xsize_d + NX + i];
-                global_data1[k*ysize_d*xsize_d + j*xsize_d + i + NX + WHALO] = global_data1[k*ysize_d*xsize_d + j*xsize_d + WHALO + i];
-                global_data2[k*ysize_d*xsize_d + j*xsize_d + i] = global_data2[k*ysize_d*xsize_d + j*xsize_d + NX + i];
-                global_data2[k*ysize_d*xsize_d + j*xsize_d + i + NX + WHALO] = global_data2[k*ysize_d*xsize_d + j*xsize_d + WHALO + i];
-            }
+                global_data1[i*ysize_d + j] = global_data1[(NX+i)*ysize_d + j];
+                global_data1[(i + NX + WHALO)*ysize_d + j] = global_data1[(WHALO + i)*ysize_d + j];
+                global_data2[i*ysize_d + j] = global_data2[(NX + i)*ysize_d + j];
+                global_data2[(NX + WHALO + i)*ysize_d + j] = global_data2[(WHALO + i)*xsize_d + j];
         }
     }
-    for(int k=0; k<NZ; k++)
+    for(int i=0; i<NX+EHALO+1; i++)
     {
         for(int j=0; j<NHALO; j++)
         {
-            for(int i=0; i<NX+EHALO+1; i++)
-            {
-                global_data1[k*ysize_d*xsize_d + (j+NY+SHALO)*xsize_d + i] = -global_data1[k*ysize_d*xsize_d + (NY+1-j)*xsize_d + NX + EHALO - i];
-                global_data1[k*ysize_d*xsize_d + (j+NY+SHALO)*xsize_d + NX + WHALO + 1] = -global_data1[k*ysize_d*xsize_d + (NY+1-j)*xsize_d];
-            }
+                global_data1[i*ysize_d + j+NY+SHALO] = -global_data1[(NX+EHALO-i)*ysize_d + NY + 1 - j];
+                global_data1[(NX+WHALO+1)*ysize_d + j + NY + SHALO] = -global_data1[(NX-1)*ysize_d + NY - 1 - j];
         }
     }
-    for(int k=0; k<NZ; k++)
+    for(int i=0; i<WHALO+NX+EHALO; i++)
     {
         for(int j=0; j<NHALO; j++)
         {
-            for(int i=0; i<WHALO+NX+EHALO; i++)
-            {
-                global_data2[k*ysize_d*xsize_d + (j+NY+SHALO)*xsize_d + i] = -global_data2[k*ysize_d*xsize_d + (NY+1-j)*xsize_d + WHALO + NX + 1 - i];
-            }
+                global_data2[i*ysize_d + j + NY + SHALO] = -global_data2[(WHALO+NX+1-i)*ysize_d + NY - j];
         }
     }
-
+    
     /*
     xr8(is:ie+shift,js:je,      :) = global1r8(is:ie+shift,js:je,      :)
     yr8(is:ie      ,js:je+shift,:) = global2r8(is:ie,      js:je+shift,:)
     */
-    for(int k = 0; k<NZ; k++)
+    for(int i = WHALO; i<WHALO+NX; i++)
     {
         for(int j = SHALO; j<SHALO+NY; j++)
         {
-            for(int i = WHALO; i<WHALO+NX; i++)
-            {
-                x_data[k*ysize_d*xsize_d + j*xsize_d + i] = global_data1[k*ysize_d*xsize_d + j*xsize_d + i];
-                y_data[k*ysize_d*xsize_d + j*xsize_d + i] = global_data2[k*ysize_d*xsize_d + j*xsize_d + i];
-            }
+            x_data[i*ysize_d + j] = global_data1[i*ysize_d + j];
+            y_data[i*ysize_d + j] = global_data2[i*ysize_d + j];
         }
     }
 
@@ -216,29 +187,35 @@ void test_vector_double3d(int *domain_id)
     int *complete = NULL;
     char *name = NULL;
 
-    cFMS_v_update_domains_double_3d(x_shape, x_data, y_shape, y_data, domain_id, flags,
+    cFMS_v_update_domains_double_2d(x_shape, x_data, y_shape, y_data, domain_id, flags,
                                      &gridtype, complete, &whalo, &ehalo, &shalo, &nhalo,
                                      name, tile_count);
+
+    int element;
+    for(int i = 0; i<12; i++)
+    {
+        for(int j = 0; j<12; j++)
+        {
+            element = i*ysize_d + j;
+            printf("xd[%d][%d] = %f, gd_1[%d][%d] = %f\n", i,j,x_data[element],i,j,global_data1[element]);
+            if(x_data[element] != global_data1[element]) printf("[%d][%d] does not match\n", i, j);
+            // printf("gd_1[%d][%d] = %f\n", i,j,global_data1[element]);
+        }
+    }
 
     /*
     global2r8(nx/2+1:nx,     ny+shift,:) = -global2r8(nx/2:1:-1, ny+shift,:)
     global2r8(1-xhalo:0,     ny+shift,:) = -global2r8(nx-xhalo+1:nx, ny+shift,:)
     global2r8(nx+1:nx+xhalo, ny+shift,:) = -global2r8(1:xhalo,       ny+shift,:)
     */
-    for(int k = 0; k<NZ; k++)
+    for(int i = 0; i<EHALO+WHALO; i++)
     {
-        for(int i = 0; i<EHALO+WHALO; i++)
-        {
-            global_data2[k*ysize_d*xsize_d + (NY+1)*xsize_d + NX - WHALO + i] = -global_data2[k*ysize_d*xsize_d + (NY+1)*xsize_d + NX - WHALO - 1 -i];
-        }
+        global_data2[(NY+1)*xsize_d + NX - WHALO + i] = -global_data2[(NY+1)*xsize_d + NX - WHALO - 1 -i];
     }
-    for(int k = 0; k<NZ; k++)
+    for(int i = 0; i<WHALO; i++)
     {
-        for(int i = 0; i<WHALO; i++)
-        {
-            global_data2[k*ysize_d*xsize_d + (NY+1)*xsize_d + i] = -global_data2[k*ysize_d*xsize_d + (NY+1)*xsize_d + NX + i];
-            global_data2[k*ysize_d*xsize_d + (NY+1)*xsize_d + NX + WHALO + i] = -global_data2[k*ysize_d*xsize_d + (NY+1)*xsize_d + WHALO + i];
-        }
+        global_data2[(NY+1)*xsize_d + i] = -global_data2[(NY+1)*xsize_d + NX + i];
+        global_data2[(NY+1)*xsize_d + NX + WHALO + i] = -global_data2[(NY+1)*xsize_d + WHALO + i];
     }
 
     // int element;
