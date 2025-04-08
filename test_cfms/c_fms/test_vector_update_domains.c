@@ -171,6 +171,14 @@ void test_vector_double2d(int *domain_id)
                 global_data2[i*ydatasize + j + NY + SHALO] = -global_data2[(WHALO+NX+1-i)*ydatasize + NY - j];
         }
     }
+
+    // for(int i = 0; i<xdatasize; i++)
+    // {
+    //   for(int j = 0; j<ydatasize; j++)
+    //   {
+    //     printf("g1[%d][%d] = %f\n", i, j, global_data1[i*ydatasize + j]);
+    //   }
+    // }
     
     /*
     xr8(is:ie+shift, js:je) = global1r8(is:ie+shift, js:je)
@@ -213,7 +221,8 @@ void test_vector_double2d(int *domain_id)
     {
         for(int j = 0; j<ysize_d; j++)
         {
-          if(cFMS_pe() == 0 && x_data[i*ysize_d + j] != global_data1[i*ydatasize + j]) cFMS_error(FATAL, "data domain did not update correctly!");
+            if(cFMS_pe() == 0 && y_data[i*ysize_d + j] != global_data2[i*ydatasize + j]) cFMS_error(FATAL, "y_data domain did not update correctly!");
+            if(cFMS_pe() == 0 && x_data[i*ysize_d + j] != global_data1[i*ydatasize + j]) cFMS_error(FATAL, "x_data domain did not update correctly!");
         }
     }
 
