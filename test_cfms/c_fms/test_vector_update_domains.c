@@ -6,7 +6,6 @@
 #include <c_fms.h>
 #include <c_mpp_domains_helper.h>
 
-//Adapted from test_mpp_update_domains_real.F90 - Folded xy_halo - CGRID_NE
 /*
 F -1 0 | 1 2 3 4 5 6 7 8 | 9 10
 C  0 1 | 2 3 4 5 6 7 8 9 | 10 11
@@ -71,6 +70,8 @@ void define_domain(int *domain_id)
 
 void test_vector_double2d(int *domain_id)
 {
+    //Adapted from test_mpp_update_domains_real.F90 - Folded xy_halo - CGRID_NE
+
     int isc, iec, jsc, jec;
     int isd, ied, jsd, jed;
     int xsize_c = 0;
@@ -97,14 +98,13 @@ void test_vector_double2d(int *domain_id)
     cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
                          x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
 
-    // printf("pe = %d, isd = %d, ied = %d, jsd = %d, jed = %d, xsize_d = %d, ysize_d = %d\n", cFMS_pe(), isd, ied, jsd, jed, xsize_d, ysize_d);
-
+    // if(cFMS_pe() == 0) printf("isd = %d, ied = %d, jsd = %d, jed = %d, xsize_d = %d, ysize_d = %d\n", isd, ied, jsd, jed, xsize_d, ysize_d);
     
     /*
-      allocate(global1r8(1-xhalo:nx+xhalo, 1-yhalo:ny+yhalo, nz))
-      allocate(global2r8(1-xhalo:nx+xhalo, 1-yhalo:ny+yhalo, nz))
-      global1r8(:,:,:) = 0.0
-      global2r8(:,:,:) = 0.0
+      allocate(global1r8(1-xhalo:nx+xhalo, 1-yhalo:ny+yhalo))
+      allocate(global2r8(1-xhalo:nx+xhalo, 1-yhalo:ny+yhalo))
+      global1r8(:,:) = 0.0
+      global2r8(:,:) = 0.0
     */
     int xdatasize = WHALO+NX+EHALO;
     int ydatasize = SHALO+NY+NHALO;
@@ -112,8 +112,8 @@ void test_vector_double2d(int *domain_id)
     double *global_data2 = (double *)calloc(xdatasize*ydatasize,sizeof(double));
 
     /*
-      allocate(xr8 (isd:ied+shift,jsd:jed,nz), yr8 (isd:ied,jsd:jed+shift,nz) )
-      xr8(:,:,:) = 0.; yr8(:,:,:) = 0.
+      allocate(xr8 (isd:ied+shift,jsd:jed), yr8 (isd:ied,jsd:jed+shift) )
+      xr8(:,:) = 0.; yr8(:,:) = 0.
     */
     double *x_data = (double *)calloc(xsize_d*ysize_d,sizeof(double));
     int x_shape[2] = {xsize_d, ysize_d};
@@ -121,12 +121,11 @@ void test_vector_double2d(int *domain_id)
     int y_shape[2] = {xsize_d, ysize_d};
 
     /*
-    do k = 1,nz
-      do j = 1,ny
-        do i = 1,nx
-          global1r8(i,j,k) = 1 + i*1e-3 + j*1e-6
-          global2r8(i,j,k) = 1 + i*1e-3 + j*1e-6
-        end do
+    do j = 1,ny
+      do i = 1,nx
+        global1r8(i,j,k) = 1 + i*1e-3 + j*1e-6
+        global2r8(i,j,k) = 1 + i*1e-3 + j*1e-6
+      end do
     end do
     */
     for(int i = 0; i<NX; i++)
@@ -162,7 +161,7 @@ void test_vector_double2d(int *domain_id)
         for(int j=0; j<NHALO; j++)
         {
                 global_data1[i*ydatasize + j+NY+SHALO] = -global_data1[(NX+EHALO-i)*ydatasize + NY + 1 - j];
-                global_data1[(NX+WHALO+1)*ydatasize + j + NY + SHALO] = -global_data1[(NX-1)*ydatasize + NY - 1 - j];
+                global_data1[(NX+WHALO+1)*ydatasize + j + NY + SHALO] = -global_data1[(NX-1)*ydatasize + NY + 1 - j];
         }
     }
     for(int i=0; i<WHALO+NX+EHALO; i++)
@@ -174,8 +173,8 @@ void test_vector_double2d(int *domain_id)
     }
     
     /*
-    xr8(is:ie+shift,js:je,      :) = global1r8(is:ie+shift,js:je,      :)
-    yr8(is:ie      ,js:je+shift,:) = global2r8(is:ie,      js:je+shift,:)
+    xr8(is:ie+shift, js:je) = global1r8(is:ie+shift, js:je)
+    yr8(is:ie, js:je+shift) = global2r8(is:ie, js:je+shift)
     */
     for(int i = 0; i<xsize_c; i++)
     {
@@ -196,9 +195,9 @@ void test_vector_double2d(int *domain_id)
                                      name, tile_count);
 
     /*
-    global2r8(nx/2+1:nx,     ny+shift,:) = -global2r8(nx/2:1:-1, ny+shift,:)
-    global2r8(1-xhalo:0,     ny+shift,:) = -global2r8(nx-xhalo+1:nx, ny+shift,:)
-    global2r8(nx+1:nx+xhalo, ny+shift,:) = -global2r8(1:xhalo,       ny+shift,:)
+    global2r8(nx/2+1:nx, ny+shift) = -global2r8(nx/2:1:-1, ny+shift)
+    global2r8(1-xhalo:0, ny+shift) = -global2r8(nx-xhalo+1:nx, ny+shift)
+    global2r8(nx+1:nx+xhalo, ny+shift) = -global2r8(1:xhalo, ny+shift)
     */
     for(int i = 0; i<EHALO+WHALO; i++)
     {
@@ -214,9 +213,7 @@ void test_vector_double2d(int *domain_id)
     {
         for(int j = 0; j<ysize_d; j++)
         {
-            if(cFMS_pe() == 0) printf("xd[%d][%d] = %f, gd_1[%d][%d] = %f\n", i,j,x_data[i*ysize_d + j],i,j,global_data1[i*ydatasize + j]);
-            if(cFMS_pe() == 0 && x_data[i*ysize_d + j] != global_data1[i*ydatasize + j]) printf("[%d][%d] does not match\n", i, j);
-            // if(cFMS_pe() == 1) printf("xd[%d][%d] = %f\n", i,j,x_data[element]);
+          if(cFMS_pe() == 0 && x_data[i*ysize_d + j] != global_data1[i*ydatasize + j]) cFMS_error(FATAL, "data domain did not update correctly!");
         }
     }
 
