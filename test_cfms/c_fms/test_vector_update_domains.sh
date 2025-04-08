@@ -26,5 +26,5 @@
 if [ -f "input.nml" ] ; then rm -f input.nml ; fi
 touch input.nml
 
-test_expect_success "test vector update domains" 'mpirun -n 1  ./test_vector_update_domains'
+test_expect_success "test vector update domains" 'mpirun -n 2 ./test_vector_update_domains'
 test_done
