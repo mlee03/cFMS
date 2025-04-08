@@ -97,8 +97,6 @@ void test_vector_double2d(int *domain_id)
     // get data domain sizes
     cFMS_get_data_domain(domain_id, &isd, &ied, &jsd, &jed, &xsize_d, xmax_size, &ysize_d, ymax_size,
                          x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
-
-    // if(cFMS_pe() == 0) printf("isd = %d, ied = %d, jsd = %d, jed = %d, xsize_d = %d, ysize_d = %d\n", isd, ied, jsd, jed, xsize_d, ysize_d);
     
     /*
       allocate(global1r8(1-xhalo:nx+xhalo, 1-yhalo:ny+yhalo))
@@ -213,8 +211,7 @@ void test_vector_double2d(int *domain_id)
     {
         for(int j = 0; j<ysize_d; j++)
         {
-            if(cFMS_pe() == 0) printf("yd[%d][%d] = %f, gd_2[%d][%d] = %f\n", i,j,y_data[i*ysize_d + j],i,j,global_data2[i*ydatasize + j]);
-            if(cFMS_pe() == 0 && y_data[i*ysize_d + j] != global_data2[i*ydatasize + j]) printf("[%d][%d] does not match\n", i, j);
+            if(cFMS_pe() == 0 && y_data[i*ysize_d + j] != global_data2[i*ydatasize + j]) cFMS_error(FATAL, "y_data domain did not update correctly!");
             if(cFMS_pe() == 0 && x_data[i*ysize_d + j] != global_data1[i*ydatasize + j]) cFMS_error(FATAL, "x_data domain did not update correctly!");
         }
     }
