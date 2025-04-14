@@ -27,7 +27,7 @@ module c_horiz_interp_mod
 
   type(FmsHorizInterp_type), allocatable, target, public :: interp(:)
   type(fmshorizinterp_type), pointer :: current_interp
-  integer :: current_interp_id
+  integer, public :: current_interp_id
   
 contains
 

@@ -1,4 +1,4 @@
-subroutine CFMS_GET_INTERP_SUB_NAME_(interp_id, nxgrid, ilon_ptr, ilon_shape, jlat_ptr, jlat_shape, &
+subroutine CFMS_GET_INTERP_NAME_(interp_id, nxgrid, ilon_ptr, ilon_shape, jlat_ptr, jlat_shape, &
     i_lon_ptr, i_lon_shape, j_lat_ptr, j_lat_shape, found_neighbors_ptr, found_neighbors_shape, &
     num_found_ptr, num_found_shape, nlon_src, nlat_src, nlon_dst, nlat_dst, interp_method, &
     I_am_initialized, version, i_src_ptr, i_src_shape, j_src_ptr, j_src_shape, i_dst_ptr, i_dst_shape, &
@@ -188,6 +188,6 @@ subroutine CFMS_GET_INTERP_SUB_NAME_(interp_id, nxgrid, ilon_ptr, ilon_shape, jl
     NULLIFY(lat_in_cf)
     NULLIFY(area_frac_dst_cf)
 
-end subroutine CFMS_GET_INTERP_SUB_NAME_
+end subroutine CFMS_GET_INTERP_NAME_
 
 
