@@ -1,7 +1,7 @@
 function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_shape, &
     lon_out_ptr, lon_out_shape, lat_out_ptr, lat_out_shape, interp_method, verbose, &
-    max_dist, src_modulo, mask_in_ptr, mask_in_shape, mask_out_ptr, mask_out_shape, &
-    is_latlon_in, is_latlon_out) bind(C, name=CFMS_HORIZ_INTERP_NEW_2D_BINDC_)
+    max_dist, src_modulo, mask_in_ptr, mask_out_ptr, is_latlon_in, is_latlon_out) &
+    bind(C, name=CFMS_HORIZ_INTERP_NEW_2D_BINDC_)
 
   implicit none
 
@@ -14,9 +14,7 @@ function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_
   type(c_ptr), intent(in), value :: lat_out_ptr
   integer, intent(in) :: lat_out_shape(2)
   type(c_ptr), intent(in), value :: mask_in_ptr
-  integer, intent(in), optional :: mask_in_shape(2)
   type(c_ptr), intent(in), value :: mask_out_ptr
-  integer, intent(in), optional :: mask_out_shape(2)
   character(c_char), intent(in), optional :: interp_method(MESSAGE_LENGTH)
   integer, intent(in), optional :: verbose
   CFMS_HORIZ_INTERP_NEW_2D_DATA_TYPE_, intent(in), optional :: max_dist
@@ -48,12 +46,12 @@ function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_
   call cFMS_pointer_to_array(lat_out_ptr, lat_out_shape, lat_out)
 
   if(c_associated(mask_in_ptr))  then
-    allocate(mask_in(mask_in_shape(1), mask_in_shape(2)))
-    call cFMS_pointer_to_array(mask_in_ptr, mask_in_shape, mask_in)
+    allocate(mask_in(lon_in_shape(1), lon_in_shape(2)))
+    call cFMS_pointer_to_array(mask_in_ptr, lon_in_shape, mask_in)
   end if
   if(c_associated(mask_out_ptr)) then 
-    allocate(mask_out(mask_out_shape(1), mask_out_shape(2)))
-    call cFMS_pointer_to_array(mask_out_ptr, mask_out_shape, mask_out)
+    allocate(mask_out(lon_out_shape(1), lon_out_shape(2)))
+    call cFMS_pointer_to_array(mask_out_ptr, lon_out_shape, mask_out)
   end if
 
   if(present(interp_method) .and. interp_method_f /= '' ) interp_method_f = fms_string_utils_c2f_string(interp_method)

@@ -175,7 +175,7 @@ int main()
     test_interp_id = cFMS_horiz_interp_2d_cdouble(lon_in_2D, lon_in_shape, lat_in_2D, lat_in_shape,
                                     lon_out_2D, lon_out_shape, lat_out_2D, lat_out_shape,
                                     interp_method, NULL, NULL, NULL, NULL,
-                                    NULL, NULL, NULL, NULL, NULL);
+                                    NULL, NULL, NULL);
 
     int nxgrid;
     int nlon_src;
@@ -254,6 +254,9 @@ int main()
     assert(nlon_dst == iec-isc);
     assert(nlat_dst == jec-jsc);
     assert(interp_id == 0);
+
+    printf("in_2d_size = %d\n", in_2d_size);
+    printf("out_2d_size = %d\n", out_2d_size);
     
     cFMS_end();
 
