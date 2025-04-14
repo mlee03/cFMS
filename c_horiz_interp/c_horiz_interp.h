@@ -14,14 +14,14 @@ extern void cFMS_horiz_interp_init(int *ninterp);
 
 extern void cFMS_set_current_interp(int *interp_id);
 
-extern int cFMS_horiz_interp_new_2d_cfloat(float *lon_in_ptr, int *lon_in_shape, float *lat_in_ptr,
+extern int cFMS_horiz_interp_2d_cfloat(float *lon_in_ptr, int *lon_in_shape, float *lat_in_ptr,
                                             int *lat_in_shape, float *lon_out_ptr, int *lon_out_shape,
                                             float *lat_out_ptr, int *lat_out_shape, char *interp_method,
                                             int *verbose, float *max_dist, bool *src_modulo, 
                                             float *mask_in_ptr, int *mask_in_shape, float *mask_out_ptr,
                                             int* mask_out_shape, bool *is_latlon_in, bool *is_latlon_out);
 
-extern int cFMS_horiz_interp_new_2d_cdouble(double *lon_in_ptr, int *lon_in_shape, double *lat_in_ptr,
+extern int cFMS_horiz_interp_2d_cdouble(double *lon_in_ptr, int *lon_in_shape, double *lat_in_ptr,
                                             int *lat_in_shape, double *lon_out_ptr, int *lon_out_shape,
                                             double *lat_out_ptr, int *lat_out_shape, char *interp_method,
                                             int *verbose, double *max_dist, bool *src_modulo, 

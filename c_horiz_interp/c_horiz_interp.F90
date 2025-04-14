@@ -19,8 +19,8 @@ module c_horiz_interp_mod
   public :: cFMS_horiz_interp_init
   public :: cFMS_set_current_interp
 
-  public :: cFMS_horiz_interp_new_2d_cdouble
-  public :: cFMS_horiz_interp_new_2d_cfloat
+  public :: cFMS_horiz_interp_2d_cdouble
+  public :: cFMS_horiz_interp_2d_cfloat
 
   public :: cFMS_get_interp_cdouble
   public :: cFMS_get_interp_cfloat
