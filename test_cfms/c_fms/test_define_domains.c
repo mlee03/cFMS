@@ -142,7 +142,6 @@ int main() {
         cFMS_error(FATAL, "domain did not set up correctly");
         exit(EXIT_FAILURE);
       }
-      
       free(cdomain.layout);
       free(cdomain.maskmap);
       cFMS_null_cdomain(&cdomain);

@@ -107,7 +107,7 @@ void test_float2d(int *domain_id)
   // (89)(99)(29)(39)(49)(59)(69)(79)   (49)(59)(69)(79)(89)(99)(29)(39)
   // (88)(98)(28)(38)(48)(58)(68)(78)   (48)(58)(68)(78)(88)(98)(28)(38)
   
-  float answers_t[4][8][8] = {
+  double answers_t[4][8][8] = {
                               { {88, 98, 28, 38, 48, 58, 68, 78},
                                 {89, 99, 29, 39, 49, 59, 69, 79},
                                 {82, 92, 22, 32, 42, 52, 62, 72},
@@ -143,8 +143,9 @@ void test_float2d(int *domain_id)
                                 {49, 59, 69, 79, 89, 99, 29, 39},
                                 {42, 52, 62, 72, 82, 92, 22, 23},
                                 {43, 53, 63, 73, 83, 93, 23, 33}} };
+
   
-  float **global, **idata, *blob_global, *blob_idata;
+  double **global, *idata, *blob_global, *blob_idata;
 
   int xdatasize=(WHALO+NX+EHALO);
   int ydatasize=(SHALO+NY+NHALO);
@@ -176,32 +177,30 @@ void test_float2d(int *domain_id)
                        x_is_global, y_is_global, tile_count, position, &whalo, &shalo);
 
   //allocate global array
-  blob_global = (float *)calloc(xdatasize*ydatasize, sizeof(float));
-  global = (float **)calloc(ydatasize, sizeof(float *));
-  for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX;  
+  blob_global = (double *)calloc(xdatasize*ydatasize, sizeof(double));
+  global = (double **)calloc(ydatasize, sizeof(double *));
+  for(int i=0; i<ydatasize; i++) global[i] = blob_global+i*NX; 
   
   // allocate array for the ith data domain
-  blob_idata = (float *)malloc(xsize_d*ysize_d*sizeof(float));
-  idata = (float **)malloc(xsize_d*sizeof(float *));
-  for(int ix=0 ; ix<xsize_d; ix++) idata[ix] = blob_idata+ix*ysize_d;
+  idata = (double *)calloc(xsize_d*ysize_d,sizeof(double));
 
   for(int ix=0 ; ix<NX; ix++) for(int iy=0 ; iy<NY; iy++) global[WHALO+ix][SHALO+iy] = (iy+SHALO)*10+(ix+WHALO);
 
-  for(int ix=0; ix<xsize_c; ix++) for(int iy=0; iy<ysize_c; iy++) idata[WHALO+ix][SHALO+iy] = global[isc+ix][jsc+iy];
+  for(int ix=0; ix<xsize_c; ix++) for(int iy=0; iy<ysize_c; iy++) idata[ysize_d*(ix + WHALO) + iy + SHALO] = global[isc+ix][jsc+iy];
 
   int field_shape[2] = {xsize_d, ysize_d};
   int *flags = NULL;
   int *complete = NULL;
   char *name = NULL;
   
-  cFMS_update_domains_float_2d(field_shape, idata, domain_id, flags, complete, position,
+  cFMS_update_domains_double_2d(field_shape, idata, domain_id, flags, complete, position,
                                &whalo, &ehalo, &shalo, &nhalo, name, tile_count);
 
   int ipe = cFMS_pe();  
   for(int ix=0 ; ix<xsize_d; ix++) {
     for(int iy=0 ; iy<ysize_d; iy++) {
       if( ipe == 0 ) {
-        if( idata[ix][iy] != answers_t[ipe][ix][iy] ) cFMS_error(FATAL, "data domain did not update correctly!");
+        if( idata[ysize_d*ix+iy] != answers_t[ipe][ix][iy] ) cFMS_error(FATAL, "data domain did not update correctly!");
       }
     }
   }

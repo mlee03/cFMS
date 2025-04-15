@@ -45,8 +45,8 @@
 #undef  CFMS_UPDATE_DOMAINS_SHAPE_CF_
 #undef  CFMS_UPDATE_DOMAINS_SHAPE_F_
 #undef  CFMS_UPDATE_DOMAINS_RESHAPE_ORDER_
-#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_cfloat_4d
-#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_cfloat_4d"
+#define CFMS_UPDATE_DOMAINS_SUB_NAME_      cFMS_update_domains_int_4d
+#define CFMS_UPDATE_DOMAINS_BINDC_         "cFMS_update_domains_int_4d"
 #define CFMS_UPDATE_DOMAINS_FIELD_TYPE_    integer
 #define CFMS_UPDATE_DOMAINS_FIELD_NDIM_    4
 #define CFMS_UPDATE_DOMAINS_FIELD_POINTER_ :,:,:,:
