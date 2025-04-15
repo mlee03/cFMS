@@ -3,6 +3,8 @@ function CFMS_HORIZ_INTERP_NEW_2D_(lon_in_ptr, lon_in_shape, lat_in_ptr, lat_in_
     max_dist, src_modulo, mask_in_ptr, mask_out_ptr, is_latlon_in, is_latlon_out) &
     bind(C, name=CFMS_HORIZ_INTERP_NEW_2D_BINDC_)
 
+  ! Current interface only supports CONSERVATIVE interp method
+
   implicit none
 
   type(c_ptr), intent(in), value :: lon_in_ptr

@@ -178,85 +178,32 @@ int main()
                                     NULL, NULL, NULL);
 
     int nxgrid;
+
+    cFMS_get_interp_cdouble(NULL, NULL, NULL, NULL, NULL, 
+        NULL, NULL, &nxgrid, 
+        NULL, NULL, NULL, NULL, 
+        NULL, NULL);
+
     int nlon_src;
     int nlat_src;
     int nlon_dst;
     int nlat_dst;
-    int shape = 119664;
-    int *i_src = (int *)malloc(shape*sizeof(int));
-    int *j_src = (int *)malloc(shape*sizeof(int));
-    int *i_dst = (int *)malloc(shape*sizeof(int));
-    int *j_dst = (int *)malloc(shape*sizeof(int));
-    double *area_frac_dst = (double *)malloc(shape*sizeof(double));
+    int *i_src = (int *)malloc(nxgrid*sizeof(int));
+    int *j_src = (int *)malloc(nxgrid*sizeof(int));
+    int *i_dst = (int *)malloc(nxgrid*sizeof(int));
+    int *j_dst = (int *)malloc(nxgrid*sizeof(int));
+    double *area_frac_dst = (double *)malloc(nxgrid*sizeof(double));
 
-    cFMS_get_interp_cdouble(
-        NULL,
-        &nxgrid,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        &nlon_src,
-        &nlat_src,
-        &nlon_dst,
-        &nlat_dst,
-        NULL,
-        NULL,
-        NULL,
-        i_src,
-        &shape,
-        j_src,
-        &shape,
-        i_dst,
-        &shape,
-        j_dst,
-        &shape,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        area_frac_dst,
-        &shape,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-    );
+    cFMS_get_interp_cdouble(NULL, i_src, j_src, i_dst, j_dst, 
+        area_frac_dst, NULL, NULL, 
+        &nlon_src, &nlat_src, &nlon_dst, &nlat_dst, 
+        NULL, NULL);
 
     assert(nlon_src == NI_SRC);
     assert(nlat_src == NJ_SRC);
     assert(nlon_dst == iec-isc);
     assert(nlat_dst == jec-jsc);
     assert(interp_id == 0);
-
-    printf("in_2d_size = %d\n", in_2d_size);
-    printf("out_2d_size = %d\n", out_2d_size);
     
     cFMS_end();
 
@@ -268,7 +215,11 @@ int main()
     free(lat_in_2D);
     free(lon_out_2D);
     free(lat_out_2D);
-
+    free(i_src);
+    free(j_src);
+    free(i_dst);
+    free(j_dst);
+    free(area_frac_dst);
 
     return EXIT_SUCCESS;
 }
