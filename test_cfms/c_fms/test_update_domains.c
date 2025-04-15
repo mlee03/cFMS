@@ -23,16 +23,16 @@
 // d1 d2 | d1 d2 | d1 d2 |
 //-------|-------|-------|
 
-void define_domain(int *domain_id);
+int define_domain();
 void test_float2d(int *domain_id);
 
 int main()
 {
-  int domain_id = 0;
+  int domain_id = -99;
 
   cFMS_init(NULL,NULL,NULL,NULL,NULL);
 
-  define_domain(&domain_id);
+  domain_id = define_domain();
   cFMS_set_current_pelist(NULL,NULL);
 
   test_float2d(&domain_id);
@@ -42,7 +42,7 @@ int main()
 
 }
 
-void define_domain(int *domain_id)
+int define_domain()
 {
   int global_indices[4] = {0, NX-1, 0, NY-1};
   int npes = NPES;
@@ -60,7 +60,6 @@ void define_domain(int *domain_id)
   cFMS_define_layout(global_indices, &npes, cdomain.layout);
 
   cdomain.global_indices = global_indices;
-  cdomain.domain_id = domain_id;
   cdomain.whalo = &whalo;
   cdomain.ehalo = &ehalo;
   cdomain.shalo = &shalo;
@@ -68,7 +67,7 @@ void define_domain(int *domain_id)
   cdomain.xflags = &cyclic_global_domain;
   cdomain.yflags = &cyclic_global_domain;
 
-  cFMS_define_domains_easy(cdomain);
+  return cFMS_define_domains_easy(cdomain);
 }
 
 void test_float2d(int *domain_id)

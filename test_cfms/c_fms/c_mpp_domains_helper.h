@@ -12,6 +12,7 @@
 typedef struct {
   int* global_indices;
   int* layout;
+  int* npelist;
   int* domain_id;
   int* pelist;
   int* xflags;
@@ -20,7 +21,7 @@ typedef struct {
   int* yhalo;
   int* xextent;
   int* yextent;
-  bool** maskmap;
+  bool* maskmap;
   char* name;
   bool* symmetry;
   int *memory_size; //memory_size[2]
@@ -50,15 +51,14 @@ typedef struct {
   int *npes_nest_tile;
   int *x_refine;
   int *y_refine;
-  int *nest_domain_id;
   int *domain_id;
   int *extra_halo;
   char *name;
 } cNestDomainStruct;
 
 
-void cFMS_define_domains_easy(cDomainStruct cdomain);
-void cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain);
+int cFMS_define_domains_easy(cDomainStruct cdomain);
+int cFMS_define_nest_domains_easy(cNestDomainStruct cnestdomain);
 void cFMS_null_cdomain(cDomainStruct *cdomain);
 void cFMS_null_cnest_domain(cNestDomainStruct *cnest_domain);
 int any(int n, int* array, int value);
