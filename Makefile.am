@@ -32,9 +32,9 @@ DOCS = docs
 endif
 
 # Make targets will be run in each subdirectory. Order is significant.
-SUBDIRS = c_fms \
-          c_fms_utils \
+SUBDIRS = c_fms_utils \
           c_constants \
+          c_fms \                    
           c_data_override \
           c_diag_manager \
           c_grid_utils \

@@ -73,7 +73,15 @@ int main() {
   cFMS_null_cdomain(&cdomain);
   cFMS_null_cnest_domain(&cnest_domain);
 
-  domain_id = cFMS_get_domain_count();
+  if(cFMS_get_domain_count()!=0){
+    cFMS_error(FATAL, "domain_count not initialized correctly");
+    exit(EXIT_FAILURE);
+  }
+
+  if(cFMS_get_nest_domain_count()!=0){
+    cFMS_error(FATAL, "nest_domain_count not initialized correctly");
+    exit(EXIT_FAILURE);
+  }
   
   //get global pelist
   {
@@ -128,9 +136,9 @@ int main() {
       cdomain.layout = (int *)malloc(2*sizeof(int));
       int ndivs = coarse_npes; cFMS_define_layout(coarse_global_indices, &ndivs, cdomain.layout);      
 
-      int returned_domain_id = cFMS_define_domains_easy(cdomain);
+      domain_id = cFMS_define_domains_easy(cdomain);
 
-      if(returned_domain_id != 0) {
+      if(domain_id != 0) {
         cFMS_error(FATAL, "domain did not set up correctly");
         exit(EXIT_FAILURE);
       }
@@ -157,20 +165,18 @@ int main() {
       
       char name[NAME_LENGTH] = "test fine domain" ; cdomain.name = name;
       cdomain.global_indices = fine_global_indices;
-      cdomain.domain_id = &domain_id;
       cdomain.npelist = &fine_npes;
       cdomain.tile_id = &fine_tile_id;
       cdomain.whalo = &fine_whalo;
       cdomain.ehalo = &fine_ehalo;
       cdomain.shalo = &fine_shalo;
       cdomain.nhalo = &fine_nhalo;
-      cdomain.domain_id = &domain_id;
       cdomain.layout = (int *)malloc(2*sizeof(int));
       int ndivs = FINE_NPES; cFMS_define_layout(fine_global_indices, &ndivs, cdomain.layout);
 
-      int returned_domain_id = cFMS_define_domains_easy(cdomain);
+      domain_id = cFMS_define_domains_easy(cdomain);
 
-      if(returned_domain_id != 0) {
+      if(domain_id != 0) {
         cFMS_error(FATAL, "TILE IN domain did not set up correctly");
         exit(EXIT_FAILURE);
       }      

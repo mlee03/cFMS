@@ -60,7 +60,7 @@ module c_fms_mod
   public :: cFMS_define_nest_domains
   public :: cFMS_domain_is_initialized  
   public :: cFMS_get_compute_domain
-  public :: cFMS_get_current_domain
+  public :: cFMS_get_domain
   public :: cFMS_get_data_domain
   public :: cFMS_get_domain_from_id
   public :: cFMS_get_domain_name
@@ -258,16 +258,15 @@ contains
     
   end subroutine cFMS_set_current_pelist
   
-  function cFMS_define_domains(global_indices, layout, npelist, domain_id, pelist,   &
-       xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name,                &
-       symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,     &
+  function cFMS_define_domains(global_indices, layout, npelist, pelist,         &
+       xflags, yflags, xhalo, yhalo, xextent, yextent, maskmap, name,           &
+       symmetry, memory_size, whalo, ehalo, shalo, nhalo, is_mosaic, tile_count,&
        tile_id, complete, x_cyclic_offset, y_cyclic_offset) bind(C, name="cFMS_define_domains")
 
     implicit none   
     integer, intent(inout) :: global_indices(4) 
     integer, intent(in) :: layout(2)
     integer, intent(in) :: npelist
-    integer, intent(in), optional :: domain_id
     integer, intent(in), optional :: pelist(npelist)
     integer, intent(in), optional :: xflags, yflags
     integer, intent(in), optional :: xhalo, yhalo
@@ -308,13 +307,7 @@ contains
        maskmap_f = .True.
     end if
 
-    if(present(domain_id)) then
-       cFMS_define_domains = domain_id
-       if(domain_id>=domain_count) domain_count = domain_count + 1
-    else
-       cFMS_define_domains = domain_count
-       domain_count = domain_count + 1
-    end if
+    cFMS_define_domains = domain_count
     
     call cFMS_set_current_domain(cFMS_define_domains)
     call fms_mpp_domains_define_domains(global_indices_f, layout, current_domain, pelist=pelist,  & 
@@ -326,6 +319,8 @@ contains
     if(present(tile_id))    tile_id = tile_id - 1;
     if(present(tile_count)) tile_count = tile_count - 1;
 
+    domain_count = domain_count + 1
+    
   end function cFMS_define_domains
 
 
@@ -452,11 +447,17 @@ contains
   end subroutine cFMS_get_compute_domain
 
 
-  function cFMS_get_current_domain()
+  function cFMS_get_domain(domain_id)
     implicit none
-    type(FmsMppDomain2D), pointer :: cFMS_get_current_domain
-    cFMS_get_current_domain => current_domain
-  end function cFMS_get_current_domain
+    integer, intent(in), optional :: domain_id
+    type(FmsMppDomain2D), pointer :: cFMS_get_domain
+
+    if(present(domain_id)) then
+       cFMS_get_domain => domain(domain_id)
+    else
+       cFMS_get_domain => current_domain
+    end if
+  end function cFMS_get_domain
     
   !> cFMS_get_data_domain
   subroutine cFMS_get_data_domain(domain_id, xbegin, xend, ybegin, yend, xsize, xmax_size, ysize, ymax_size, &

@@ -13,7 +13,6 @@ typedef struct {
   int* global_indices;
   int* layout;
   int* npelist;
-  int* domain_id;
   int* pelist;
   int* xflags;
   int* yflags;

@@ -26,7 +26,6 @@ int cFMS_define_domains_easy(cDomainStruct cdomain)
   return cFMS_define_domains(cdomain.global_indices,
                              cdomain.layout,
                              cdomain.npelist,
-                             cdomain.domain_id,
                              cdomain.pelist,
                              cdomain.xflags, cdomain.yflags,
                              cdomain.xhalo, cdomain.yhalo,
@@ -69,7 +68,6 @@ void cFMS_null_cdomain(cDomainStruct *cdomain)
   cdomain->global_indices = NULL;
   cdomain->layout = NULL;
   cdomain->npelist = NULL;
-  cdomain->domain_id = NULL;
   cdomain->pelist = NULL;
   cdomain->xflags = NULL;
   cdomain->yflags = NULL;

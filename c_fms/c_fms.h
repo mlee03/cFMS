@@ -63,7 +63,7 @@ extern int cFMS_pe();
 
 extern void cFMS_set_current_pelist(int *pelist, bool *no_sync);
 
-extern int cFMS_define_domains(int* global_indices, int* layout, int *npelist, int *domain_id, int *pelist, 
+extern int cFMS_define_domains(int* global_indices, int* layout, int *npelist, int *pelist, 
                                int *xflags, int *yflags, int *xhalo, int *yhalo, int* xextent, int *yextent,
                                bool *maskmap, char *name, bool *symmetry, int* memory_size,
                                int *whalo, int *ehalo, int *shalo, int *nhalo, bool *is_mosaic,
